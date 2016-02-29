@@ -3,5 +3,7 @@ layout: page
 title: "To do's"
 ---
 
-- [ ] Work on the index page
-- [ ] Make code chunks responsive
+	- [ ] Figure out better layouts structure
+	- [ ] Finish data visuals
+	- [x] Work on the index page
+	- [x] Make code chunks responsive
