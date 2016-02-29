@@ -68,6 +68,10 @@ header {
     border-bottom: 1px solid #e8e8e8;
 }
 
+ul li {
+  list-style-type: disc;
+}
+
 hr {
     display: block;
     height: 1px;
@@ -189,7 +193,7 @@ table.outtable td.code pre  {
     1px 1px 0 #000;  
 }
 
-ul.unstyled {
+ul.unstyled, ul.unstyled li {
   list-style-type: none;
   display: block;
   -webkit-margin-before: 0;
