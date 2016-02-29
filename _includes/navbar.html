@@ -1,0 +1,30 @@
+<ul id="dropdown1" class="dropdown-content">
+  <li><a href="/data-visuals/may-vs-pac/may-vs-pac.html">May vs. Pac</a></li>
+</ul>
+
+<nav role = "navigation">
+  <div class="nav-wrapper">
+    <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+
+    <ul class="brand-logo center unstyled hide-on-med-and-down">
+      <span class="left">
+        <a class = "site-title" href = "/">Home</a>
+      </span>
+      {% for my_page in site.pages %}
+        {% if my_page.title %}
+      <li><a href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a></li>
+        {% endif %}
+      {% endfor %}
+      <li><a class = "dropdown-button" href="#!" data-activates="dropdown1">Data Visuals<i class="material-icons right">arrow_drop_down</i></a></li>
+    </ul>
+    <ul class="side-nav unstyled" id="mobile-demo">
+      <li><a class="page-link" href="/">Home</a></li>
+      {% for my_page in site.pages %}
+        {% if my_page.title %}
+          <li><a class="page-link" href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a></li>
+        {% endif %}
+      {% endfor %}
+
+    </ul>
+  </div>
+</nav>

@@ -1,0 +1,212 @@
+---
+layout: default-alt
+---
+
+<style>
+#Bar_chart_oil g.y, #Bar_chart_rate g.y {
+            display: none;
+        }
+
+.dc-chart g.row text {
+    fill: black !important;
+    font-size: 14px !important;
+    cursor: pointer;
+}
+
+.dc-chart .pie-slice {
+    fill: black !important;
+    font-size: 16px !important;
+    cursor: pointer;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: grey;
+  color: #fff;
+  border-radius: 8px;
+}
+
+
+</style>
+
+<div class='container-wrap' style = 'max-width:990px'>
+
+  <h2>dc.js - Mayweather vs. Pacquiao dashboard </h2>
+    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+    <div class="addthis_sharing_toolbox"></div>
+    
+
+    <p>
+        A fight of the century that did not live up to its hype. Overwhelming majority of viewers exclaimed that boxing is dead as Mayweather emerged victorious over Pacquiao. Mayweather's 'boring' defensive style did not please the crowd, but earned him another win. Below is the fight broken down to every punch. One important and deciding insight is that Mayweather landed <strong>148 pucnhes out of 435</strong> whereas Manny only landed <strong>81 out of 429</strong>. Floyd is one win away from reaching <a href = 'http://en.wikipedia.org/wiki/Rocky_Marciano' target = '_blank'>Rocky Marciano's</a> untouched record of 49-0. Unfortunately, I was not able to find info about miles ran and hugs given. The modern computing power would not be enough to manage the data of this size anyway (yes, Mayeather did it a lot). Here is a list of fight related information:
+        <ul >
+          <li><a href = 'http://bleacherreport.com/articles/2453338-mayweather-vs-pacquiao-full-punch-stats-and-scorecard-results-from-megafight' target = '_blank'>Punch report</a></li>
+          <li><a href = 'http://www.mmafighting.com/2015/5/3/8538795/floyd-mayweather-vs-manny-pacquiao-scorecard' target = '_blank'>Scorecard</a></li>
+          <li><a href = 'http://www.boxingscene.com/forums/view.php?pg=mayweather-pacquiao-compubox' target = '_blank'>Full Punch report (which is also the data source for this dashboard)</a></li>
+          <li><a href = 'http://www.nbcsports.com/boxing/pacquiao-could-face-disciplinary-action-shoulder?utm_network=twitter&utm_post=3654420&utm_source=TW%2520%2540NBCSports&utm_tags%2520=srm%255Bcontent%2520-%2520text-based%252Csport%2520-%2520boxing%255D' target = '_blank'>Pacquiao's shoulder injury</a></li>
+        </ul>
+    </p>
+
+    <p>
+        I used the <a href='http://dc-js.github.io/dc.js/' target='_blank'>javascript charting library dc.js</a> for data visualization, <a href ='http://square.github.io/crossfilter/' target='_blank'>crossfilter</a> for data manipulation, and <a href = 'http://labratrevenge.com/d3-tip/' target='_blank'>D3 Tooltip</a> for dc.js chart customization. The <a href = 'http://www.boxingscene.com/forums/view.php?pg=mayweather-pacquiao-compubox' target = '_blank'>data source</a> was provided by reddit user WillieLee.
+    </p>
+    <hr>
+
+  <div class = 'row'>
+    <div id = 'round-punch-bar'>
+      <div>
+        <strong>Punches thrown per Round</strong>
+        <span class='reset' style='display: none;'> Round: <span class='filter'></span></span>
+        <a class='reset' href="javascript: roundBar.filterAll();dc.redrawAll();" style="display: none;"> | reset</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class='row'>
+    <div class = 'col l4 m4 s6 fixed'>
+      <div id = 'total-punch-row' style='margin-left: 30px'>
+        <div>
+          <strong>Punches by Boxer</strong>
+          <a class='reset' href="javascript: boxerRow.filterAll();dc.redrawAll();" style="display: none;"> | reset</a>
+        </div>
+      </div>
+
+      <div id = 'punch-type-row' style='margin-left: 30px'>
+        <div>
+          <strong>Jab vs. Power punches</strong>
+          <a class='reset' href="javascript: punchRow.filterAll();dc.redrawAll();" style="display: none;"> | reset</a>
+        </div>
+      </div> 
+
+    </div>
+
+
+    <div class = 'col l4 m4 s6 fixed'>
+      <table style="border-width: 0 0 medium; margin: 0 auto" cellspacing="0" width="100%">
+        <tbody>
+          <tr>
+            <td colspan="3" style="padding:0;" align="center" valign="middle">
+              <img src="may-pac.png" align="middle" border="0" width="300">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="data" style="border-width: 0px 0px medium; margin:0 auto; width:300px;" width="100%">
+        <tbody>
+          <tr class="row1" style="border-bottom: 1px solid #d8d8d8; padding: 8px;">
+            <td style="width:42%;" align="center" valign="middle">Floyd Mayweather
+            </td>
+            <td style="width: 16%;" align="center" valign="middle"><b>vs.</b>
+            </td>
+            <td style="width:42%;" align="center" valign="middle">Manny Pacquiao
+            </td>
+          </tr>
+
+          <tr class="row1" style="border-bottom: 1px solid #d8d8d8; padding: 8px;">
+            <td style="width:42%;" align="center" valign="middle">47–0 (26 KO)
+            </td>
+            <td style="width: 16%;" align="center" valign="middle"><b>W-L<br>(KO)</b>
+            </td>
+            <td style="width:42%;" align="center" valign="middle">57–5–2 (38 KO)
+            </td>
+          </tr>
+
+          <tr class="row1" style="border-bottom: 1px solid #d8d8d8; padding: 8px;">
+            <td align="center" valign="middle">5'8"
+            </td>
+            <td align="center" valign="middle"><b>Ht.</b>
+            </td>
+            <td align="center" valign="middle">5'6"
+            </td>
+          </tr>
+
+          <tr class="row1" style="border-bottom: 1px solid #d8d8d8; padding: 8px;">
+            <td align="center" valign="middle">147 
+            </td>
+            <td align="center" valign="middle"><b>Wt.</b>
+            </td>
+            <td align="center" valign="middle">147
+            </td>
+          </tr>
+
+          <tr class="row1" style="border-bottom: 1px solid #d8d8d8; padding: 8px;">
+            <td align="center" valign="middle">38
+            </td>
+            <td align="center" valign="middle"><b>Age</b>
+            </td>
+            <td align="center" valign="middle">36
+            </td>
+          </tr>
+
+          <tr class="row1" style="border-bottom: 1px solid #d8d8d8; padding: 8px;">
+            <td align="center" valign="middle">72"
+            </td>
+            <td align="center" valign="middle"><b>Reach</b>
+            </td>
+            <td align="center" valign="middle">67"
+            </td>
+          </tr>
+
+          <tr class="row1" style="border-bottom: 1px solid #d8d8d8; padding: 8px;">
+            <td align="center" valign="middle">Orthodox
+            </td>
+            <td align="center" valign="middle"><b>Stance</b>
+            </td>
+            <td align="center" valign="middle">Southpaw
+            </td>
+          </tr>
+
+          <tr class="row1" style="border-bottom: 1px solid #d8d8d8; padding: 8px;">
+            <td align="center" valign="middle">363
+            </td>
+            <td align="center" valign="middle"><b>Rds.<br>fought</b>
+            </td>
+            <td align="center" valign="middle">407
+            </td>
+          </tr>
+        </tbody>
+      </table> 
+    </div>  
+
+    <div class = 'col l4 m4 s6'>
+      <div id = 'outcome-may-pie' style='margin-left: 60px'>
+        <div>
+          <strong> Mayweather<br>Landed vs. Missed</strong>
+          <a class='reset' href="javascript: outcomeMayPie.filterAll();dc.redrawAll();" style="display: none;"> | reset</a>
+        </div>
+      </div>
+
+      <div id = 'outcome-pac-pie' style='margin-left: 60px'>
+        <div>
+          <strong>Pacquiao<br>Landed vs. Missed</strong>
+          <a class='reset' href="javascript: outcomePacPie.filterAll();dc.redrawAll();" style="display: none;"> | reset</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class='row'>
+    <div id = 'landed-series'>
+      <div>
+        <strong>Punches Landed by Round</strong><font class='muted'> | Mayweather landed more punches in 10 out of 12 Rounds</font>
+        <span class='reset' style='display: none;'> Round: <span class='filter'></span></span>
+        <a class='reset' href="javascript: composite.filterAll();dc.redrawAll();" style="display: none;"> | reset</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://rawgit.com/mbostock/d3/master/d3.js" charset="utf-8"></script>
+<script type="text/javascript" src="https://rawgit.com/square/crossfilter/master/crossfilter.min.js"></script>
+<script type="text/javascript" src="https://rawgit.com/dc-js/dc.js/develop/dc.js"></script>
+<link rel="stylesheet" type="text/css" href="https://rawgit.com/dc-js/dc.js/develop/dc.css" media="screen" />
+<script src="https://rawgit.com/Edouard-Legoupil/3W-Dashboard/gh-pages/js/d3.tip.min.js"></script> 
+
+<script src='/data-visuals/may-vs-pac/may-vs-pac.js' type="text/javascript"></script> 
+
+
+

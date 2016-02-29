@@ -1,0 +1,78 @@
+---
+layout: home
+---
+
+<div class="home">
+
+  <h1>Posts</h1>
+
+  <ul class="post-list">
+    {% for post in site.posts %}
+      <li>
+        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+
+        <h2>
+          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+        </h2>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <hr>
+
+  <h1 style="display:inline"> Today's top ten news <small>from <a href = '//reddit.com/r/worldnews' target = '_blank'>/r/worldnews</a></small></h1>&nbsp
+  <span class = "muted">
+    [<a class = "muted" href="https://jsfiddle.net/KobaKhit/t42zkbnk/" target="_blank">jsfiddle</a>,
+    <a class = "muted" href="https://gist.github.com/KobaKhit/e90978692fff51b149ce" target="_blank">gist</a>]
+  </span>
+
+  <br></br>
+
+  <ul id="news-list" class = "unstyled"></ul>
+
+</div>
+
+<!-- Produces a responsive list of top ten posts from a subreddit /worldnews. Working jsfiddle http://jsfiddle.net/KobaKhit/t42zkbnk/ -->
+<script src="/js/redditjs.js"></script>
+<script src="https://rawgit.com/davatron5000/FitText.js/master/jquery.fittext.js"></script>  <!-- for text scaling -->
+<script>
+function correct_url(text) {
+// Remove the slash from the end of the article link to pass to href
+    var html = $.trim(text);
+    if (html) {
+        html = html.replace(/(\/$)/, '');
+    }
+    return html;
+}
+function reddit_list(news) {
+// Create a list of top ten posts
+    var l = $('#news-list');
+    // clear the existing list
+    $('#news-list li').remove();
+    $.each(news, function (index, obj) {
+        var link = correct_url(obj.url);
+        l.append($("<li></li>")
+            .append($("<p class = 're'></p>")
+            .append("<a class = 'title' target = '_blank' href = " + "http://www." + obj.domain + '></a>')
+            .append("<a target = '_blank' href = " + link + "><text class = 're-title'>" + obj.title + "</text><a/>  <a target = '_blank' class = 'muted' href=http://www." + obj.domain + '>(' + obj.domain + ')</a>'))
+            .append($("<p class='re-under'><a target = '_blank' class = 'muted' href = " + 'http://reddit.com' + obj.permalink + " style = 'outline:0'>(score: " + obj.score + ' | comments: ' + obj.num_comments + ') on reddit.com</a><p>'))
+        );
+    });
+    // Scale text so its responsive
+    jQuery(".re-under").fitText(6, {
+        minFontSize: '9px',
+        maxFontSize: '14px'
+    });
+}
+// Fetch the 10 top posts on /r/worldnews using redditjs api
+var news = [];
+reddit.top('worldnews').t('day').limit(10).fetch(function (res) {
+    // console.log(res);
+    for (var i = 0; i < res.data.children.length; i++) {
+        // res contains JSON parsed response from Reddit
+        news.push(res.data.children[i].data);
+    }
+    console.log(news)
+    reddit_list(news);
+});
+</script>

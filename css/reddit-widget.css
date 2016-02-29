@@ -1,0 +1,413 @@
+/*Scale text*/
+.re {
+	margin-bottom:0px;
+}
+.re-title{
+
+	font-size:18px;
+}
+
+.re-under{
+	margin-top:1px;
+}
+@media all and (max-width: 500px) { /* screen size until 500px */
+    .re-title{
+        font-size: 14px; /* 0.8x default size */
+        }
+    }
+/*Thumbnail rules*/ 
+
+a.title[href*="aljazeera.com"]{
+	padding-left:81px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px 0px
+}
+
+a.title[href*="ap.org"]{
+	padding-left:83px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -18px
+}
+
+a.title[href*="theatlantic.com"]{
+	padding-left:49px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -36px
+}
+
+a.title[href*="bbc.co.uk"],a.title[href*="bbc.com"]{
+	padding-left:47px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -54px
+}
+
+a.title[href*="bloomberg.com"]{
+	padding-left:73px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -72px
+}
+
+a.title[href*="bostonglobe.com"]{
+	padding-left:96px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -90px
+}
+
+a.title[href*="cbc.ca"]{
+	padding-left:43px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -108px
+}
+
+a.title[href*="cbsnews.com"]{
+	padding-left:96px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -126px
+}
+
+a.title[href*="csmonitor.com"]{
+	padding-left:59px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -144px
+}
+
+a.title[href*="cnn.com"]{
+	padding-left:36px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -162px
+}
+
+a.title[href*="ctv.ca"]{
+	padding-left:48px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -180px
+}
+
+a.title[href*="dw.de"]{
+	padding-left:31px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -196px
+}
+
+a.title[href*="economist.com"]{
+	padding-left:74px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -216px
+}
+
+a.title[href*="elpais.com"]{
+	padding-left:59px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -234px
+}
+
+a.title[href*="globalpost.com"]{
+	padding-left:59px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -252px
+}
+
+a.title[href*="theglobeandmail.com"]{
+	padding-left:125px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -270px
+}
+
+a.title[href*="haaretz.com"]{
+	padding-left:71px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -286px
+}
+
+a.title[href*="huffingtonpost.com"]{
+	padding-left:77px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -306px
+}
+
+a.title[href*="motherjones.com"]{
+	padding-left:77px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -360px
+}
+
+a.title[href*="msnbc.msn.com"]{
+	padding-left:65px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -378px
+}
+
+a.title[href*="npr.org"]{
+	padding-left:47px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -414px
+}
+
+a.title[href*="newstatesman.com"]{
+	padding-left:82px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -432px
+}
+
+a.title[href*="nhk.or.jp/nhkworld"]{
+	padding-left:79px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -450px
+}
+
+a.title[href*="nytimes.com"]{
+	padding-left:104px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -468px
+}
+
+a.title[href*="reuters.com"]{
+	padding-left:65px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -484px
+}
+
+a.title[href*="www.rt.com"],a.title[href*="/rt.com"]{
+	padding-left:34px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -503px
+}
+
+a.title[href*="salon.com"]{
+	padding-left:70px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -522px
+}
+
+a.title[href*="spiegel.de"]{
+	padding-left:91px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -540px
+}
+
+a.title[href*="theaustralian.com.au"]{
+	padding-left:103px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -576px
+}
+
+a.title[href*="guardian.co.uk"]{
+	padding-left:84px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -594px
+}
+
+a.title[href*="thenation.com"]{
+	padding-left:68px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -612px
+}
+
+a.title[href*=".time.com"],a.title[href*="/time.com"]{
+	padding-left:52px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -628px
+}
+
+a.title[href*="wsj.com"]{
+	padding-left:58px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -648px
+}
+
+a.title[href*=".washingtonpost.com"]{
+	padding-left:96px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -666px
+}
+
+a.title[href*="news.yahoo.com/"]{
+	padding-left:82px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -682px
+}
+
+a.title[href*="abcnews.go.com/"]{
+	padding-left:48px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -702px
+}
+
+a.title[href*="abc.net.au/news"]{
+	padding-left:86px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -720px
+}
+
+a.title[href*="english.ahram.org.eg/"]{
+	padding-left:69px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -738px
+}
+
+a.title[href*="english.alarabiya.net/"]{
+	padding-left:65px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -756px
+}
+
+a.title[href*=".atimes.com/"]{
+	padding-left:65px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -774px
+}
+
+a.title[href*="bostonherald.com/"]{
+	padding-left:59px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -792px
+}
+
+a.title[href*="suntimes.com"]{
+	padding-left:118px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -810px
+}
+
+a.title[href*="chicagotribune.com"]{
+	padding-left:98px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -828px
+}
+
+a.title[href*="freep.com"]{
+	padding-left:97px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -846px
+}
+
+a.title[href*="the-diplomat.com/"]{
+	padding-left:106px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -864px
+}
+
+a.title[href*="forbes.com/"]{
+	padding-left:53px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -882px
+}
+
+a.title[href*="foreignpolicy.com/"]{
+	padding-left:85px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -900px
+}
+
+a.title[href*="france24.com/en/"]{
+	padding-left:36px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -918px
+}
+
+a.title[href*="chron.com/"]{
+	padding-left:79px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -936px
+}
+
+a.title[href*="hurriyetdailynews.com/"]{
+	padding-left:63px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -954px
+}
+
+a.title[href*="ibtimes.com/"]{
+	padding-left:57px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -972px
+}
+
+a.title[href*="mercurynews.com/"]{
+	padding-left:65px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -990px
+}
+
+a.title[href*="miamiherald.com/"]{
+	padding-left:88px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1008px
+}
+
+a.title[href*="mondediplo.com/"]{
+	padding-left:58px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1026px
+}
+
+a.title[href*="montrealgazette.com/"]{
+	padding-left:72px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1044px
+}
+
+a.title[href*="news.com.au/"]{
+	padding-left:48px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1062px
+}
+
+a.title[href*="newsday.com"]{
+	padding-left:78px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1080px
+}
+
+a.title[href*="newyorker.com/"]{
+	padding-left:99px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1098px
+}
+
+a.title[href*="pbs.org/"]{
+	padding-left:41px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1116px
+}
+
+a.title[href*="philly.com/"]{
+	padding-left:64px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1134px
+}
+
+a.title[href*="pri.org/"]{
+	padding-left:56px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1152px
+}
+
+a.title[href*="scientificamerican.com/"]{
+	padding-left:62px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1170px
+}
+
+a.title[href*="seattlepi.com/"]{
+	padding-left:39px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1188px
+}
+
+a.title[href*="seattletimes.nwsource.com/"]{
+	padding-left:96px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1206px
+}
+
+a.title[href*="sfgate.com/"]{
+	padding-left:58px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1224px
+}
+
+a.title[href*="slate.com/"]{
+	padding-left:35px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1242px
+}
+
+a.title[href*="smh.com.au/"]{
+	padding-left:69px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1260px
+}
+
+a.title[href*="stltoday.com/"]{
+	padding-left:76px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1278px
+}
+
+a.title[href*="buffalonews.com/"]{
+	padding-left:99px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1296px
+}
+
+a.title[href*="thestar.com/"]{
+	padding-left:92px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1314px
+}
+
+a.title[href*="upi.com/"]{
+	padding-left:43px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1332px
+}
+
+a.title[href*="washingtontimes.com"]{
+	padding-left:122px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1350px
+}
+
+a.title[href*="dailymail.co.uk"]{
+	padding-left:98px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1366px
+}
+
+a.title[href*="nypost.com"],a.title[href*="pagesix.com"]{
+	padding-left:110px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1385px
+}
+
+a.title[href*="theguardian.com"]{
+	padding-left:110px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1407px
+}
+
+a.title[href*="mirror.co.uk"]{
+	padding-left:50px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1427px
+}
+
+a.title[href*="thesun.co.uk"]{
+	padding-left:55px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1448px
+}
+
+a.title[href*="globemagazine.com"]{
+	padding-left:70px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1468px
+}
+
+a.title[href*="nydailynews.com"]{
+	padding-left:115px;
+	background:url("/img/Q1ag0NwDPntERAkYW-qo9DiA-ECGYorf0w0XjVR3jfs.png") no-repeat 0px -1486px
+}
