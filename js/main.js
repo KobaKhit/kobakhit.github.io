@@ -17,7 +17,7 @@ $(function(){
 
 	// Materialize
 	$('.button-collapse').sideNav(); // sidenav
-	$('.slider').slider({full_width: false, height: 200}); // pic slider
+	$('.slider').slider({full_width: false, height: 250}); // pic slider
 	$('.slider').slider('pause');
 	$(".dropdown-button").dropdown(); // dropdown button in navbar
 

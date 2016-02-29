@@ -113,7 +113,7 @@ table.highlighttable{
     }
 
     .post, header {
-        padding-top: 7%;
+        padding-top: 8%;
     }
 }
 
@@ -171,7 +171,13 @@ table.outtable td.code pre  {
 // end code chunks style
 ////////////////////////
 
-#particles-js {background: black;}
+#particles-js {
+    background: black;
+}
+
+.particles-js-canvas-el {
+    min-height: 410px !important;
+}
 
 .strokeme
 {
