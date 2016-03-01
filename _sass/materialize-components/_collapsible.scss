@@ -10,8 +10,8 @@
   display: block;
   cursor: pointer;
   min-height: $collapsible-height;
-  line-height: $collapsible-height;
-  padding: 0 1rem;
+  // line-height: $collapsible-height;
+  padding: 10px 10px;
   background-color: $collapsible-header-color;
   border-bottom: 1px solid $collapsible-border-color;
 
@@ -33,7 +33,7 @@
 
   p {
     margin: 0;
-    padding: 2rem;
+    padding: 0.7rem;
   }
 }
 

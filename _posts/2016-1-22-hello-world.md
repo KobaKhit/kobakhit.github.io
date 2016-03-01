@@ -1,9 +1,9 @@
 ---
 layout: post
 title: 'Hello world!'
-author: Koba Khitalishvili
-categories: 
-tags: r python 
+author: "Koba Khitalishvili"
+categories: beginner
+tags: "r python"
 ---
 
 This is my professional blog where I will be writing about data science, programming, math and, in general, about technical sciences. Lets test things out. I wonder how [Jekyll]() or rather how the specified highlighter renders code. By default Jekyll 3.0+ uses [Rouge](http://rouge.jneen.net/).
@@ -108,7 +108,7 @@ The highlighter works as intended. To make sure I remember the primality test co
 
 After running the code it seems like my primality test works correctly. 
 
-Jekyll also allows to include gists. I will embed the code that produces the news list on my main page. Let's see how the gist looks:
+Jekyll also allows to include gists. I will embed the code that produces the news list on my main page. Let's see what the gist looks like:
 {% gist KobaKhit/e90978692fff51b149ce %}
 Looks neat.
 
@@ -127,4 +127,4 @@ $$(x-a)^n \equiv (x^n-a)$$
 
 <hr>
 
-Thats pretty much it for the testing. I am working on a bunch of posts and one of them will be a step by step guide of how I built this website. Hopefully, it will be helpful to people who intend to use jekyll for the their blogging needs. Until later.
+Thats pretty much it for the testing. I am working on a bunch of posts and one of them will be a step by step guide of how I built this website. Hopefully, it will be helpful to people who intend to use jekyll for their blogging needs. Until later.

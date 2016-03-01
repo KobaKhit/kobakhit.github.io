@@ -20,6 +20,24 @@ $(function(){
 	$('.slider').slider({full_width: false, height: 250}); // pic slider
 	$('.slider').slider('pause');
 	$(".dropdown-button").dropdown(); // dropdown button in navbar
+	$('.collapsible').collapsible({
+      accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    });
+
+    // posts view on main page
+    $( "#view1" ).click(function() {
+	  var ls = $(this).data("view");
+	  $("#" + ls).css("display","block");
+	  $("#collapsible-list").css("display","none");
+	});
+
+	$( "#view2" ).click(function() {
+	  var ls = $(this).data("view");
+	  $("#" + ls).css("display","block");
+	  $("#single-list").css("display","none");
+	});
+
+	$('ul.tabs').tabs();
 
 	// white background for output code chunks
 	$("code.language-").parents(".highlighttable").addClass("outtable").removeClass("highlighttable")

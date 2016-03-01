@@ -64,7 +64,7 @@ nav {
     background-color: white;
 }
 
-header {
+nav {
     border-bottom: 1px solid #e8e8e8;
 }
 
@@ -206,6 +206,30 @@ ul.unstyled, ul.unstyled li {
 ul.list-inline li  {
     display: inline;
 }
+
+/*override chip class in materialize for post tags*/
+.chip {
+  display: inline-block;
+  height: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+  line-height: 20px;
+  padding: 0 12px;
+  border-radius: 16px;
+  background-color: #e4e4e4; }
+  .chip img {
+    float: left;
+    margin: 0 8px 0 -12px;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%; }
+  .chip i.material-icons {
+    cursor: pointer;
+    float: right;
+    font-size: 16px;
+    line-height: 20px;
+    padding-left: 8px; }
 
 
 
