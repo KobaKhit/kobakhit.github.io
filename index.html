@@ -4,16 +4,18 @@ layout: home
 
 <div class="home">
   <div class = "row">
-  <div class = "col s12 m4 l2">
-    <h1>Posts</h1>
+    <div class = "col s12 m4 l2" style = "padding:0px;">
+      <h1>Posts</h1>
+    </div>
+    <div class = "col s12 m8 l9">
+      <div class = "post-view-tabs-wrapper right">
+        <ul class="tabs">
+          <li class="tab "><a id="view1" class="active waves-effect waves-red btn-flat" href="#" data-view="single-list">List</a></li>
+          <li class="tab "><a id="view2" class = "waves-effect waves-red btn-flat" href="#" data-view="collapsible-list">Collapsible List</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
-  <div class = "col s12 m8 l5">
-    <ul class="tabs">
-      <li class="tab col s3 l2"><a id="view1" class="active" href="#" data-view="single-list">List</a></li>
-      <li class="tab col s3 l2"><a id="view2" href="#" data-view="collapsible-list">Collapsible List</a></li>
-    </ul>
-  </div>
-</div>
 
   <div id = "single-list"> 
     {% include list.html %}
