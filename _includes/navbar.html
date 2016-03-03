@@ -1,4 +1,4 @@
-<ul id="dropdown1" class="dropdown-content">
+<!-- <ul id="dropdown1" class="dropdown-content">
   <li><a href="/data-visuals/may-vs-pac/may-vs-pac.html">May vs. Pac</a></li>
   <li><a href="/data-visuals/ruboil/ruboil.html">Ruble vs. Oil</a></li>
 </ul>
@@ -18,6 +18,7 @@
       {% endfor %}
       <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Data visuals<i class="material-icons right">arrow_drop_down</i></a></li>
     </ul>
+
     <ul class="side-nav unstyled" id="mobile-demo">
       <li><a class="page-link" href="/">Home</a></li>
       {% for my_page in site.pages %}
@@ -25,7 +26,49 @@
           <li><a class="page-link" href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a></li>
         {% endif %}
       {% endfor %}
-
     </ul>
   </div>
+</nav> -->
+
+<nav>
+  <ul id="slide-out" class="side-nav">
+    <li><a class="page-link" href="/">Home</a></li>
+      {% for my_page in site.pages %}
+        {% if my_page.title %}
+          <li><a class="page-link" href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a></li>
+        {% endif %}
+      {% endfor %}
+
+    <li class="no-padding">
+      <ul class="collapsible collapsible-accordion">
+        <li>
+          <a class="collapsible-header">Data Visuals<i class="mdi-navigation-arrow-drop-down"></i></a>
+          <div class="collapsible-body">
+            <ul>
+              <li><a href="/data-visuals/may-vs-pac/may-vs-pac.html">May vs. Pac</a></li>
+              <li><a href="/data-visuals/ruboil/ruboil.html">Ruble vs. Oil</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul class="brand-logo center unstyled hide-on-med-and-down">
+    <span class="left">
+      <a class = "site-title" href = "/">Home</a>
+    </span>
+    {% for my_page in site.pages %}
+      {% if my_page.title %}
+    <li><a href="{{ my_page.url | prepend: site.baseurl }}">{{ my_page.title }}</a></li>
+      {% endif %}
+    {% endfor %}
+    <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Data visuals<i class="mdi-navigation-arrow-drop-down right"></i></a></li>
+
+    <ul id="dropdown1" class="dropdown-content">
+      <li><a href="/data-visuals/may-vs-pac/may-vs-pac.html">May vs. Pac</a></li>
+      <li><a href="/data-visuals/ruboil/ruboil.html">Ruble vs. Oil</a></li>
+    </ul>
+  </ul>
+  <a href="#" data-activates="slide-out" class="button-collapse brand-logo"><i class="mdi-navigation-menu"></i></a>
 </nav>
