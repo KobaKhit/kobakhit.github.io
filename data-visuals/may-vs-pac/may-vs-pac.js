@@ -199,7 +199,7 @@ d3.csv('may-vs-pac.csv', function(data) {
     var barTip = d3.tip()
         .attr('class', 'd3-tip')
         .offset([-10, 0])
-        .html(function (d) {return "<span style = 'background-color: grey;'><font color='9900FF'>" + d.layer + ": </font></span>" + d.y});
+        .html(function (d) {return "<span>" + d.layer + ": </span>" + "<span style = 'color:red'>" + d.y + "</span>"});
 
     d3.selectAll(".bar").call(barTip);
     d3.selectAll(".bar").on('mouseover', barTip.show)
@@ -209,7 +209,7 @@ d3.csv('may-vs-pac.csv', function(data) {
     var rowTip = d3.tip()
         .attr('class', 'd3-tip')
         // .offset([-10, 0])
-        .html(function (d) {return "<span><font color='#9900FF'>" + 'Punches: ' + "</font></span>" + d.value});
+        .html(function (d) {return "<span>" + 'Punches: ' + "</span>" + "<span style = 'color:red'>" + d.value + "</span>"});
 
     d3.selectAll(".row").select('rect').call(rowTip);
     d3.selectAll(".row").select('rect').on('mouseover', rowTip.show)
@@ -219,7 +219,7 @@ d3.csv('may-vs-pac.csv', function(data) {
     var pieTip = d3.tip()
           .attr('class', 'd3-tip')
           .offset([-10, 0])
-          .html(function (d) {console.log(d); return "<span style='color: #9900FF'>" +  d.data.key + "</span> : "  + d.value + ' punches'; });
+          .html(function (d) {console.log(d); return "<span>" +  d.data.key + "</span> : "  + "<span style = 'color:red'>" + d.value + "</span>" + ' punches'; });
 
     d3.selectAll(".pie-slice").call(pieTip);
     d3.selectAll(".pie-slice").on('mouseover', pieTip.show)
@@ -229,7 +229,7 @@ d3.csv('may-vs-pac.csv', function(data) {
     var lineTip = d3.tip()
           .attr('class', 'd3-tip')
           .offset([-10, 0])
-          .html(function (d) {return "<span style='color: #9900FF'>" +  'Round ' + d.data.key + "</span> : "  + d.y + ' punches'; });
+          .html(function (d) {return "<span>" +  'Round ' + d.data.key + "</span> : "  + "<span style = 'color:red'>" + d.y + "</span>" + ' punches'; });
 
     d3.selectAll(".dot").call(lineTip);
     d3.selectAll(".dot").on('mouseover', lineTip.show)
