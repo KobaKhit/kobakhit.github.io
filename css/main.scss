@@ -91,9 +91,13 @@ pre,code {
 }
 ////////////////////
 // Code chunks style
-table.highlighttable{
+table.highlighttable {
 	border-collapse: collapse;
 
+}
+
+table.highlighttable td, table.highlighttable th{
+  padding: 0px 0px;
 }
 
 @media #{$small-and-down} {
@@ -129,6 +133,10 @@ table.outtable td.code pre  {
     overflow: auto;
 }
 
+.linenos {
+  text-align: right;
+}
+
 .linenodiv pre, .code pre {
 	border-radius: 0px;
 	line-height: 1.3;
@@ -162,7 +170,7 @@ table.outtable td.code pre  {
     left: 100%;
     top: 13px;
     bottom: 13px;
-    width: 2px;
+    width: 1px;
 }
 
 .outtable td  pre { // no line for output code chunks

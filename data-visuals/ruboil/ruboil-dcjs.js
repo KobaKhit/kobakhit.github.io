@@ -124,7 +124,7 @@ $.when(
 
   // Graph the dataset using dc.js
   ////////////////////////////////
-  var dateFormat = d3.time.format('%B-%d-%Y');
+  var dateFormat = d3.time.format('%b %d %Y');
   var numberFormat = d3.format('.2f');
   var numberFormat4 = d3.format('.4f');
 
