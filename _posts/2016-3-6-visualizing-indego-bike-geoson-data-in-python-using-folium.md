@@ -66,7 +66,7 @@ df.head()
 </table>
 </div>
 
-
+<br>
 
 Now, `df` is a dictionary of dictionaries. We are interested in the features column. Each entry looks like this.
 
