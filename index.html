@@ -10,19 +10,20 @@ layout: home
     <div class = "col s12 m8 l9 hide-on-small-only">
       <div class = "post-view-tabs-wrapper right">
         <ul class="tabs">
-          <li class="tab "><a id="view1" class="active waves-effect waves-red btn-flat" href="#" data-view="single-list">List</a></li>
-          <li class="tab "><a id="view2" class = "waves-effect waves-red btn-flat" href="#" data-view="collapsible-list">Collapsible List</a></li>
+          <li class="tab "><a id="view2" class = "waves-effect waves-red btn-flat active" href="#" data-view="collapsible-list">List</a></li>
+          <li class="tab "><a id="view3" class = "waves-effect waves-red btn-flat" href="#" data-view="cards-list">Cards</a></li>
         </ul>
       </div>
     </div>
   </div>
 
-  <div id = "single-list"> 
-    {% include list.html %}
+
+  <div id = "collapsible-list"> 
+    {% include list-collapsible.html %}
   </div>
 
-  <div id = "collapsible-list" style = "display:none"> 
-    {% include list-collapsible.html %}
+  <div id = "cards-list" style = "display:none"> 
+    {% include cards.html %}
   </div>
 
   <hr>

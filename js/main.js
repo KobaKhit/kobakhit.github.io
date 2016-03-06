@@ -29,12 +29,21 @@ $(function(){
 	  var ls = $(this).data("view");
 	  $("#" + ls).css("display","block");
 	  $("#collapsible-list").css("display","none");
+	  $("#cards-list").css("display","none");
 	});
 
 	$( "#view2" ).click(function() {
 	  var ls = $(this).data("view");
 	  $("#" + ls).css("display","block");
 	  $("#single-list").css("display","none");
+	  $("#cards-list").css("display","none");
+	});
+
+	$( "#view3" ).click(function() {
+	  var ls = $(this).data("view");
+	  $("#" + ls).css("display","block");
+	  $("#single-list").css("display","none");
+	  $("#collapsible-list").css("display","none");
 	});
 
 	$('ul.tabs').tabs();
