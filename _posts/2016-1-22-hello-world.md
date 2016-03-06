@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Hello world!'
-author: "Koba Khitalishvili"
+author: "<a href = 'http://www.kobakhit.com/about/'>Koba Khitalishvili</a>"
 categories: beginner
 tags: "r python"
 ---
