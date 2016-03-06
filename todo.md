@@ -3,6 +3,8 @@ layout: page
 title: "To do's"
 ---
 	
+  - [ ] Create tags and categories pages
+  - [ ] Create posts page
   - [ ] Add code chunks in which output is without overflow
   - [ ] Add pagination
   - [ ] Add card view on the index page
