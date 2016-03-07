@@ -129,7 +129,7 @@ table.highlighttable td, table.highlighttable th{
 table.highlighttable td.code pre,
 table.outtable td.code pre  {
 	// the code chunk max-width with overflow
-    max-width: calc(#{$content-width} - (#{$spacing-unit}*2));
+    max-width: 740px;
     overflow: auto;
 }
 
@@ -245,6 +245,6 @@ ul.tabs {
   background-color:rgba(255, 255, 255, 0);
 }
 .addthis_sharing_toolbox {
-  padding:10px 0;
+  padding-bottom:10px;
 }
 
