@@ -36,7 +36,8 @@ I execute all Julia code below in IJulia. I suggest you create a folder on your 
 VERSION # print julia version number
 pwd() # print working directory
 homedir() # print the default home directory
-cd("C:/Users/TimDz/Desktop/julia-lang") # set working directory to DirectoryPath "C:/Users/TimDz/Desktop/julia-lang"
+# set working directory to DirectoryPath "C:/Users/TimDz/Desktop/julia-lang"
+cd("C:/Users/TimDz/Desktop/julia-lang") 
 ```
 
 
@@ -238,7 +239,8 @@ Before we save it lets categorize the points based on whether the original numbe
 
 
 ```julia
-df = hcat(df, map(x -> if x % 2 == 0 "even" else "odd" end, 1:1000)) # create new evenodd column
+# create new evenodd column
+df = hcat(df, map(x -> if x % 2 == 0 "even" else "odd" end, 1:1000)) 
 rename!(df, :x1, :evenodd) #rename it to evenodd
 head(df)
 ```
@@ -254,7 +256,8 @@ head(df)
 
 
 ```julia
-# To save the data frame in the working directory (make sure to set the wd as described in the beginning of the tutorial)
+# To save the data frame in the working directory (make sure to set the wd as described in 
+# the beginning of the tutorial)
 writetable("collatz.csv", df)
 ```
 
@@ -2943,7 +2946,8 @@ Looks pretty. You should be able to zoom in/out. Lets color the points based on 
 
 
 ```julia
-a = plot(df,x="Number", y="NumofSteps", color = "evenodd", Geom.point) # assign plot to variable
+# assign plot to variable
+a = plot(df,x="Number", y="NumofSteps", color = "evenodd", Geom.point) 
 ```
 <div class="output_html rendered_html output_subarea output_execute_result">
 <?xml version="1.0" encoding="UTF-8"?>
@@ -5647,7 +5651,6 @@ fig.select("#img-e572ec8a-1251")
     });
 ]]> </script>
 </svg>
-
 </div>
 
 
