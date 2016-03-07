@@ -13,15 +13,15 @@ layout: default
     	{% endfor %}
     </p>
 
-    <!-- Share buttons. Go to www.addthis.com/dashboard to customize your tools -->
-    <div class="addthis_sharing_toolbox"></div>
-
     <p class = "post-meta">
       Save as <a href="javascript:void(0)" onClick="window.print()"> PDF</a>
       {% if page.ipynb %}
        • <a href="{{ page.ipynb }}"> IPythonNotebook</a> 
        {% endif %}
     </p>
+
+    <!-- Share buttons. Go to www.addthis.com/dashboard to customize your tools -->
+    <div class="addthis_sharing_toolbox"></div>
   </header>
 
   <div class="post-content" itemprop="articleBody">
