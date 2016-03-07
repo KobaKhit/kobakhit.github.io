@@ -11,8 +11,8 @@ permalink: /about/
 	      <img src="/img/about.jpg">
 	      <span class="card-title strokeme">Koba Khitalishvili</span>
 	    </div>
-	    <div class="card-content center">
-			<ul class="unstyled list-inline">
+	    <div class="card-content">
+			<ul class="unstyled list-inline center">
 			    <li>
 			        <a href="https://www.facebook.com/cobra.khitalishvili" target="_blank"><i class="fa fa-facebook-square fa-2x"></i></a>
 			    </li>
@@ -48,4 +48,22 @@ permalink: /about/
 	        <p>After learning programming on the side, working at two technology firms,  and getting on the big data bandwagon I decided to focus on analytics as my academic and professional careers.</p>
 	    </div>
 	</div>
+</div>
+
+<hr>
+
+<h2>Kaggle tweeted my <a href="https://www.kaggle.com/kobakhit/digit-recognizer/digital-recognizer-in-r" target = "_blank">write up</a> about solving the Digit Recognizer problem in R.</h2>
+
+<blockquote class="twitter-tweet tw-align-center" data-lang="en"><p lang="en" dir="ltr">Quick tutorial on using h2o for neural networks on the MSNIT Digit Recognizer dataset <a href="https://t.co/VnM3U0XVvQ">https://t.co/VnM3U0XVvQ</a> <a href="https://t.co/y9NRV5WPqP">pic.twitter.com/y9NRV5WPqP</a></p>&mdash; Kaggle (@kaggle) <a href="https://twitter.com/kaggle/status/668177223443226624">November 21, 2015</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<hr>
+
+</div>
+</div comment = "container end. After this full width page">
+
+<h1 class = "center">Instagram</h1>
+
+<div  style='padding:10px'>
+    <script src="//instansive.com/widget/js/instansive.js"></script><iframe src="//instansive.com/widgets/ae59f1d1ab970282e4227e6c3376cfe550bb12de.html" id="instansive_ae59f1d1ab" name="instansive_ae59f1d1ab"  scrolling="no" allowtransparency="true" class="instansive-widget" style="width: 100%; border: 0; overflow: hidden;"></iframe>
 </div>

@@ -23,6 +23,7 @@ $(function(){
 	$('.collapsible').collapsible({
       accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
     });
+    $('ul.tabs').tabs(); // posts view
 
     // posts view on main page
     $( "#view1" ).click(function() {
@@ -46,7 +47,6 @@ $(function(){
 	  $("#collapsible-list").css("display","none");
 	});
 
-	$('ul.tabs').tabs();
 
 	// white background for output code chunks
 	$("code.language-").parents(".highlighttable").addClass("outtable").removeClass("highlighttable")
