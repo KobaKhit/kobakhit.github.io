@@ -60,6 +60,20 @@ $small-and-down: "only screen and (max-width : #{$small-screen})" !default;
 
 // Enable scss language highlighiting in sublime text 2
 // http://adampatterson.ca/blog/2011/05/adding-sass-scss-support-sublime-edit-2
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #section-to-print, #section-to-print * {
+    visibility: visible;
+  }
+  #section-to-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+
 nav {
     background-color: white;
 }
