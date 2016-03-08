@@ -5429,7 +5429,7 @@ datatable(format(datatab,big.mark = ',',scientific = F, digits = 1),
 
 Let's see whether the most frequent events have a significant effect on the health of population and the infrastructure. 
 
-## Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
+**Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?**
 
 I summarize the number of total injuries and deaths by the event type over the period 1950 to 2011.
 
@@ -5519,7 +5519,7 @@ par(mar=c(5.1,4.1,4.1,2.1))
 
 On average tornados and excessive heat cause the most number of deaths and injuries per year for the period 2000-2011. The most frequent events, tornado, flash flood and thundestorm winds have a significant effect on the population health. However, hail, the second most frequent event, has an insignificant effect on population health. Excessive heat which is 20th most frequent event with $27.06452$ occurences per year is the most deadly. Thus, in general, the events that are most frequent are significantly harmful to the population health. Therefore, countermeasures should be provided on a constant basis. This means that the amortisation and review of the countermeasure infrastructure needs to be frequent as well.
 
-## Across the United States, which types of events have the greatest economic consequences?
+**Across the United States, which types of events have the greatest economic consequences?**
 
 I calculate the total damage over the period 1950-2011 and average damage for years 2000 to 2011. The total damage is the sum of property damage and the crop damage.
 
