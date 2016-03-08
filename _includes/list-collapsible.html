@@ -1,13 +1,17 @@
 <ul class="unstyled collapsible" data-collapsible="accordion">
   {% for post in site.posts %}
   <li>
-    <div class="collapsible-header">
+    <div class="collapsible-header active">
       <div class="post-meta">{{ post.date | date: "%b %-d, %Y" }} •
         {{ post.author }}
       </div>
-      <a style = "display:inline" class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>&nbsp 
+      <a class="post-link" style = "display: inline-block;" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+      <br>
+      {% for cat in post.categories %}
+        <a href="{{$baseurl}}/categories/{{ cat | urlize }}/"><span class = "chip-cat">{{ cat }}</span></a>
+      {% endfor %}
       {% for tag in post.tags %}
-        <a href="{{$baseurl}}/tags/{{ $tag | urlize }}/"><span class = "chip">{{ $tag }}</span></a>
+        <a href="{{$baseurl}}/tags/{{ $tag | urlize }}/"><span class = "chip">#{{ tag }}</span></a>
       {% endfor %}
     </div>
 

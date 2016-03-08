@@ -8,8 +8,11 @@ layout: default
     <p class="post-meta">
     	<time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>
     	{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %} •
+      {% for cat in page.categories %}
+        <a href="{{$baseurl}}/categories/{{ cat | urlize }}/"><span class = "chip-cat">{{ cat }}</span></a>
+      {% endfor %}
     	{% for tag in page.tags %}
-    		<a href="{{$baseurl}}/tags/{{ tag | urlize }}/"><span class = "chip">{{ tag }}</span></a>
+    		<a href="{{$baseurl}}/tags/{{ tag | urlize }}/"><span class = "chip">#{{ tag }}</span></a>
     	{% endfor %}
     </p>
 
@@ -17,6 +20,12 @@ layout: default
       Save as <a href="javascript:void(0)" onClick="window.print()"> PDF</a>
       {% if page.ipynb %}
        • <a href="{{ page.ipynb }}"> IPythonNotebook</a> 
+       {% endif %}
+       {% if page.rmd %}
+       • <a href="{{ page.rmd }}"> Rmarkdown</a> 
+       {% endif %}
+       {% if page.rpubs %}
+       • <a href="{{ page.rpubs }}" target="_blank"> RPubs</a> 
        {% endif %}
     </p>
 

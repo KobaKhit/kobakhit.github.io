@@ -1,11 +1,56 @@
 ---
-layout: home
+layout: index
 ---
 
 <div class="home">
   <div class = "row">
-    <div class = "col s12 m4 l2" style = "padding:0px;">
-      <h1>Posts</h1>
+    <div class = "col s12 m12 l12">
+      <div class = "card-panel">
+        <div class = "row valign-wrapper">
+          <div class = "col s12 m3 l3">
+            <a href='/about'>
+              <img src="/img/about-square.jpg" alt="" class="circle responsive-img hoverable">
+            </a>
+            <ul class="unstyled list-inline center" style = 'padding-top:6px'>
+              <li>
+                  <a href="https://www.linkedin.com/in/kobakhit/" target="_blank"><i class="fa fa-linkedin-square fa-2x"></i></a>
+              </li>
+              <li>
+                  <a href="https://github.com/KobaKhit"><i class="fa fa-github fa-2x" target="_blank"></i></a>
+              </li>
+              <li>
+                  <a href="https://instagram.com/dostre"><i class="fa fa-instagram fa-2x" target="_blank"></i></a>
+              </li>
+            </ul>
+          </div>
+
+          <div class = "col s12 m9 l9">
+            <p>
+              Welcome to my home page. I am a graduate student in business analytics. I built this website using
+              <ul>
+                <li><a href = "https://jekyllrb.com/" target = "_blank">Jekyll 3.0+</a></li>
+                <li><a href = "http://materializecss.com/" target = "_blank">Materialize.css</a></li>
+                <li><a href = "https://pages.github.com/" target = "_blank">Github pages</a></li>
+              </ul>
+            </p>
+            <p> I used other tools such as <a href = "https://www.mathjax.org/" target = "_blank">mathjax</a>, <a href = "https://d3js.org/" target = "_blank">d3.js</a>, etc. This website also works on mobile. Hopefully, you will find it useful. If you have any questions/comments/suggestions please fell free to contact me.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+   <!--  <div class = "col 12 m6 l6">
+      <div class = "">
+      <a class="twitter-timeline"  width="100%m"
+            height="300" href="https://twitter.com/Gigantsex" data-widget-id="545767113949204481">Tweets by @Gigantsex</a>
+      </div>
+    </div> -->
+  </div>
+
+
+  <div class = "row">
+    <div class = "col s12 m4 l3" style = "padding:0px;">
+      <h1>Latest posts</h1>
     </div>
     <div class = "col s12 m8 l9 hide-on-small-only">
       <div class = "post-view-tabs-wrapper right">
@@ -46,6 +91,12 @@ layout: home
   <ul id="news-list" class = "unstyled"></ul>
 
 </div>
+
+<!-- Twitter feed -->
+<script>
+// !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+</script>
+
 
 <!-- Produces a responsive list of top ten posts from a subreddit /worldnews. Working jsfiddle http://jsfiddle.net/KobaKhit/t42zkbnk/ -->
 <script src="/js/redditjs.js"></script>

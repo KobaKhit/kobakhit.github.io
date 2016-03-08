@@ -3,8 +3,8 @@ layout: post
 title: 'Visualizing Indego bike geoson data in Python using Folium'
 author: "<a href = 'https://www.linkedin.com/in/1saha'>Shantanu Saha</a> and <a href = 'http://www.kobakhit.com/about/'>Koba Khitalishvili</a>"
 categories: beginner
-tags: "python geoson indego-bike-share philly"
-ipynb: "/ipynb/Visualizing geoson data in Python using Folium.ipynb"
+tags: "python ipynb geoson indego-bike-share philly"
+ipynb: "/ipynb/2016-3-6-visualizing-indego-bike-geoson-data-in-python-using-folium.ipynb"
 ---
 
 A simple example of visualizing geoson data in python using [Folium](https://folium.readthedocs.org/en/latest/). We obtain Philly Indego bike data from [opendataphilly](https://www.opendataphilly.org/dataset/bike-share-stations) website. We download the data using the website's free public api.

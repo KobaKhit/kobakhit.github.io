@@ -1,0 +1,314 @@
+
+---
+title: "Impact of Weather Events on Population Health and Economy in the US"
+author: "[Koba Khitalishvili](http://www.kobakhit.com/about)"
+date: "May 17, 2015"
+output:
+  html_document:
+    keep_md: TRUE
+---
+
+# Synopsis
+Using the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database I explore which weather events are most harmful to population health and economy in the US. Regarding the population health, the most frequent events are usually the most harmful ones such as tornadoes, floods, thunderstorm winds, hurricanes and lightnings. An exception is the excessive heat event which is the 20th most frequent, but the deadliest with 88 deaths per year on average during the 2000-2011 period. Regarding the economy, the most frequent events are not necessarily the most harmful. The first four most harmful economically events are hydro-meteorological events such as floods, hail, storms, hurricanes. During 2000-2011 damage done to property was 14 times greater than the damage done to crops. Below is a detailed analysis. 
+
+# Data processing
+I start with downloading the data, unzipping it, and reading it in.
+
+```{r download, message=FALSE, cache=TRUE, warning=FALSE}
+if(!file.exists("data.csv")) {
+  
+  if(!file.exists("data.bz2")){
+    #Download
+    url<-"https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
+    download.file(url,"data.bz2",method="curl")
+    }
+  
+  # Unzip
+  zz <- readLines(gzfile("data.bz2"))
+  zz <- iconv(zz, "latin1", "ASCII", sub="")
+  writeLines(zz, "data.csv")
+  rm(zz)
+  }
+
+## Read data in
+data<-read.csv("data.csv", sep=",", quote = "\"", header=TRUE)
+```
+
+The data set has `r nrow(data)` observations and `r ncol(data)` variables (columns). Below are the first six rows of the first 5 columns of the data set I am working with as well as the names of all columns.
+
+```{r summary}
+head(data[,1:5])
+
+names(data)
+```
+
+For my analysis I needed to extract the year information from the `BGN_DATE` column.
+
+```{r years, cache=TRUE}
+# Add a new year column to the dataset
+data<-data.frame(Year=format(as.Date(data$BGN_DATE,format="%m/%d/%Y"),"%Y"),data)
+
+head(data[,1:5])
+```
+
+After looking at the most frequent events I noticed duplicates THUNDERSTORM WIND, THUNDERSTORM WINDS, TSTM WIND, MARINE TSTM WIND. These are obviously the same thing, so I replaced them with TSTM WIND.
+
+```{r, cache=TRUE}
+# Replace duplicate THUDNDERSTORM WIND, etc. with TTSM WIND
+data$EVTYPE = sapply(data$EVTYPE,function(x) gsub("THUNDERSTORM WINDS|MARINE TSTM WIND|THUNDERSTORM WIND","TSTM WIND",x))
+```
+
+The data set has scaling factors for two variables which are needed for analysis. Namely, property damage `PROPDMG` and crop damage `CROPDMG`. They have corresponding scaling columns `PROPDMGEXP` and `CROPDMGEXP`. The scaling columns contain information about how to scale the values in the columns `PROPDMG` and `CROPDMG`. For example, a value in the `PROPDMG` column that has a scaling factor "k" in the `PROPDMGEXP` column should be multiplied by $10^3$. I use the following scheme for the scaling factors. 
+
+```{r scaling factors, eval=TRUE, echo=FALSE}
+df<-data.frame(table(data$PROPDMGEXP), Scale=0)
+for(i in 1:nrow(df)){
+   if(df[i,1] %in% 0:8) {df[i,3]<-paste("10^",as.character(df[i,1]),sep="")}
+   else if(df[i,1] %in% c("b","B")) {df[i,3]<-"10^9"}    # billion
+   else if(df[i,1] %in% c("m","M")) {df[i,3]<-"10^6"}    # million/mega
+   else if(df[i,1] %in% c("k","K")) {df[i,3]<-"10^3"}   # kilo   
+   else if(df[i,1] %in% c("h","H")) {df[i,3]<-"10^2"}   # hundred
+   else{df[i,3]<-"10^0"}
+}
+names(df)<-c("Scaling exponent","Occurences","Scaling factor")
+df
+```
+
+Some values in the `PROPDMG` and `CROPDMG` did not have scaling factors specified or had symbols like `+,-,?`. I decided not to scale the values that had those symbols. The rest is intuitive, namely, "b" and "B" stand for billion and etc. In the code below I create two new columns, `PROPDMGSCALE` and `CROPDMGSCALE`, with property damage and crop damage scaled. 
+
+
+```{r, cache=TRUE}
+scale.func <- function(x) {
+  # Function that replaces a factor with a numeric
+   if(x %in% 0:8) {x<-as.numeric(x)}
+   else if(x %in% c("b","B")) {x<-10^9}    # billion
+   else if(x %in% c("m","M")) {x<-10^6}    # million/mega
+   else if(x %in% c("k","K")) {x<-10^3}   # kilo   
+   else if(x %in% c("h","H")) {x<-10^2}   # hundred
+   else x<-10^0
+   }
+
+# Apply scale.func with sapply
+data$PROPDMGSCALE <- sapply(data$PROPDMGEXP,scale.func) * data$PROPDMG
+data$CROPDMGSCALE <- sapply(data$CROPDMGEXP,scale.func) * data$CROPDMG
+```
+
+I also created a plotting function for horizontal barplots, so I dont have to repeat code:
+
+```{r}
+plot.k<- function(df,title){
+  # A function that plots a barplot with presets. Arguments are a matrix-like dataset and a plot title
+  barplot(main=title,sort(df,decreasing=FALSE),las=1,horiz=TRUE,cex.names=0.75,col=c("lightblue"))
+}
+```
+
+# Results
+
+According to the project instructions, with time the recording of the weather events improved. In the multiline graph I show the number of occurences of 10 most frequent weather events by year during 1950-2011. The number of occurences of the events increased drastically due to improvements in the process of recording those events.
+
+```{r plot of the number of events per year, results = 'hold', eval=FALSE, include=FALSE}
+# Create a counts table by year and event type during 1950-2011
+tab.time <- ts(table(data$Year,data$EVTYPE)[, -1], start=1950, end=2011)
+
+# Multiline Plot
+par(bg='lightgrey')
+plot(tab.time,plot.type="single", col=1:984, xlab = 'Year', ylab = '# of Occurences', main = '# of Event Occurences by Year, 1950-2011')
+grid(NA, 5, lwd = 1,col = 'grey')
+legend('topleft',legend=names(sort(apply(tab.time,2,sum),decreasing=TRUE)[1:10]),col=1:984,cex=0.7,fill=1:984)
+par(bg='white')
+```
+
+```{r, results='asis', comment = NA, message=FALSE}
+# Get table of counts of events by year
+dat = as.data.frame(table(data[,c("Year","EVTYPE")]))
+
+# 10 most frequent events
+a = sort(apply(table(data[,c("Year","EVTYPE")]),2,sum),decreasing=TRUE)[1:10]
+dat = dat[dat$EVTYPE %in% names(a),]
+
+# Modify year column to be in the unambiguos date format %Y-%m-%d
+dat$Year = paste0(dat$Year,"-01-01")
+dat$Year = as.numeric(as.POSIXct(dat$Year))
+
+# Create Rickshaw graph
+# require(devtools)
+# install_github('ramnathv/rCharts')
+require(rCharts)
+
+r2 <- Rickshaw$new()
+r2$layer(
+  Freq ~ Year,
+  data = dat,
+  type = "line",
+  groups = "EVTYPE",
+  height = 340,
+  width = 700
+)
+# turn on built in features
+r2$set(
+  hoverDetail = TRUE,
+  xAxis = TRUE,
+  yAxis = TRUE,
+  shelving = FALSE,
+  legend = TRUE,
+  slider = TRUE,
+  highlight = TRUE
+)
+r2$show('iframesrc', cdn = TRUE)
+```
+
+Below is the list of average occurences per year during 1950-2011 of 20 most frequent events.
+
+```{r plot of avg oocurences per year, fig.height = 5, results = 'hold'}
+# List of average occurences per year
+avg_occ = sort(apply(table(data$Year,data$EVTYPE),2,sum),decreasing=TRUE)[1:20]/61
+data.frame(`Avg Occurences` = avg_occ)
+```
+
+In the table below I show the annual averages of property damage, crop damage, total damage, number of injuries, deaths and occurences during **1950-2011**. I highlight the time period because later in my analysis I focus on the 2000-2011 period. The table is initially sorted by the average number of occurences per year. You may play around with the table.
+
+```{r data table, message=FALSE}
+# http://rstudio.github.io/DT/
+# require(devtools)
+# install_github('ramnathv/htmlwidgets')
+# install_github("rstudio/DT")
+
+require(htmlwidgets)
+require(DT)
+
+# Create data frame for datatable
+datatab <- data.frame(
+  `Property Damage` = tapply(data$PROPDMGSCALE,list(data$EVTYPE),sum)/61,
+  `Crop Damage` = tapply(data$CROPDMGSCALE,list(data$EVTYPE),sum)/61,
+  `Total Damage` = 
+    tapply(data$PROPDMGSCALE,list(data$EVTYPE),sum)/61 + tapply(data$CROPDMGSCALE,list(data$EVTYPE),sum)/61,
+  Deaths = tapply(data$FATALITIES,list(data$EVTYPE),sum)/61,
+  Injuries = tapply(data$INJURIES,list(data$EVTYPE),sum)/61,
+  Occurences = matrix(table(data[,"EVTYPE"])/61)
+  )
+
+# Create datatable initially sorted by avg number of occurences
+datatable(format(datatab,big.mark = ',',scientific = F, digits = 1),
+          colnames = c('Property Damage,$' = 2, 'Crop Damage,$' = 3, 'Total Damage,$' = 4),
+          caption = 'Table: Average annual values, 1950-2011',
+          options = list(order = list(list(6, 'desc'))),
+          extensions = 'Responsive'
+          )
+```
+
+Let's see whether the most frequent events have a significant effect on the health of population and the infrastructure. 
+
+## Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
+
+I summarize the number of total injuries and deaths by the event type over the period 1950 to 2011.
+
+```{r total number,cache=TRUE}
+# Table of total deaths and injuries by event type during 1950-2011
+Tdeaths<-sort(tapply(data$FATALITIES,list(data$EVTYPE),sum),decreasing=TRUE)
+Tinj<-sort(tapply(data$INJURIES,list(data$EVTYPE),sum),decreasing=TRUE)
+
+# Total deaths by event type
+head(Tdeaths)
+
+# Total injuries by event type
+head(Tinj)
+```
+
+Next, I calculate the average number of deaths and injuries for years 2000-2011. I chose the period 2000-2011 because in the earlier years there are generally fewer events recorded due to poor recording process as was stated in the project instructions. Recent years have more accurate records.
+
+```{r average number}
+# Boolean to subset data
+years<-data$Year %in% 2000:2010
+
+# Average deaths and injuries per year
+TdeathsAve<-sort(tapply(data[years,]$FATALITIES,list(data[years,]$EVTYPE),sum),decreasing=TRUE)/11
+TinjAve<-sort(tapply(data[years,]$INJURIES,list(data[years,]$EVTYPE),sum),decreasing=TRUE)/11
+
+# Average deaths per year by event type
+head(TdeathsAve)
+
+# Average injuries per year by event type
+head(TinjAve)
+```
+
+Let's plot the averages.
+
+```{r, fig.height = 3}
+par(mfcol=c(1,2))
+par(mar=c(3,7,2,3))
+
+rowChart = plot.k(TdeathsAve[1:10],'Avg # of deaths per year')
+text(x= sort(TdeathsAve[1:10])+20, y= rowChart, labels=as.character(round(sort(TdeathsAve[1:10]),2)),xpd=TRUE)
+
+rowChart = plot.k(TinjAve[1:10],'Avg # of injuries per year')
+text(x= sort(TinjAve[1:10])+200, y= rowChart, labels=as.character(round(sort(TinjAve[1:10]),2)),xpd=TRUE)
+
+par(mfcol=c(1,1))
+par(mar=c(5.1,4.1,4.1,2.1))
+
+```
+
+On average tornados and excessive heat cause the most number of deaths and injuries per year for the period 2000-2011. The most frequent events, tornado, flash flood and thundestorm winds have a significant effect on the population health. However, hail, the second most frequent event, has an insignificant effect on population health. Excessive heat which is 20th most frequent event with $27.06452$ occurences per year is the most deadly. Thus, in general, the events that are most frequent are significantly harmful to the population health. Therefore, countermeasures should be provided on a constant basis. This means that the amortisation and review of the countermeasure infrastructure needs to be frequent as well.
+
+## Across the United States, which types of events have the greatest economic consequences?
+
+I calculate the total damage over the period 1950-2011 and average damage for years 2000 to 2011. The total damage is the sum of property damage and the crop damage.
+
+```{r}
+# Total damage table by event type
+TtotalDmg<-sort(tapply(data$PROPDMGSCALE,list(data$EVTYPE),sum)
+                + tapply(data$CROPDMGSCALE,list(data$EVTYPE),sum)
+                ,decreasing=TRUE)
+
+totalDmg = data.frame(row.names = 1:length(TtotalDmg), event = rownames(TtotalDmg),cost = TtotalDmg,`pretty_cost` = format(TtotalDmg,big.mark = ',',scientific = F,digits = 4))
+
+# Show events whose total damage is more than 1bil$ during 1950-2011
+totalDmg[totalDmg$cost > 1000000000,c(1,3)]
+```
+
+Let's look at the average total economic damage per year during 2000-2011.
+
+```{r}
+# Average damage per year table for the period 2000-2011 by event type
+TtotalDmgAve<-sort(tapply(data[years,]$PROPDMGSCALE,list(data[years,]$EVTYPE),sum)
+                + tapply(data[years,]$CROPDMGSCALE,list(data[years,]$EVTYPE),sum),
+                decreasing=TRUE)/11
+
+# Turn into a dataframe with pretty cost column
+totalDmgAve = data.frame(row.names = 1:length(TtotalDmgAve), event = rownames(TtotalDmgAve),cost = TtotalDmgAve,`pretty_cost` = format(TtotalDmgAve,big.mark = ',',scientific = F,digits = 4))
+
+# Show events whose average total damage is more than 1mil$ per year during 2000-2011
+totalDmgAve[totalDmgAve$cost > 1000000,c(1,3)]
+```
+
+Below I plot the average total economic damage per year during 2000-2011 of events whose average economic damage is greater than 1 million.
+
+```{r, fig.height=7}
+par(mar=c(2,8,2,6.4))
+# Plot average economic damage > than 1mil$ per year during 2000-2011
+rowChart = plot.k(totalDmgAve[totalDmgAve$cost > 1000000,]$cost,'Avg Damage per Year in $, 2000-2011')
+text(x = sort(totalDmgAve[totalDmgAve$cost > 1000000,2])+1780000000, 
+     y = rowChart, 
+     labels= format(sort(totalDmgAve[totalDmgAve$cost > 1000000,2]),big.mark = ',',scientific = F,digits = 4),
+     xpd=TRUE)
+```
+
+Lastly, let's look at the average economic damage per year by damage type during 2000-2011. The average annual damage done to property by weather events is 14 times greater than the average annual damage done to crops.
+
+```{r}
+# Average damage per year during 2000-2011 by damage type
+format(data.frame(
+  prop_dmg=sum(data[years,]$PROPDMGSCALE/11),
+  crop_dmg=sum(data[years,]$CROPDMGSCALE/11),
+  row.names = '$ annualy'),
+big.mark = ',',digits = 4, scientific = F)
+```
+
+The fact that floods have had the biggest damage in economic terms makes sense. It is a devastating force of nature. Water can crush, water can flow. In the 2000s a bunch of storms and hurricanes took place in the US whose appearences are correlated the floods. However, hurricanes, storms, droughts are not even in the top 16 most frequent events. They are just most devastating to the infrastracture and crops. During 2000-2011 the damage done to property was 14 times greater than the damage done to crops. Therefore, the countermeasures need to focus on ensuring the security of the property.
+
+
+
+
+
+
+

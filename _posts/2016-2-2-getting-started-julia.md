@@ -3,8 +3,8 @@ layout: post
 title: 'Getting started with Julia programming language'
 author: "<a href = 'http://www.kobakhit.com/about/'>Koba Khitalishvili</a>"
 categories: beginner
-tags: "julia gadfly collatz"
-ipynb: "/ipynb/getting-started-julia.ipynb"
+tags: "julia ipynb gadfly collatz"
+ipynb: "/ipynb/2016-2-2-getting-started-julia.ipynb"
 ---
 
 ## Table of contents

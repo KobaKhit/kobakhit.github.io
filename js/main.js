@@ -14,15 +14,17 @@ $(function(){
 		}
 	}).wrap('<td class="code"></td>');
 
+	// white background for output code chunks
+	$("code.language-").parents(".highlighttable").addClass("outtable").removeClass("highlighttable")
 
 	// Materialize
 	$('.button-collapse').sideNav(); // sidenav
-	$('.slider').slider({full_width: false, height: 250}); // pic slider
-	$('.slider').slider('pause');
-	$(".dropdown-button").dropdown(); // dropdown button in navbar
 	$('.collapsible').collapsible({
       accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
     });
+	$('.slider').slider({full_width: false, height: 250}); // pic slider
+	$('.slider').slider('pause');
+	$(".dropdown-button").dropdown(); // dropdown button in navbar
     $('ul.tabs').tabs(); // posts view
 
     // posts view on main page
@@ -46,10 +48,6 @@ $(function(){
 	  $("#single-list").css("display","none");
 	  $("#collapsible-list").css("display","none");
 	});
-
-
-	// white background for output code chunks
-	$("code.language-").parents(".highlighttable").addClass("outtable").removeClass("highlighttable")
 
 	// particlejs config
     /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */

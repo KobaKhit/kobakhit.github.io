@@ -7,7 +7,7 @@ title: "To do's"
   - [ ] Create posts page
   - [ ] Add code chunks in which output is without overflow
   - [ ] Add pagination
-  - [ ] Add card view on the index page
+  - [x] Add card view on the index page
   - [ ] Figure out better layouts structure
   - [x] Add dropdown to sidenav
   - [x] Finish data visuals

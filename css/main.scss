@@ -100,7 +100,12 @@ hr {
 
 pre,code {
 	font-size: $base-code-size;
-    background-color: #eef;
+  background-color: #eef;
+}
+
+p code, p pre {
+  padding: 0 6px;
+  border-radius: 4px;
 }
 
 .muted {
@@ -193,7 +198,7 @@ table.outtable td.code pre  {
     border:none;
 }
 .outtable pre,
-.outtable code {
+.outtable code, .language-  {
     background: white;
 }
 
@@ -256,6 +261,16 @@ ul.collapsible li, .post-meta{
   padding: 0px 12px;
   border-radius: 16px;
   background-color: #e4e4e4; }
+.chip-cat {
+  display: inline-block;
+  height: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: white;
+  line-height: 20px;
+  padding: 0px 12px;
+  border-radius: 16px;
+  background-color: #66a3ff; }
   .chip img {
     float: left;
     margin: 0px 8px 0 -12px;

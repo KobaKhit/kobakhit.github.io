@@ -7,11 +7,11 @@
             <i class="fa fa-calendar"></i> {{post.date|date:"%b %d, %Y"}} |
             <!-- category -->
             <i class="fa fa-tag"></i>
-            {% for tag in post.categories %}
-               <a href="{{baseurl}}/tags/{{ tag | urlize }}/"><span class = "chip">{{ tag }}</span></a>
+            {% for cat in post.categories %}
+               <a href="{{baseurl}}/categories/{{ cat | urlize }}/"><span class = "chip-cat">{{ cat }}</span></a>
             {% endfor %}
 
-            <p>{{post.excerpt}}<a href = "{{post.url}}">...Read more</a></p>
+            <p>{{post.excerpt}}<br><a href = "{{post.url}}">...Read more</a></p>
 
             <!-- tags -->
             <div class = "tags">
