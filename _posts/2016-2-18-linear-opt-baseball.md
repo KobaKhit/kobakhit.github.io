@@ -315,7 +315,9 @@ For comparison mean normalized offensive and defensive ratings for all players a
 
 While this is a straightforward way to model the selection of the players there are several
 nuances we need to address. One of them is that the standardized game statistics are not
-additively independent. As a result, the our utility index poorly measures the player's value and is biased. It is possible to construct an unbiased utility index which has been done a lot in baseball (look up sabermetrics). `Off` and `Def`and a lot of other statistics are examples of utility indices.
+additively independent. As a result, our utility index poorly measures the player's value and is biased. It is possible to construct an unbiased utility index which has been done a lot in baseball (look up sabermetrics). `Off` and `Def`and a lot of other statistics are examples of utility indices. A reddit user suggested a solid way to construct the utility index.
+
+<div class="reddit-embed" data-embed-media="www.redditmedia.com" data-embed-parent="false" data-embed-live="true" data-embed-created="2016-03-09T15:10:49.095Z"><a href="https://www.reddit.com/r/baseball/comments/49mfxu/analysis_help_evaluate_a_team_produced_by_an/d0tcx4u">Comment</a> from discussion <a href="https://www.reddit.com/r/baseball/comments/49mfxu/analysis_help_evaluate_a_team_produced_by_an/">[Analysis] Help evaluate a team produced by an algorithm</a>.</div><script async src="https://www.redditstatic.com/comment-embed.js"></script>
 
 Another issue we need to addrees is when we substituted the missing values with zero. Players with
 missing game statistics values have their utility index diminished because one of the stats used to calculate it is zero. However, imputing with zero is better than imputing with the mean in our case.
