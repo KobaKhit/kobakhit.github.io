@@ -13,7 +13,7 @@ We try to use Integer Linear Programming to build a perfect 25 men roster baseba
 
 
 <p class = "muted">
-Edit: The choice of statistics for our utility index is almost random. The main goal was to model the the general constraints and objective function. This code allows to easily add desired statistics and extend the general case to include more sophisticated preferences, for example using the weight vector.
+Edit: The choice of statistics for our utility index is almost random. The main goal was to model the  general constraints and objective function. This code allows to easily add desired statistics and extend the general case to include more sophisticated preferences, for example using the weight vector.
 </p>
 
 <style>
