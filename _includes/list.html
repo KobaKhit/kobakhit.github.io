@@ -14,6 +14,9 @@
         {% for tag in post.tags %}
           <a href="{{$baseurl}}/tags/{{ $tag | urlize }}/"><span class = "chip">{{ $tag }}</span></a>
         {% endfor %}
+        {% if post.reddit %}
+       <a href="{{ post.reddit }}"><i class="fa fa-reddit-alien fa-lg"></i></a>
+      {% endif %}
       </div>
     </li>
   {% endfor %}
