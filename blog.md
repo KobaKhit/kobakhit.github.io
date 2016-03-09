@@ -11,9 +11,40 @@ title: Blog
 			<p class = "flow-text">
 			Some posts have links to <code>.ipynb</code>, <code>.Rmd</code> files. I am a huge proponent of reproducible research and provide code where applicable. Every post can be saved as a <code>.pdf</code>. If you have questions/comments/suggestions feel free to contact me.
 			</p>
+
+			<hr>
+
+			<!-- Category list -->
+			<ul class="unstyled list-inline">
+			{% for tag in site.categories %}
+			  {% assign t = tag | first %}
+			  {% assign posts = tag | last %}
+			  <li>
+			  	<a href="/tags#{{t}}">
+			  		<span class = "chip-cat">{{t | downcase | replace:" ","-" }}</span>
+			  	</a>
+			  </li>
+			{% endfor %}
+
+			<!-- Sorted tags list -->
+			{% capture tags %}
+				{% for tag in site.tags %}
+					{{ tag[0] }}
+			 	{% endfor %}
+			{% endcapture %}
+
+			{% assign sortedtags = tags | split:' ' | sort %}
+
+			{% for tag in sortedtags %}
+			  <li><a href="/tags#{{tag}}"><span class = "chip">#{{tag | downcase | replace:" ","-" }}</span></a></li>
+			{% endfor %}
+			</ul>
+
 		</div>
-		<hr>
+	</div>
 </div>
+
+
 
 <div class = "row">
 	<div class = "col s12 m4 l2" style = "padding:0px;">

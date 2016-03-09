@@ -8,12 +8,7 @@
       <span class = "post-meta">by {{ post.author }}</span> 
 
       <div>
-        {% for cat in post.categories %}
-        <a href="{{$baseurl}}/categories/{{ cat | urlize }}/"><span class = "chip-cat">{{ cat }}</span></a>
-        {% endfor %}
-        {% for tag in post.tags %}
-          <a href="{{$baseurl}}/tags/{{ $tag | urlize }}/"><span class = "chip">{{ $tag }}</span></a>
-        {% endfor %}
+        {% include tag-list.html %}
         {% if post.reddit %}
        <a href="{{ post.reddit }}" target="_blank"><i class="fa fa-reddit-alien fa-lg"></i></a>
       {% endif %}

@@ -9,10 +9,10 @@ layout: default
     	<time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time>
     	{% if page.author %} • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ page.author }}</span></span>{% endif %} •
       {% for cat in page.categories %}
-        <a href="{{$baseurl}}/categories/{{ cat | urlize }}/"><span class = "chip-cat">{{ cat }}</span></a>
+        <a href="/tags/#{{ cat }}"><span class = "chip-cat">{{ cat }}</span></a>
       {% endfor %}
     	{% for tag in page.tags %}
-    		<a href="{{$baseurl}}/tags/{{ tag | urlize }}/"><span class = "chip">#{{ tag }}</span></a>
+    		<a href="/tags/#{{ tag }}"><span class = "chip">#{{ tag }}</span></a>
     	{% endfor %}
       {% if page.reddit %}
        <a href="{{ page.reddit }}" target="_blank"><i class="fa fa-reddit-alien fa-2x"></i></a>

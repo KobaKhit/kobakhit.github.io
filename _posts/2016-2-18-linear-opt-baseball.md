@@ -37,7 +37,7 @@ padding:2px 8px !important;
 
 <br>
 
-**Prerequisites**
+# Prerequisites
 
 To follow the process of us setting up the ILP model you should have familitarity with
   
@@ -145,7 +145,7 @@ Now that we have scaled player stats we will weigh them and add them up to obtai
 
 $U\_i(x) = w\_{1}\text{PA}\_i+w\_{2}\text{HR}\_i+w\_{3}\text{R}\_i+w\_{4}\text{RBI}\_i+w\_{5}\text{SB}\_i+w\_{6}\text{ISO}\_i+w\_{7}\text{BABIP}\_i+w\_{8}\text{AVG}\_i+w\_{9}\text{OBP}\_i+w\_{10}\text{SLG}\_i+w\_{11}\text{wOBA}\_i+w\_{12}\text{wRC.}\_i+w\_{13}\text{BsR}\_i+w\_{14}\text{Off}\_i+w\_{15}\text{Def}\_i+w\_{16}\text{WAR}\_i$
 
-$\text{ for player } i \text{ where } i \in \{1,199\}$
+$\text{ for player } i \text{ where } i \in \\{1,199\\}$
 
 By introducing weights we can construct the weight vector which best suits our preferences.
 For example, if we wanted the player utility index to value the offensive statistics like 

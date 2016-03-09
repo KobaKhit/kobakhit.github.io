@@ -49,6 +49,7 @@ nav {
     display: inline-block;
     font-size: $navbar-brand-font-size;
     padding: 0;
+    min-width:745px;
     // white-space: nowrap;
 
     &.center {
@@ -57,6 +58,7 @@ nav {
     }
 
     @media #{$medium-and-down} {
+      min-width:0px;
       left: 50%;
       transform: translateX(-50%);
 
