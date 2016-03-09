@@ -3,15 +3,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta property="og:url" content="http://www.kobakhit.com" />
-  <meta property="og:image" content="http://www.kobakhit.com/img/net.jpeg" />
-  <meta property="og:title" content="Koba's website" />
-  <meta property="og:description" content="A blog about data science, stats, and math." />
-
-
   <title>{% if page.title %}{{ page.title | escape }}{% else %}{{ site.title | escape }}{% endif %}</title>
   <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
 
+  <meta property="og:image" content="{% if page.img %}{{ page.img | prepend: site.url }}{% else %}http://www.kobakhit.com/img/net.jpeg{% endif %}" />
+  <meta property="og:url" content="{% if page.url %}{{ page.url }}{% else %}{{ site.url }}{% endif %}" />
+ 
   <link rel="stylesheet" href="{{ "/css/materialize.css" | prepend: site.baseurl }}">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="{{ "/css/reddit-widget.css" | prepend: site.baseurl }}">
