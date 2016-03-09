@@ -178,7 +178,7 @@ $$
 & \sum x_{\text{LeftHandPitchers}} \ge 2 \\
 & \sum x_{\text{LeftHandBatters}} \ge 2 \\
 & \frac{1}{25} \sum Stat_{ij}x_{i} \ge mean(Stat_{j}) \text{ for } j = 1,2,...,16 \\
-& \sum^{199}_{i=1}salary_i*x_i \le 191.22
+& \sum^{199}_{i=1}salary_i*x_i \le 178
 \end{align}
 $$
 where 

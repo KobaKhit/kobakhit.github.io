@@ -6,9 +6,15 @@ categories: intermediate
 tags: "r opr linear-optimization integer datatable  rmarkdown"
 rmd: "/ipynb/2016-2-18-linear-opt-baseball.zip"
 rpubs: "http://rpubs.com/Koba/linear-opt-baseball"
+reddit: "https://redd.it/49mfxu"
 ---
 
 We try to use Integer Linear Programming to build a perfect 25 men roster baseball team. We present our best team below which is the solution of the ILP model we built using the 2015 MLB season player data. If you understand baseball please evaluate our resulting baseball team and drop a comment, so that we know whether ILP can be used to get a decent baseball team. After the table I describe how we arrived at our solution.
+
+
+<p class = "muted">
+Edit: The choice of statistics for our utility index is almost random. The main goal was to model the the general constraints and objective function. This code allows to easily add desired statistics and extend the general case to include more sophisticated preferences, for example using the weight vector.
+</p>
 
 <style>
 .dataTable {
@@ -191,7 +197,7 @@ $$
 & \sum x\_{\text{LeftHandPitchers}} \ge 2 \\\\
 & \sum x\_{\text{LeftHandBatters}} \ge 2 \\\\
 & \frac{1}{25} \sum Stat\_{ij}x\_{i} \ge mean(Stat\_{j}) \text{ for } j = 1,2,...,16 \\\\
-& \sum^{199}\_{i=1}salary\_i\*x\_i \le 191.22
+& \sum^{199}\_{i=1}salary\_i\*x\_i \le 178
 \end{align}
 $$
 
