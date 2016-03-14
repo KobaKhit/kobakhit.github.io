@@ -2,7 +2,9 @@
 layout: page
 title: "To do's"
 ---
-	
+  
+
+	- [ ] Add as a resource http://sebastianraschka.com/faq/index.html
   - [x] Create tags and categories pages
   - [x] Create posts page
   - [ ] Add code chunks in which output is without overflow
