@@ -1,0 +1,65 @@
+- title: Effect of minimum wage increase on food industry in PA
+  cat: repres
+  description: "The purpose of this research paper was to either confirm or reject the hypothesis that the increase in minumum wage affected employment in the food industry in PA. I used OLS regression and the R framework. The data was obtained from the US Burea of Labor statistics. Increase in the minimum wage did decrease employment by 1.33% which was equivalent to six thousand people. The result was statistically reasonable."
+  date: "June 2014"
+  img: /img/portfolio/above-minwage.png
+  pdf: https://github.com/KobaKhit/ECON322/raw/master/Paper/Paper.pdf
+  github: https://github.com/KobaKhit/ECON322/tree/master/R
+
+- title: Digit Recognizer using Neural Networks and Python
+  cat: repres
+  description: "The problem is to classify images of handwritten digits. Neural networks are great for image classification. I set up a convolutional neural network in python that achieved 98.6% accuracy on the test data."
+  date: "November 2015"
+  img: /img/portfolio/digit-recognizer-python.png
+  ipynb: "/ipynb/portfolio/Digit recognizer in python.ipynb"
+  pdf: 
+  kaggle: https://www.kaggle.com/kobakhit/digit-recognizer/digit-recognizer-in-python-using-cnn
+
+- title: Digit Recognizer using Neural Networks and R
+  cat: repres
+  description: "Same digit recognizer problem approached from within the R framework. I set up a neural network in R that achieved ~97.8% accuracy on the test data. This write up was <a href = 'https://twitter.com/kaggle/status/668177223443226624/photo/1?ref_src=twsrc%5Etfw' target = '_blank'>tweeted</a> by Kaggle as a tutorial about neural networks and R."
+  date: "November 2015"
+  img: /img/portfolio/digit-recognizer.png
+  ipynb: "/ipynb/portfolio/Digit recognizer in python.ipynb"
+  kaggle: https://www.kaggle.com/kobakhit/digit-recognizer/digital-recognizer-in-r
+
+- title: Macroeconomic History of Mexico
+  cat: repres
+  description: "Macroeconomic history of Mexico between 1950 and 2010. In this paper I follow the economy of Mexico and its up and downs. I used Excel and data obtained from the <a href = 'http://data.worldbank.org/data-catalog/world-development-indicators' target = '_blank'>world development indicators</a> as well as other sources."
+  date: "December 2013"
+  img: /img/portfolio/mexico.png
+  pdf: /ipynb/portfolio/Macroeconomic history of Mexico.pdf
+
+- title: enkrypt-page
+  cat: webdev
+  description: "eикrуpт, inspired by cryptii, is a web page where you can encrypt/decrypt messages using algorythms such as AES, DES, etc. Everything is done in your browser using javascript, cryptojs, tea.js and steganographyjs. Nothing is send to the server (there is no back-end). This tool got <a href = 'https://www.reddit.com/r/InternetIsBeautiful/comments/3glej1/enkryptpage_encryptdecrypt_any_message_in/' target = '_blank'>viral on reddit.</a>"
+  date: "June 2014"
+  img: /img/portfolio/enkrypt-logo.png
+  link: http://www.kobakhit.com/enkrypt-page/
+  github: https://github.com/KobaKhit/enkrypt-page
+
+- title: owk.co
+  cat: webdev
+  description: "A website I made for a clothing business I happen to be involved with. It is noteworthy that ot cost zero dollars to set up an online store and a website. Thanks to <a href = 'https://pages.github.com/'  target = '_blank'>github pages</a> and <a href = 'https://tictail.com/' target = '_blank'>tictail</a>."
+  date: "January 2015"
+  img: /img/portfolio/owk.png
+  link: http://owk.co/
+  github: https://github.com/KobaKhit/owk.com
+
+- title: ambako.co
+  cat: webdev
+  description: "A personal website I made for a professional greko-roman wrestler who was world champion in 2010."
+  date: "October 2014"
+  img: /img/portfolio/ambako.png
+  link: http://ambako.co/
+  github: https://github.com/KobaKhit/ambako.co
+
+- title: Cumlaude Inc.
+  cat: webdev
+  description: "A website I made for a small fashion business. It does not operate anymore and this is just the template."
+  date: "July 2014"
+  img: /img/portfolio/cumlaude.png
+  link: http://cumluadeinc.com/
+  github: https://github.com/KobaKhit/cumlaude
+
+

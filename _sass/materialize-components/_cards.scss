@@ -19,7 +19,7 @@
 
 
   .card-title {
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 300;
     &.activator {
       cursor: pointer;
@@ -35,7 +35,7 @@
       overflow: hidden;
     }
     .card-content {
-      max-height: 40%;
+      // max-height: 40%;
       overflow: hidden;
     }
     .card-action {
@@ -96,7 +96,7 @@
       color: inherit;
     }
     .card-title {
-      line-height: 48px;
+      line-height: 5px;
     }
   }
 

@@ -41,11 +41,10 @@ permalink: /about/
 
 	<div class="col s12 m8 l8">
 		<div class = "card-panel">
-			<!-- <h2>About Modern Business</h2> -->
-	        <p>Currently, I am a graduate student in business analytics.</p>
-	        <p>I graduated magna cum laude from Drexel with a bachelors in economics. During my undergraduate studies I concentrated in mathematics.</p>
-	        <p>Economterics, mathematical economics, macroeconomics and in particular labor economics were my main interests. In terms of mathematics, optimization theory, differential equations and mathematical reasoning excited me the most.</p>
-	        <p>After learning programming on the side, working at two technology firms,  and getting on the big data bandwagon I decided to focus on analytics as my academic and professional careers.</p>
+	        <p>Currently, I am a graduate student in business analytics with a concentration in statistics.</p>
+	        <p>I graduated magna cum laude from Drexel with a bachelors in economics. As an undergrad I concentrated in mathematics.</p>
+	        <p>Main focus of my undergraduate studies was labor macroeconomics. To conduct analysis I mainly used the econometric techniques and R. I developed a solid mathematical background by studying optimization theory, mathematical economics and other advanced topics. Towards the end of my undergraduate experience I focused on computer science, analytics and statistics.  </p>
+	        <p>After learning programming, working at two technology firms, and developing passion for data science I decided to focus on analytics as my academic and professional careers.</p>
 	    </div>
 	</div>
 </div>
@@ -54,6 +53,82 @@ permalink: /about/
 
 </div>
 </div comment = "container end. After this full width page">
+
+<div class = "row">
+	<h1 id = "projects" class = "center">Projects</h1>
+	<h2 class = "center">Reproducible Research</h2>
+	<div>
+		<ul class = "list-inline unstyled" style =" display:table; margin:0 auto;">
+			{% for p in site.data.portfolio %}
+			{% if p.cat == "repres" %}
+			<li style = "margin-right:30px">
+				<div class="card small" style = "max-width:300px; display:inline-block">
+				    <div class="card-image waves-effect waves-block waves-light">
+				      <img class="activator" src="{{ p.img }}">
+				    </div>
+				    <div class="card-content">
+				      <span class="card-title activator grey-text text-darken-4">{{ p.title }}<i class="material-icons right">more_vert</i></span>
+				      <br>
+				      <br>
+				      <p class = "card-title">
+				      	{% if p.link %}<a href="{{ p.link }}" target = "_blank">Link</a>{% endif %}
+				      	{% if p.ipynb %}<a href="{{ p.ipynb }}" target = "_blank">Ipynb</a>{% endif %}
+				      	{% if p.pdf %}<a href="{{ p.pdf }}" target = "_blank">Paper</a>{% endif %}
+				      	{% if p.github %}<a href="{{ p.github}}" target = "_blank">Code</a>{% endif %}
+				      	{% if p.kaggle %}<a href="{{ p.kaggle}}" target = "_blank">Kaggle</a>{% endif %}
+				      </p>
+				    </div>
+				    <div class="card-reveal">
+				      <span class="card-title grey-text text-darken-4">Description<i class="material-icons right">close</i></span>
+				      <p>{{ p.description }}</p>
+				    </div>
+				</div>
+			</li>
+			{% endif %}
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+
+<br>
+
+<div class = "row">
+	<h2 class = "center">Webdev</h2>
+	<div>
+		<ul class = "list-inline unstyled" style =" display:table; margin:0 auto;">
+			{% for p in site.data.portfolio %}
+			{% if p.cat == "webdev" %}
+			<li style = "margin-right:30px">
+				<div class="card small" style = "max-width:300px; display:inline-block">
+				    <div class="card-image waves-effect waves-block waves-light">
+				      <img class="activator" src="{{ p.img }}">
+				    </div>
+				    <div class="card-content">
+				      <span class="card-title activator grey-text text-darken-4">{{ p.title }}<i class="material-icons right">more_vert</i></span>
+				      <br>
+				      <br>
+				      <p class = "card-title">
+				      	{% if p.link %}<a href="{{ p.link }}" target = "_blank">Link</a>{% endif %}
+				      	{% if p.ipynb %}<a href="{{ p.ipynb }}" target = "_blank">Ipynb</a>{% endif %}
+				      	{% if p.pdf %}<a href="{{ p.pdf }}" target = "_blank">Paper</a>{% endif %}
+				      	{% if p.github %}<a href="{{ p.github}}" target = "_blank">Code</a>{% endif %}
+				      	{% if p.kaggle %}<a href="{{ p.kaggle}}" target = "_blank">Kaggle</a>{% endif %}
+				      </p>
+				    </div>
+				    <div class="card-reveal">
+				      <span class="card-title grey-text text-darken-4">Description<i class="material-icons right">close</i></span>
+				      <p>{{ p.description }}</p>
+				    </div>
+				</div>
+			</li>
+
+			{% endif %}
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+
+<hr> 
 
 <h1 class = "center">Instagram</h1>
 
