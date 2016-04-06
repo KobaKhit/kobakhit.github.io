@@ -73,6 +73,7 @@ permalink: /about/
 				      <p class = "card-title">
 				      	{% if p.link %}<a href="{{ p.link }}" target = "_blank">Link</a>{% endif %}
 				      	{% if p.ipynb %}<a href="{{ p.ipynb }}" target = "_blank">Ipynb</a>{% endif %}
+				      	{% if p.rmd %}<a href="{{ p.rmd }}" target = "_blank">Rmd</a>{% endif %}
 				      	{% if p.pdf %}<a href="{{ p.pdf }}" target = "_blank">Paper</a>{% endif %}
 				      	{% if p.github %}<a href="{{ p.github}}" target = "_blank">Code</a>{% endif %}
 				      	{% if p.kaggle %}<a href="{{ p.kaggle}}" target = "_blank">Kaggle</a>{% endif %}
@@ -110,6 +111,7 @@ permalink: /about/
 				      <p class = "card-title">
 				      	{% if p.link %}<a href="{{ p.link }}" target = "_blank">Link</a>{% endif %}
 				      	{% if p.ipynb %}<a href="{{ p.ipynb }}" target = "_blank">Ipynb</a>{% endif %}
+				      	{% if p.rmd %}<a href="{{ p.rmd }}" target = "_blank">Rmd</a>{% endif %}
 				      	{% if p.pdf %}<a href="{{ p.pdf }}" target = "_blank">Paper</a>{% endif %}
 				      	{% if p.github %}<a href="{{ p.github}}" target = "_blank">Code</a>{% endif %}
 				      	{% if p.kaggle %}<a href="{{ p.kaggle}}" target = "_blank">Kaggle</a>{% endif %}

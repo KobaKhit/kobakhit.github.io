@@ -20,7 +20,7 @@
   description: "Same digit recognizer problem approached from within the R framework. I set up a neural network in R that achieved ~97.8% accuracy on the test data. This write up was <a href = 'https://twitter.com/kaggle/status/668177223443226624/photo/1?ref_src=twsrc%5Etfw' target = '_blank'>tweeted</a> by Kaggle as a tutorial about neural networks and R."
   date: "November 2015"
   img: /img/portfolio/digit-recognizer.png
-  ipynb: "/ipynb/portfolio/Digit recognizer in python.ipynb"
+  rmd: "/ipynb/portfolio/digit-recognizer-r.Rmd"
   kaggle: https://www.kaggle.com/kobakhit/digit-recognizer/digital-recognizer-in-r
 
 - title: Macroeconomic History of Mexico
