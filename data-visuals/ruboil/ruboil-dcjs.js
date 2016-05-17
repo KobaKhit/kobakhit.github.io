@@ -453,6 +453,7 @@ $.when(
 
             // Update the line chart
             linechart_rate
+             .dimension(dateDim)
              .group(avgRateCadByDayGroup)
              .title(function (d) {
                     var value = d.value.avg ? d.value.avg : d.value;
@@ -464,7 +465,7 @@ $.when(
              .yAxisLabel("CAD per $")
 
             linechart_rate2
-             .group(avgRateCadByDayGroup, 'CAD per $')
+             .group(avgRateCadByWeekGroup, 'CAD per $')
              .title(function (d) {
                     var value = d.value.avg ? d.value.avg : d.value;
                     if (isNaN(value)) {
