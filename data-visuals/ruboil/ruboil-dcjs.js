@@ -131,6 +131,10 @@ $.when(
   var ndx = crossfilter(dat); 
   var all = ndx.groupAll();
 
+  // vars 
+  var startDate = new Date(2013, 1, 1)
+  var endDate = new Date().setDate(new Date().getDate())
+
   // Dimensions
   var dateDim = ndx.dimension(function(d) {return d['date']})
   var weekDim = ndx.dimension(function(d) {return d['week']})
@@ -144,22 +148,29 @@ $.when(
   var avgWTIByWeekGroup = weekDim.group().reduce(reduceAddAvg('wti_price'),reduceRemoveAvg('wti_price'),reduceInitAvg);
   var avgWTIByDayGroup = dateDim.group().reduce(reduceAddAvg('wti_price'),reduceRemoveAvg('wti_price'),reduceInitAvg);
   var avgBrentByDayGroup = dateDim.group().reduce(reduceAddAvg('brent_price'),reduceRemoveAvg('brent_price'),reduceInitAvg);
+  var avgBrentByWeekGroup = weekDim.group().reduce(reduceAddAvg('brent_price'),reduceRemoveAvg('brent_price'),reduceInitAvg); 
 
   // Charts
   composite_oil = dc.compositeChart('#Composite_chart_oil')
   barchart_oil = dc.barChart('#Bar_chart_oil')  
   linechart_rate = dc.lineChart('#Line_chart_rate')
   barchart_rate = dc.barChart('#Bar_chart_rate')
+  composite = dc.compositeChart('#Composite')
+  barchart_com = dc.barChart('#Bar_chart_com')
+  linechart_rate2 = dc.lineChart(composite)
+  linechart_brent = dc.lineChart(composite)
+  linechart_wti = dc.lineChart(composite)
   table = dc.dataTable("#data-table")
 
   composite_oil
     .width(990)
     .height(200)
     // .margins({top: 30, right: 50, bottom: 25, left: 40})
-    .x(d3.time.scale().domain([new Date(2012, 11, 1), new Date().setDate(new Date().getDate()+30)]))
+    .x(d3.time.scale().domain([startDate, endDate]))
     .round(d3.time.month.round)
     .xUnits(d3.time.months)
     .yAxisLabel("Price per barrel, $")
+    .elasticY(true)
     .legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
     .renderHorizontalGridLines(true)
     .rangeChart(barchart_oil)
@@ -170,49 +181,49 @@ $.when(
             }
             return dateFormat(d.key) + '\n' + numberFormat(value) + '$';
         })
+    .dimension(dateDim)
     .compose([
         dc.lineChart(composite_oil)
-            .dimension(dateDim)
-            .colors('#FF9933')
+            .colors('#000000')
             .group(avgWTIByDayGroup, "WTI Oil Price")
             .valueAccessor(function (d) {
             return d.value.avg;
         })
             /*.dashStyle([2,2])*/,
         dc.lineChart(composite_oil)
-            .dimension(dateDim)
-            .colors('#0099FF')
+            .colors('#808080')
             .group(avgBrentByDayGroup, "Brent Oil Price")
             .valueAccessor(function (d) {
             return d.value.avg;
         })
             // .dashStyle([5,5])
         ])
-    .brushOn(false)
-    .render();
+    .brushOn(false);
 
     barchart_oil
     .width(990)
     .height(40)
     .margins({top: 0, right: 50, bottom: 20, left: 40})
-    .dimension(monthDim)
+    .colors('#808080')
+    .dimension(dateDim)
     .group(avgWTIByWeekGroup)
     .valueAccessor(function (d) {
             return d.value.avg;
         })
     .centerBar(true)
     .gap(1)
-    .x(d3.time.scale().domain([new Date(2012, 11, 1), new Date().setDate(new Date().getDate()+30)]))
+    .x(d3.time.scale().domain([startDate, endDate]))
     .round(d3.time.week.round)
     .alwaysUseRounding(true)
     .xUnits(d3.time.weeks)
 
   linechart_rate
     .width(990).height(200)
+    .colors('#619542')
     // .margins({top: 30, right: 50, bottom: 25, left: 40})
     .renderArea(true)
     .mouseZoomable(false)
-    .dimension(monthDim)
+    .dimension(dateDim)
     .transitionDuration(1000)
     .group(avgRateRubByDayGroup)
     .yAxisLabel("RUB per $")
@@ -220,7 +231,7 @@ $.when(
     .valueAccessor(function (d) {
             return d.value.avg;
         })
-    .x(d3.time.scale().domain([new Date(2012, 11, 1), new Date().setDate(new Date().getDate()+30)]))
+    .x(d3.time.scale().domain([startDate, endDate]))
     .round(d3.time.month.round)
     .xUnits(d3.time.months)
     .elasticY(true)
@@ -238,17 +249,106 @@ $.when(
     .width(990)
     .height(40)
     .margins({top: 0, right: 50, bottom: 20, left: 40})
-    .dimension(monthDim)
+    .colors('#619542')
+    .dimension(dateDim)
     .group(avgRateRubByWeekGroup)
     .valueAccessor(function (d) {
             return d.value.avg;
         })
     .centerBar(true)
     .gap(1)
-    .x(d3.time.scale().domain([new Date(2012, 11, 1), new Date().setDate(new Date().getDate()+30)]))
+    .x(d3.time.scale().domain([startDate, endDate]))
     .round(d3.time.week.round)
     .alwaysUseRounding(true)
     .xUnits(d3.time.weeks)
+
+  linechart_rate2
+    .width(990).height(200)
+    .colors('#619542')
+    // .margins({top: 30, right: 50, bottom: 25, left: 40})
+    .mouseZoomable(false)
+    .dimension(weekDim)
+    .transitionDuration(1000)
+    .group(avgRateRubByDayGroup, "RUB per $")
+    .valueAccessor(function (d) {
+            return d.value.avg;
+        })
+    .x(d3.time.scale().domain([startDate, endDate]))
+    .round(d3.time.month.round)
+    .xUnits(d3.time.months)
+    .elasticY(true)
+    .brushOn(false)
+    .title(function (d) {
+            var value = d.value.avg ? d.value.avg : d.value;
+            if (isNaN(value)) {
+                value = 0;
+            }
+            return dateFormat(d.key) + '\n' + numberFormat(value) + 'RUB';
+        })
+    .renderHorizontalGridLines(true)
+
+
+  barchart_com
+    .width(990)
+    .height(40)
+    .margins({top: 0, right: 50, bottom: 20, left: 40})
+    .colors('#808080')
+    .dimension(weekDim)
+    .group(avgWTIByWeekGroup)
+    .valueAccessor(function (d) {
+            return d.value.avg;
+        })
+    .centerBar(true)
+    .gap(1)
+    .x(d3.time.scale().domain([startDate, endDate]))
+    .round(d3.time.week.round)
+    .alwaysUseRounding(true)
+    .xUnits(d3.time.weeks)
+    .yAxis().ticks(0);
+
+  linechart_wti
+    .width(990)
+    .height(200)
+    .colors('#000000')
+    .dimension(weekDim)
+    .group(avgWTIByDayGroup, "WTI Oil Price")
+    .valueAccessor(function (d) {
+      return d.value.avg});
+
+  linechart_brent
+    .width(990)
+    .height(200)
+    .colors('#808080')
+    .dimension(weekDim)
+    .group(avgBrentByDayGroup, "Brent Oil Price")
+    .valueAccessor(function (d) {
+      return d.value.avg});
+
+  composite
+    .width(990)
+    .height(200)
+    // .margins({top: 30, right: 50, bottom: 25, left: 40})
+    .x(d3.time.scale().domain([startDate, endDate]))
+    .round(d3.time.month.round)
+    .xUnits(d3.time.months)
+    .yAxisLabel("Price per barrel, $")
+    .elasticY(true)
+    .legend(dc.legend().x(840).y(50).itemHeight(13).gap(5))
+    .renderHorizontalGridLines(true)
+    .rangeChart(barchart_com)
+    .title(function (d) {
+            var value = d.value.avg ? d.value.avg : d.value;
+            if (isNaN(value)) {
+                value = 0;
+            }
+            return dateFormat(d.key) + '\n' + numberFormat(value) + '$';
+        })
+    .dimension(weekDim)
+    .compose([linechart_brent, linechart_wti,
+              linechart_rate2.useRightYAxis(true)
+              ])
+    .rightYAxisLabel("Rub per $")
+    .brushOn(false);
 
   dc.dataCount('.data-count')
         .dimension(ndx)
@@ -287,8 +387,10 @@ $.when(
             //Update chart to show Rubles
             avgRateCadByDayGroup.dispose()
             avgRateCadByWeekGroup.dispose()
+           
+
             // Update the line chart
-             linechart_rate
+            linechart_rate
              .group(avgRateRubByDayGroup)
              .title(function (d) {
                     var value = d.value.avg ? d.value.avg : d.value;
@@ -297,15 +399,33 @@ $.when(
                     }
                     return dateFormat(d.key) + '\n' + numberFormat(value) + 'RUB';
                 })
-             .yAxisLabel("Rub per $")
+             .yAxisLabel("RUB per $")
 
-             // Update Bar Chart
-             barchart_rate
+            linechart_rate2
+             .group(avgRateRubByWeekGroup, "RUB per $")
+             .title(function (d) {
+                    var value = d.value.avg ? d.value.avg : d.value;
+                    if (isNaN(value)) {
+                        value = 0;
+                    }
+                    return dateFormat(d.key) + '\n' + numberFormat(value) + 'RUB';
+                })
+             .yAxisLabel("RUB per $")
+
+            // Update Bar Chart
+            barchart_rate
             .group(avgRateRubByWeekGroup)
             .y(d3.scale.linear().domain([0, 75]))
 
-             // Update data table
-             table
+            //  Update composite chart
+            composite
+              .compose([linechart_brent, linechart_wti,
+                        linechart_rate2.useRightYAxis(true)
+              ])
+              .rightYAxisLabel("RUB per $")
+
+            // Update data table
+            table
               .columns([
                 function(d) { return dateFormat(d.date)},
                 function(d) { return d.wti_price; },
@@ -329,10 +449,22 @@ $.when(
             //Update chart to show Canadian Dollars
             avgRateRubByDayGroup.dispose()
             avgRateRubByWeekGroup.dispose()
+        
 
             // Update the line chart
-             linechart_rate
+            linechart_rate
              .group(avgRateCadByDayGroup)
+             .title(function (d) {
+                    var value = d.value.avg ? d.value.avg : d.value;
+                    if (isNaN(value)) {
+                        value = 0;
+                    }
+                    return dateFormat(d.key) + '\n' + numberFormat(value) + 'CAD';
+                })
+             .yAxisLabel("CAD per $")
+
+            linechart_rate2
+             .group(avgRateCadByDayGroup, 'CAD per $')
              .title(function (d) {
                     var value = d.value.avg ? d.value.avg : d.value;
                     if (isNaN(value)) {
@@ -346,6 +478,14 @@ $.when(
              barchart_rate
                 .group(avgRateCadByWeekGroup)
                 .y(d3.scale.linear().domain([0.5, 1.5]))
+
+            //  Update composite chart
+            composite
+            .compose([linechart_brent, linechart_wti,
+                      linechart_rate2.useRightYAxis(true)
+            ])
+            .rightYAxisLabel("CAD per $")
+
              // Update data table
              table
               .columns([
