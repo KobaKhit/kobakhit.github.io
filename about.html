@@ -58,7 +58,7 @@ permalink: /about/
 	<h1 id = "projects" class = "center">Projects</h1>
 	<h2 class = "center">Reproducible Research</h2>
 	<div>
-		<ul class = "list-inline unstyled center" style =" display:table; margin:0 auto;">
+		<ul class = "list-inline unstyled center">
 			{% for p in site.data.portfolio %}
 			{% if p.cat == "repres" %}
 			<li class = 'left-align' style = "margin-right:0px">
@@ -96,10 +96,10 @@ permalink: /about/
 <div class = "row">
 	<h2 class = "center">Webdev</h2>
 	<div>
-		<ul class = "list-inline unstyled" style =" display:table; margin:0 auto;">
+		<ul class = "list-inline unstyled center">
 			{% for p in site.data.portfolio %}
 			{% if p.cat == "webdev" %}
-			<li style = "margin-right:30px">
+			<li class = 'left-align' style = "margin-right:0px">
 				<div class="card small" style = "max-width:300px; display:inline-block">
 				    <div class="card-image waves-effect waves-block waves-light">
 				      <img class="activator" src="{{ p.img }}">
