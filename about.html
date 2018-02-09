@@ -58,7 +58,7 @@ permalink: /about/
 	<h1 id = "projects" class = "center">Projects</h1>
 	<h2 class = "center">Reproducible Research</h2>
 	<div>
-		<ul class = "list-inline unstyled center" style =" display:table; margin:0 auto;">
+		<ul class = "list-inline unstyled" style =" display:table; margin:0 auto;">
 			{% for p in site.data.portfolio %}
 			{% if p.cat == "repres" %}
 			<li style = "margin-right:30px">
@@ -96,7 +96,7 @@ permalink: /about/
 <div class = "row">
 	<h2 class = "center">Webdev</h2>
 	<div>
-		<ul class = "list-inline unstyled center">
+		<ul class = "list-inline unstyled" style =" display:table; margin:0 auto;">
 			{% for p in site.data.portfolio %}
 			{% if p.cat == "webdev" %}
 			<li style = "margin-right:30px">
@@ -109,12 +109,12 @@ permalink: /about/
 				      <br>
 				      <br>
 				      <p class = "card-title">
-				      	{% if p.link %}<a href="{{ p.link }}" target = "_blank">Link</a>{% endif %} · 
-				      	{% if p.ipynb %}<a href="{{ p.ipynb }}" target = "_blank">Ipynb</a>{% endif %} · 
-				      	{% if p.rmd %}<a href="{{ p.rmd }}" target = "_blank">Rmd</a>{% endif %} · 
-				      	{% if p.pdf %}<a href="{{ p.pdf }}" target = "_blank">Paper</a>{% endif %} · 
-				      	{% if p.github %}<a href="{{ p.github}}" target = "_blank">Code</a>{% endif %} · 
-				      	{% if p.kaggle %}<a href="{{ p.kaggle}}" target = "_blank">Kaggle</a>{% endif %} · 
+				      	{% if p.link %}<a href="{{ p.link }}" target = "_blank">Link</a> · {% endif %}
+				      	{% if p.ipynb %}<a href="{{ p.ipynb }}" target = "_blank">Ipynb</a>  ·  {% endif %}
+				      	{% if p.rmd %}<a href="{{ p.rmd }}" target = "_blank">Rmd</a>  ·  {% endif %}
+				      	{% if p.pdf %}<a href="{{ p.pdf }}" target = "_blank">Paper</a>  ·  {% endif %}
+				      	{% if p.github %}<a href="{{ p.github}}" target = "_blank">Code</a>  · {% endif %}
+				      	{% if p.kaggle %}<a href="{{ p.kaggle}}" target = "_blank">Kaggle</a> · {% endif %}
 				      </p>
 				    </div>
 				    <div class="card-reveal">
