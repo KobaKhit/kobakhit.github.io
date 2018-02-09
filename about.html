@@ -51,15 +51,17 @@ permalink: /about/
 
 <hr>
 
+</div markdown='0'>
+</div makrdown = '0' comment = "container end. After this full width page">
 
 <div class = "row">
 	<h1 id = "projects" class = "center">Projects</h1>
 	<h2 class = "center">Reproducible Research</h2>
 	<div>
-		<ul class = "list-inline unstyled" style =" display:table; margin:0 auto;">
+		<ul class = "list-inline unstyled center" style =" display:table; margin:0 auto;">
 			{% for p in site.data.portfolio %}
 			{% if p.cat == "repres" %}
-			<li style = "margin-right:30px">
+			<li class = 'left-align' style = "margin-right:0px">
 				<div class="card small" style = "max-width:300px; display:inline-block">
 				    <div class="card-image waves-effect waves-block waves-light">
 				      <img class="activator" src="{{ p.img }}">
@@ -127,9 +129,6 @@ permalink: /about/
 		</ul>
 	</div>
 </div>
-
-</div markdown='0'>
-</div makrdown = '0' comment = "container end. After this full width page">
 
 <hr> 
 
