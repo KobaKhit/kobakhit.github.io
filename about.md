@@ -50,8 +50,9 @@ permalink: /about/
 </div>
 
 <hr>
-</div>
-</div comment = "container end. After this full width page">
+
+	</div>
+	</div comment = "container end. After this full width page">
 
 <div class = "row">
 	<h1 id = "projects" class = "center">Projects</h1>
