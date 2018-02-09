@@ -17,6 +17,8 @@ github_username:  kobakhit
 
 # Build settings
 markdown: redcarpet
+redcarpet:
+    extensions: ["with_toc_data"]
 # kramdown:
 #   input: GFM
 
