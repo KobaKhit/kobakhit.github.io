@@ -51,8 +51,8 @@ permalink: /about/
 
 <hr>
 
-  </div>
-  </div comment = "container end. After this full width page">
+</div markdown='0'>
+</div makrdown = '0' comment = "container end. After this full width page">
 
 <div class = "row">
 	<h1 id = "projects" class = "center">Projects</h1>
