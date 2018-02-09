@@ -3,10 +3,49 @@ layout: index
 ---
 
 <div class="home">
+  <div class = "row">
+    <div class = "col s12 m12 l12">
+      <div class = "card-panel">
+        <div class = "valign-wrapper">
+          <div class = "col s12 m3 l3 center">
+            <div>
+              <a href='/about'>
+                <img src="/img/about-square.jpg" alt="" class="circle responsive-img hoverable">
+              </a>
+            </div>
+            <div style = 'padding: 5px 0px'></div>
+
+              <span class='chip' style='color:black;font-size:100%'> 
+                <span id = 'typed'></span>
+              </span>
+          </div>
+
+          <div class = "col s12 m9 l9">
+            <p>
+              Welcome to my home page. I built this website using
+              <ul>
+                <li><a href = "https://jekyllrb.com/" target = "_blank">Jekyll 3.0+</a></li>
+                <li><a href = "http://materializecss.com/" target = "_blank">Materialize.css</a></li>
+                <li><a href = "https://pages.github.com/" target = "_blank">Github pages</a></li>
+              </ul>
+            </p>
+            <p> I used other tools such as <a href = "https://www.mathjax.org/" target = "_blank">mathjax</a>, <a href = "https://d3js.org/" target = "_blank">d3.js</a>, etc. This website also works on mobile. Hopefully, you will find it useful. If you have any questions/ comments/ suggestions please fell free to contact me.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+   <!--  <div class = "col 12 m6 l6">
+      <div class = "">
+      <a class="twitter-timeline"  width="100%m"
+            height="300" href="https://twitter.com/Gigantsex" data-widget-id="545767113949204481">Tweets by @Gigantsex</a>
+      </div>
+    </div> -->
+  </div>
 
   <h1> Select projects<small> | <a href="/about/#projects">see all</a></small></h1>
   <div class = "row">
-    <ul class = "list-inline unstyled" style =" display:table; margin:0 auto;">
+    <ul class = "list-inline unstyled center" >
       {% for p in site.data.portfolio %}
       {% if p.title == "Digit Recognizer using Neural Networks and Python" %}
       <li class = "col lg6">
@@ -95,49 +134,7 @@ layout: index
   <blockquote class="twitter-tweet tw-align-center" data-lang="en"><p lang="en" dir="ltr">Quick tutorial on using h2o for neural networks on the MSNIT Digit Recognizer dataset <a href="https://t.co/VnM3U0XVvQ">https://t.co/VnM3U0XVvQ</a> <a href="https://t.co/y9NRV5WPqP">pic.twitter.com/y9NRV5WPqP</a></p>&mdash; Kaggle (@kaggle) <a href="https://twitter.com/kaggle/status/668177223443226624">November 21, 2015</a></blockquote>
   <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-  <div class = "row">
-    <div class = "col s12 m12 l12">
-      <div class = "card-panel">
-        <div class = "row valign-wrapper">
-          <div class = "col s12 m3 l3">
-            <a href='/about'>
-              <img src="/img/about-square.jpg" alt="" class="circle responsive-img hoverable">
-            </a>
-            <ul class="unstyled list-inline center" style = 'padding:8px 0px'>
-              <li>
-                  <a href="https://www.linkedin.com/in/kobakhit/" target="_blank"><i class="fa fa-linkedin-square fa-2x"></i></a>
-              </li>
-              <li>
-                  <a href="https://github.com/KobaKhit"><i class="fa fa-github fa-2x" target="_blank"></i></a>
-              </li>
-              <li>
-                  <a href="https://instagram.com/dostre"><i class="fa fa-instagram fa-2x" target="_blank"></i></a>
-              </li>
-            </ul>
-          </div>
-
-          <div class = "col s12 m9 l9">
-            <p>
-              Welcome to my home page. I am a graduate student in business analytics. I built this website using
-              <ul>
-                <li><a href = "https://jekyllrb.com/" target = "_blank">Jekyll 3.0+</a></li>
-                <li><a href = "http://materializecss.com/" target = "_blank">Materialize.css</a></li>
-                <li><a href = "https://pages.github.com/" target = "_blank">Github pages</a></li>
-              </ul>
-            </p>
-            <p> I used other tools such as <a href = "https://www.mathjax.org/" target = "_blank">mathjax</a>, <a href = "https://d3js.org/" target = "_blank">d3.js</a>, etc. This website also works on mobile. Hopefully, you will find it useful. If you have any questions/ comments/ suggestions please fell free to contact me.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-   <!--  <div class = "col 12 m6 l6">
-      <div class = "">
-      <a class="twitter-timeline"  width="100%m"
-            height="300" href="https://twitter.com/Gigantsex" data-widget-id="545767113949204481">Tweets by @Gigantsex</a>
-      </div>
-    </div> -->
-  </div>
+  
 
   <hr>
 

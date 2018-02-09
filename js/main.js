@@ -55,6 +55,17 @@ $(function(){
 	  console.log('callback - particles.js config loaded');
 	});
 
+	// SMART type for titles in about.md
+	var typed = new Typed('#typed', {
+	    strings: ['Data Hacker', 'BI Analyst', 'Baller<span class="ec ec-basketball" style="font-size:0.8em"></span>'],
+	    typeSpeed: 60,
+	    backSpeed: 100,
+	    backDelay: 1500,
+	    smartBackspace: true, // this is a default
+	    loop: true
+
+	});
+
 	// footer
 	particlesJS.load('particles-js-footer', '/js/particles-footer.json', function() {
 	  console.log('callback - particles.js config loaded');

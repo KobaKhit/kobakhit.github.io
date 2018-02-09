@@ -9,10 +9,12 @@ permalink: /about/
 	  <div class="card">
 	    <div class="card-image">
 	      <img src="/img/about.jpg">
-	      <span class="card-title strokeme">Koba Khitalishvili</span>
+	      <span class="card-title"> 
+	      	<span class="strokeme">Koba Khitalishvili</span>
+	      </span>
 	    </div>
 	    <div class="card-content">
-			<ul class="unstyled list-inline center">
+			<ul class="unstyled list-inline">
 			    <li>
 			        <a href="https://www.facebook.com/cobra.khitalishvili" target="_blank"><i class="fa fa-facebook-square fa-2x"></i></a>
 			    </li>
@@ -39,12 +41,10 @@ permalink: /about/
 	  </div>
 	</div>
 
+	<!-- Bio -->
 	<div class="col s12 m8 l8">
 		<div class = "card-panel">
-	        <p>Currently, I am a graduate student in business analytics with a concentration in statistics.</p>
-	        <p>I graduated magna cum laude from Drexel with a bachelors in economics. As an undergrad I concentrated in mathematics.</p>
-	        <p>Main focus of my undergraduate studies was labor macroeconomics. To conduct analysis I mainly used the econometric techniques and R. I developed a solid mathematical background by studying optimization theory, mathematical economics and other advanced topics. Towards the end of my undergraduate experience I focused on computer science, analytics and statistics.  </p>
-	        <p>After learning programming, working at two technology firms, and developing passion for data science I decided to focus on analytics as my academic and professional careers.</p>
+	        <p>Coming...</p>
 	    </div>
 	</div>
 </div>
@@ -58,7 +58,7 @@ permalink: /about/
 	<h1 id = "projects" class = "center">Projects</h1>
 	<h2 class = "center">Reproducible Research</h2>
 	<div>
-		<ul class = "list-inline unstyled" style =" display:table; margin:0 auto;">
+		<ul class = "list-inline unstyled center" style =" display:table; margin:0 auto;">
 			{% for p in site.data.portfolio %}
 			{% if p.cat == "repres" %}
 			<li style = "margin-right:30px">
@@ -96,7 +96,7 @@ permalink: /about/
 <div class = "row">
 	<h2 class = "center">Webdev</h2>
 	<div>
-		<ul class = "list-inline unstyled" style =" display:table; margin:0 auto;">
+		<ul class = "list-inline unstyled center">
 			{% for p in site.data.portfolio %}
 			{% if p.cat == "webdev" %}
 			<li style = "margin-right:30px">
