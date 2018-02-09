@@ -51,7 +51,6 @@ permalink: /about/
 
 <hr>
 
-</div>
 </div comment = "container end. After this full width page">
 
 <div class = "row">
