@@ -17,13 +17,13 @@ github_username:  kobakhit
 
 # Build settings
 markdown: redcarpet
-redcarpet:
-    extensions: ["with_toc_data"]
-# kramdown:
-#   input: GFM
+# redcarpet:
+#     extensions: ["with_toc_data"]
+kramdown:
+  input: GFM
 
-redcarpet:
-  extensions: ["fenced_code_blocks","no_intra_emphasis"]
+# redcarpet:
+#   extensions: ["fenced_code_blocks","no_intra_emphasis"]
 
 gems:
  - jekyll-gist
