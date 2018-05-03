@@ -54,16 +54,38 @@ function reduceInitAvg() {
   return {count:0, total:0, avg:0};
 }
 
+function get_json(url){
+  // make async ajax request with CORS header since $.getJSON does support headers
+  var resp;
+  $.ajax({
+          url: url,
+          async:false,
+          type: 'GET',
+          dataType: 'json',
+          success: function(d) { 
+            resp = d
+          },
+          error: function(e) { return e },
+          beforeSend: setHeader
+        });
+
+  function setHeader(xhr) {
+        xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+      }
+
+  return resp
+}
+
 // Retrieve Brent oil, WTI oil, USD/RUB daily data from quandl.com using jquery
 $.when(
     // WTI
-    $.getJSON("https://www.quandl.com/api/v1/datasets/CHRIS/CME_CL1.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01"),
+    get_json("https://www.quandl.com/api/v1/datasets/CHRIS/CME_CL1.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01"),
     // Brent
-    $.getJSON("https://www.quandl.com/api/v1/datasets/CHRIS/ICE_B1.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01"),
+    get_json("https://www.quandl.com/api/v1/datasets/CHRIS/ICE_B1.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01"),
     // USD/RUB 
-    $.getJSON("https://www.quandl.com/api/v1/datasets/CURRFX/USDRUB.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01"),
+    get_json("https://www.quandl.com/api/v1/datasets/CURRFX/USDRUB.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01"),
     // USD/CAD
-    $.getJSON("https://www.quandl.com/api/v1/datasets/CURRFX/USDCAD.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01")
+    get_json("https://www.quandl.com/api/v1/datasets/CURRFX/USDCAD.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01")
 ).done(function(result1, result2, result3,result4) {
     console.log(result1)
     // console.log(result2)
@@ -71,14 +93,14 @@ $.when(
     var dat=[] // main dataset
 
     // Push WTI prices to dat
-    $.each(result1[0]['data'], function(index,val){
+    $.each(result1['data'], function(index,val){
       dat.push({'date':val[0],
                 'wti_price':val[1]
                 })
     })
     
     // Join dat with Brent oil price dataset using join function
-    dat = join(result2[0]['data'], dat, "0", "date", function(main, lookup) {
+    dat = join(result2['data'], dat, "0", "date", function(main, lookup) {
       return {
             date: main.date,
             wti_price: main.wti_price,
@@ -88,7 +110,7 @@ $.when(
     });
 
     // Join dat with USD/RUB dataset using join function
-    dat = join(result3[0]['data'], dat, "0", "date", function(main, lookup) {
+    dat = join(result3['data'], dat, "0", "date", function(main, lookup) {
       return {
             date: main.date,
             wti_price: main.wti_price,
@@ -98,7 +120,7 @@ $.when(
     });
 
     // Join dat with USD/RUB dataset using join function
-    dat = join(result4[0]['data'], dat, "0", "date", function(main, lookup) {
+    dat = join(result4['data'], dat, "0", "date", function(main, lookup) {
       return {
             date: main.date,
             wti_price: main.wti_price,
