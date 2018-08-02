@@ -199,4 +199,15 @@ reddit.top('worldnews').t('day').limit(10).fetch(function (res) {
     console.log(news)
     reddit_list(news);
 });
+
+// SMART type for titles in about.md
+var typed = new Typed('#typed', {
+    strings: ['Data Hacker', 'BI Analyst', 'Baller<span class="ec ec-basketball" style="font-size:0.8em"></span>'],
+    typeSpeed: 60,
+    backSpeed: 100,
+    backDelay: 1500,
+    smartBackspace: true, // this is a default
+    loop: true
+
+});
 </script>

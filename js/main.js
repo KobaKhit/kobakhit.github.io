@@ -1,21 +1,21 @@
 $(function(){
 	// add line-number to <pre> and wrapt in <table>
 	// http://mrloh.se/2015/05/bending-markdown-for-jekyll-and-github-pages/#fnref1
-	// var table = '<table class="highlighttable"><tbody><tr></tr></tbody></table>';
-	// $('article .highlight').wrap(table).before(function() {
-	// 	if($(this).parents(".gist").length === 0){
-	// 		// do not add line numbers to jekyll gists
-	// 	    var out = '<td class="linenos"><div class="linenodiv"><pre><code>';
-	// 	    var lines = $(this).text().split(/\n/).length;
-	// 	    for ( var i=1; i<lines; i++ ) {
-	// 	        out += i+'\n';
-	// 	    }
-	// 	    return out + '</code></pre></div></td>';
-	// 	}
-	// }).wrap('<td class="code"></td>');
+	var table = '<table class="highlighttable"><tbody><tr></tr></tbody></table>';
+	$('article .highlight').wrap(table).before(function() {
+		if($(this).parents(".gist").length === 0){
+			// do not add line numbers to jekyll gists
+		    var out = '<td class="linenos"><div class="linenodiv"><pre><code>';
+		    var lines = $(this).text().split(/\n/).length;
+		    for ( var i=1; i<lines; i++ ) {
+		        out += i+'\n';
+		    }
+		    return out + '</code></pre></div></td>';
+		}
+	}).wrap('<td class="code"></td>');
 
 	// white background for output code chunks
-	$("code.language-out").addClass('outtable')
+	$("code.language-out").parent().wrap( "<div class='outtable'></div>")
 	console.log('print')
 
 	// Materialize
@@ -56,20 +56,5 @@ $(function(){
 	  console.log('callback - particles.js config loaded');
 	});
 
-	// SMART type for titles in about.md
-	var typed = new Typed('#typed', {
-	    strings: ['Data Hacker', 'BI Analyst', 'Baller<span class="ec ec-basketball" style="font-size:0.8em"></span>'],
-	    typeSpeed: 60,
-	    backSpeed: 100,
-	    backDelay: 1500,
-	    smartBackspace: true, // this is a default
-	    loop: true
-
-	});
-
-	// footer
-	particlesJS.load('particles-js-footer', '/js/particles-footer.json', function() {
-	  console.log('callback - particles.js config loaded');
-	});
 
 }) // end of document ready

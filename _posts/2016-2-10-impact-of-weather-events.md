@@ -58,7 +58,7 @@ head(data[,1:5])
 names(data)
 ```
 
-```
+```out
 ##  [1] "STATE__"    "BGN_DATE"   "BGN_TIME"   "TIME_ZONE"  "COUNTY"    
 ##  [6] "COUNTYNAME" "STATE"      "EVTYPE"     "BGN_RANGE"  "BGN_AZI"   
 ## [11] "BGN_LOCATI" "END_DATE"   "END_TIME"   "COUNTY_END" "COUNTYENDN"
@@ -79,7 +79,7 @@ data<-data.frame(Year=format(as.Date(data$BGN_DATE,format="%m/%d/%Y"),"%Y"),data
 head(data[,1:5])
 ```
 
-```
+```out
 ##   Year STATE__           BGN_DATE BGN_TIME TIME_ZONE
 ## 1 1950       1  4/18/1950 0:00:00     0130       CST
 ## 2 1950       1  4/18/1950 0:00:00     0145       CST
@@ -100,7 +100,7 @@ data$EVTYPE = sapply(data$EVTYPE,function(x) gsub("THUNDERSTORM WINDS|MARINE TST
 The data set has scaling factors for two variables which are needed for analysis. Namely, property damage `PROPDMG` and crop damage `CROPDMG`. They have corresponding scaling columns `PROPDMGEXP` and `CROPDMGEXP`. The scaling columns contain information about how to scale the values in the columns `PROPDMG` and `CROPDMG`. For example, a value in the `PROPDMG` column that has a scaling factor "k" in the `PROPDMGEXP` column should be multiplied by $10^3$. I use the following scheme for the scaling factors. 
 
 
-```
+```out
 ##    Scaling exponent Occurences Scaling factor
 ## 1                       465934           10^0
 ## 2                 -          1           10^0
@@ -5443,7 +5443,7 @@ Tinj<-sort(tapply(data$INJURIES,list(data$EVTYPE),sum),decreasing=TRUE)
 head(Tdeaths)
 ```
 
-```
+```out
 ##        TORNADO EXCESSIVE HEAT    FLASH FLOOD           HEAT      LIGHTNING 
 ##           5633           1903            978            937            816 
 ##      TSTM WIND 
@@ -5455,7 +5455,7 @@ head(Tdeaths)
 head(Tinj)
 ```
 
-```
+```out
 ##        TORNADO      TSTM WIND          FLOOD EXCESSIVE HEAT      LIGHTNING 
 ##          91346           9361           6789           6525           5230 
 ##           HEAT 
@@ -5477,7 +5477,7 @@ TinjAve<-sort(tapply(data[years,]$INJURIES,list(data[years,]$EVTYPE),sum),decrea
 head(TdeathsAve)
 ```
 
-```
+```out
 ## EXCESSIVE HEAT        TORNADO    FLASH FLOOD      LIGHTNING    RIP CURRENT 
 ##       88.81818       55.09091       48.36364       40.00000       28.27273 
 ##          FLOOD 
@@ -5489,7 +5489,7 @@ head(TdeathsAve)
 head(TinjAve)
 ```
 
-```
+```out
 ##           TORNADO    EXCESSIVE HEAT         LIGHTNING         TSTM WIND 
 ##         822.72727         324.54545         254.45455         253.45455 
 ## HURRICANE/TYPHOON          WILDFIRE 
@@ -5536,7 +5536,7 @@ totalDmg = data.frame(row.names = 1:length(TtotalDmg), event = rownames(TtotalDm
 totalDmg[totalDmg$cost > 1000000000,c(1,3)]
 ```
 
-```
+```out
 ##                         event        pretty_cost
 ## 1                       FLOOD 150,319,678,257.00
 ## 2           HURRICANE/TYPHOON  71,913,712,800.00
@@ -5581,7 +5581,7 @@ totalDmgAve = data.frame(row.names = 1:length(TtotalDmgAve), event = rownames(Tt
 totalDmgAve[totalDmgAve$cost > 1000000,c(1,3)]
 ```
 
-```
+```out
 ##                event       pretty_cost
 ## 1              FLOOD 11,912,769,002.73
 ## 2  HURRICANE/TYPHOON  6,537,610,254.55
@@ -5646,7 +5646,7 @@ format(data.frame(
 big.mark = ',',digits = 4, scientific = F)
 ```
 
-```
+```out
 ##                 prop_dmg      crop_dmg
 ## $ annualy 28,173,521,423 2,084,491,549
 ```
