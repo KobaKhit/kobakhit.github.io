@@ -44,7 +44,7 @@ The data set has 902297 observations and 37 variables (columns). Below are the f
 head(data[,1:5])
 ```
 
-```
+```out
 ##   STATE__           BGN_DATE BGN_TIME TIME_ZONE COUNTY
 ## 1       1  4/18/1950 0:00:00     0130       CST     97
 ## 2       1  4/18/1950 0:00:00     0145       CST      3

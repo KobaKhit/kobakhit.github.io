@@ -15,7 +15,8 @@ $(function(){
 	// }).wrap('<td class="code"></td>');
 
 	// white background for output code chunks
-	$("code.language-").parents(".highlighttable").addClass("outtable").removeClass("highlighttable")
+	$("code.language-out").addClass('outtable')
+	console.log('print')
 
 	// Materialize
 	$('.button-collapse').sideNav(); // sidenav

@@ -16,11 +16,13 @@ twitter_username: gigantsex
 github_username:  kobakhit
 
 # Build settings
-markdown: redcarpet
+markdown: kramdown
 # redcarpet:
 #     extensions: ["with_toc_data"]
 kramdown:
   input: GFM
+  syntax_highlighter: rouge
+
 
 # redcarpet:
 #   extensions: ["fenced_code_blocks","no_intra_emphasis"]
