@@ -20,13 +20,13 @@ Updated on 12/12/2019
 
 ## Download 
 
-Download Julia from http://julialang.org/
+Download Julia from [http://julialang.org/](http://julialang.org/)
 
 Download Julai IDEs:
 
-- Juno from http://junolab.org/
+- Juno from [http://junolab.org/](http://junolab.org/)
 
-- IJulia kernel for Jyputer notebook from https://github.com/JuliaLang/IJulia.jl
+- IJulia kernel for Jyputer notebook from [https://github.com/JuliaLang/IJulia.jl](https://github.com/JuliaLang/IJulia.jl)
 
 
 Juno is a good IDE for writing and evaluating julia code quickly. IJulia notebook is good for writing tutorials and reports with julia code results embeded in the document. 
