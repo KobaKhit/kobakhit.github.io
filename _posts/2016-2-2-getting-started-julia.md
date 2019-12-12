@@ -17,22 +17,14 @@ Updated on 12/12/2019
     - [Plotting data](#Plotting-data)
 - [Conclusion](#Conclusion)
 - [Resources used](#Resources-used)
-## Table of contents
-- [Download](#Download)
-- [Quick Start](#Quick-start)
-- [Dataframes, plotting, and file Input/Output](#Data-frames,-plotting,-and-file-Input/Output)
-    - [Data frames](#Data-frames)
-    - [Plotting data](#Plotting-data)
-- [Conclusion](#Conclusion)
-- [Resources used](#Resources-used)
 
 ## Download 
 
-Download Julia from http://julialang.org/
+Download Julia from [http://julialang.org/](http://julialang.org/)
 
 Download Julai IDEs:
 
-- Juno from http://junolab.org/
+- Juno from [http://junolab.org/](http://junolab.org/)
 
 - IJulia kernel for Jyputer notebook from https://github.com/JuliaLang/IJulia.jl
 
