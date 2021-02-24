@@ -5,18 +5,29 @@ author: "<a href = 'http://www.kobakhit.com/about/'>Koba Khitalishvili</a>"
 categories: beginner
 tags: "julia ipynb gadfly collatz"
 ipynb: "/ipynb/2016-2-2-getting-started-julia.ipynb"
+nbviewer: 'https://nbviewer.jupyter.org/url/www.kobakhit.com/ipynb/2016-2-2-getting-started-julia.ipynb'
 ---
 
-Updated on 12/12/2019
+In undergrad I wrote a tutorial on #Julia programming language in which I analyzed the output of the Collatz function. The Collatz Conjecture was really fascinating to me due to its seemingly simple wording and almost impossible to solve mystery. Since then, #Julia changed significantly, and Terence Tao made a contribution that gets us closer to the proof of the #CollatzConjecture. 
+
+![alt text](info-graphic.jpg "Title")
+
+**Update:**
+In September 2019 Tao published a paper in which he proved that the Collatz Conjecture is "almost true" for "almost all numbers." 
+
+View on nbviewer: [https://lnkd.in/eGnHgy2](https://lnkd.in/eGnHgy2)
+
+Tao's Paper: [https://lnkd.in/eCus8YU](https://lnkd.in/eCus8YU)
+Tao's Blog Post: [https://lnkd.in/eb7ePAu](https://lnkd.in/eb7ePAu)
 
 ## Table of contents
-- [Download](#Download)
-- [Quick Start](#Quick-start)
-- [Dataframes, plotting, and file Input/Output](#Data-frames,-plotting,-and-file-Input/Output)
-    - [Data frames](#Data-frames)
-    - [Plotting data](#Plotting-data)
-- [Conclusion](#Conclusion)
-- [Resources used](#Resources-used)
+- [Download](#download)
+- [Quick Start](#quick-start)
+- [Dataframes, plotting, and file Input/Output](#data-frames-plotting-and-file-inputoutput)
+    - [Data frames](#data-frames)
+    - [Plotting data](#plotting-data)
+- [Conclusion](#conclusion)
+- [Resources used](#resources-used)
 
 ## Download 
 
@@ -38,7 +49,7 @@ Once you've installed everything I recommend opening up the Juno IDE and going t
 I execute all julia code below in Juno. I suggest you create a folder on your desktop and make it your working directory where we will be able to write files. First, a couple of basic commands. To evaluate code in Juno you just need to press `Ctrl-D` (its in the Juno tutrial):
 
 
-```julia
+```
 VERSION # print julia version number
 
 pwd() # print working directory
@@ -46,24 +57,21 @@ homedir() # print the default home directory
 
 # cd(pwd()) # set working directory to DirectoryPath
 ```
+```out
+"/Users/kobakhitalishvili"
+```
 
 
-
-
-    "/Users/kobakhitalishvili"
-
-
-
-
-```julia
+```
 3+5 # => 8
 5*7 # => 35
 3^17 # => 129140163
 3^(1+3im) # im stands for imaginary number => -2.964383781426573 - 0.46089998526262876im
 log(7) # natural log of 7 => 1.9459101490553132
 ```
-
-
+```out
+1.9459101490553132
+```
 
 
     1.9459101490553132
@@ -73,45 +81,42 @@ log(7) # natural log of 7 => 1.9459101490553132
 Interesting that julia has imaginary number built in. Now, variables and functions:
 
 
-```julia
+```
 a = cos(pi) + im * sin(pi) # assigning to a variable
 ```
+```out
+-1.0 + 1.2246467991473532e-16im
+```
 
 
 
 
-    -1.0 + 1.2246467991473532e-16im
+    
 
-
-
-
-```julia
+```
 b = ℯ^(im*pi)
 ```
+```out
+-1.0 + 1.2246467991473532e-16im
+```
+    
 
 
 
 
-    -1.0 + 1.2246467991473532e-16im
-
-
-
-
-```julia
+```
 a == b # boolean expression. It is an euler identity.
 ```
-
-
-
-
-    true
+```out
+true
+```
 
 
 
 Lets see how to define functions. Here is a [chapter on functions](https://docs.julialang.org/en/v1/manual/documentation/index.html#Functions-and-Methods-1) in julia docs for more info.
 
 
-```julia
+```
 plus2(x) = x + 2 # a compact way
 
 function plustwo(x) # traditional function definition
@@ -121,33 +126,28 @@ end
 
 
 
+```out
+plustwo (generic function with 1 method)
 
-    plustwo (generic function with 1 method)
+```
 
 
-
-
-```julia
+```
 plus2(11)
 ```
-
-
-
-
-    13
-
-
-
-
-```julia
-plustwo(11)
+```out
+13
 ```
 
 
 
 
-    13
-
+```
+plustwo(11)
+```
+```out
+13
+```
 
 
 Here is a [julia cheatsheet](https://juliadocs.github.io/Julia-Cheat-Sheet/) with above and additional information in a concise form. Next, lets write a function that will generate some data which we will write to a csv file, plot, and save the plot. 
@@ -163,7 +163,7 @@ $$
 The function `collatz(x)` will count the number of iterations it took for the starting number to reach $1$.
 
 
-```julia
+```
 function collatz(x)
     # Given a number x
     # - divide by 2 if x is even
@@ -187,23 +187,17 @@ end
 
 collatz(2)
 ```
-
-
-
-
-    1
-
-
-
-
-```julia
-collatz(3)
+```out
+1
 ```
 
+```
+collatz(3)
+```
+```out
+3
+```
 
-
-
-    7
 
 
 
@@ -212,7 +206,7 @@ collatz(3)
 Now, let's create a dataframe with the number of steps needed to complete the Collatz process for each number from 1 to 1000. We will use the [`DataFrames` package](https://github.com/JuliaStats/DataFrames.jl) because the base julia library does not have dataframes.
 
 
-```julia
+```
 # install DataFrames package
 using Pkg
 # Pkg.add("DataFrames")
@@ -232,7 +226,7 @@ df
 
 
 
-```julia
+```
 # Neat. Now let's generate data using collatz function
 df = DataFrame(Number = 1:1000, NumofSteps = map(collatz,1:1000))
 first(df, 10)
@@ -249,7 +243,7 @@ first(df, 10)
 
 
 
-```julia
+```
 # To get descriptive statistics 
 describe(df)
 ```
@@ -264,7 +258,7 @@ describe(df)
 Before we save it lets categorize the points based on whether the original number is even or odd.
 
 
-```julia
+```
 df.evenodd = map(x -> if x % 2 == 0 "even" else "odd" end, 1:1000) # create new evenodd column
 # rename!(df, :x1, :evenodd) #rename it to evenodd
 first(df,5)
@@ -282,22 +276,20 @@ I use the `map()` function with an anonymous function `x -> if x % 2 == 0 "even"
 Additionally, let's identify the **prime numbers** as well.
 
 
-```julia
+```
 # Pkg.add("Primes")
 using Primes
 
 isprime(3)
 ```
+```out
+true
+```
 
 
 
 
-    true
-
-
-
-
-```julia
+```
 df.isprime = map(x -> if isprime(x) "yes" else "no" end,df.Number)
 first(df,5)
 ```
@@ -310,20 +302,16 @@ first(df,5)
 
 
 
-```julia
+```
 # Pkg.add("CSV")
 using CSV
 
 # To save the data frame in the working directory 
 CSV.write("collatz.csv", df)
 ```
-
-
-
-
-    "collatz.csv"
-
-
+```out
+"collatz.csv"
+```
 
 ### Plotting data
 
@@ -332,7 +320,7 @@ To plot the data we will use the [Gadfly](http://gadflyjl.org/stable/) package. 
 To save plots in different image formats we will need the `Cairo` pakage.
 
 
-```julia
+```
 # Pkg.add(["Cairo","Fontconfig","Plots", "Gadfly","PlotlyJS","ORCA"])
 # Pkg.add("Gadfly")
 
@@ -10305,7 +10293,7 @@ fig.select("#img-a3bc1b40-3243")
 Looks pretty. I will color the points based on whether the original number is even or odd. 
 
 
-```julia
+```
 Gadfly.plot(df,x=:Number, y=:NumofSteps, color = :evenodd, Geom.point) # assign plot to variable
 ```
 
@@ -20309,7 +20297,7 @@ fig.select("#img-be18e8fc-3252")
 It looks like odd and even numbers might overlay each other. Let's plot even and odd numbers side by side.
 
 
-```julia
+```
 Gadfly.plot(df, xgroup=:evenodd, color = :evenodd,
     x=:Number, y=:NumofSteps,
     Geom.subplot_grid(Geom.point))
@@ -31501,7 +31489,7 @@ fig.select("#img-ff885417-2072")
 Even numbers up to 1000 require fewer steps to complete the Collatz procedure than odd numbers. Let's do the same for prime numbers.
 
 
-```julia
+```
 Gadfly.plot(df, xgroup=:isprime, color = :isprime,
     x=:Number, y=:NumofSteps,
     Geom.subplot_grid(Geom.point))
@@ -42693,7 +42681,7 @@ fig.select("#img-838a4bd8-1076")
 Seems like prime numbers follow a similar distribution of steps to that of non primes. Finally, let's plot this data by separating even, odd and prime numbers.
 
 
-```julia
+```
 p = Gadfly.plot(df, xgroup=:evenodd, ygroup=:isprime, 
     color = :isprime,
     x=:Number, y=:NumofSteps,
@@ -55841,7 +55829,7 @@ fig.select("#img-a256306a-3137")
 Obvisouly, there are no even prime numbers except 2 and hence the plot in bottom right contains a lonely (2,1) point. Let's calculate the mean number of steps required for $x$ to complete the Collatz process by whether $x$ is even, odd or prime.
 
 
-```julia
+```
 using Statistics
 mean_steps = by(df, [:isprime, :evenodd], :NumofSteps => mean)
 sort!(mean_steps,:NumofSteps_mean, rev=true)
@@ -55862,7 +55850,7 @@ What does it tell us about the Collatz Conjecture? Nothing. This kind of analysi
 The Collatz Conjecture is one of the simplest unsolved problems in mathematics actually and [Terence Tao is the last mathematician to have made any kind of progress on it](https://terrytao.wordpress.com/2019/09/10/almost-all-collatz-orbits-attain-almost-bounded-values/). In September 2019 he proved that the Conjecture holds "almost true" for "almost all numbers". 
 
 
-```julia
+```
 # Save the plot in the working directory
 draw(PNG("collatz-plot.png", 6inch, 4inch), p)
 ```

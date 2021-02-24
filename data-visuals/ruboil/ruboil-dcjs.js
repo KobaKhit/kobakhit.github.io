@@ -19,7 +19,7 @@ function join(lookupTable, mainTable, lookupKey, mainKey, select) {
 
 function val_color(value) {
     // Based on the sign changes color to either green (nonnegative) or red (negative)
-
+    console.log({1: value,2: Number(value)})
     if (Number(value) < 0) {
         return "<font color='red'>" + String(value) + "</font>"
     }
@@ -65,32 +65,31 @@ function get_json(url){
           success: function(d) { 
             resp = d
           },
-          error: function(e) { return e },
-          beforeSend: setHeader
+          error: function(e) { return e }
+        //   beforeSend: setHeader
         });
 
-  function setHeader(xhr) {
-        xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-      }
+//   function setHeader(xhr) {
+//         xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+//       }
 
   return resp
 }
 
 // Retrieve Brent oil, WTI oil, USD/RUB daily data from quandl.com using jquery
+var request_date_format = d3.timeFormat("%Y-%m-%d")
+var today = new Date();
+var yesterday = request_date_format(today.setDate(today.getDate()-1));
+console.log("https://api.exchangeratesapi.io/history?start_at=2020-01-01&end_at=" + yesterday + "&symbols=USD,RUB,CAD&base=USD")
 $.when(
     // WTI
-    get_json("https://www.quandl.com/api/v1/datasets/CHRIS/CME_CL1.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01"),
+    get_json("https://www.quandl.com/api/v1/datasets/CHRIS/CME_CL1.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01&trim_end=" + yesterday),
     // Brent
-    get_json("https://www.quandl.com/api/v1/datasets/CHRIS/ICE_B1.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01"),
+    get_json("https://www.quandl.com/api/v1/datasets/CHRIS/ICE_B1.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01&trim_end" + yesterday),
     // USD/RUB 
-    get_json("https://www.quandl.com/api/v1/datasets/CURRFX/USDRUB.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01"),
-    // USD/CAD
-    get_json("https://www.quandl.com/api/v1/datasets/CURRFX/USDCAD.json?auth_token=jBPoW6ZkJm9VPeu8A9xW&trim_start=2013-01-01")
-).done(function(result1, result2, result3,result4) {
-    console.log(result1)
-    // console.log(result2)
-    // console.log(result3)
-    var dat=[] // main dataset
+    get_json("https://api.exchangeratesapi.io/history?start_at=2013-01-01&end_at=" + yesterday + "&symbols=USD,RUB,CAD&base=USD")
+).done(function(result1, result2, result3) {
+    var dat=[] // main dataset unvalidated
 
     // Push WTI prices to dat
     $.each(result1['data'], function(index,val){
@@ -104,53 +103,47 @@ $.when(
       return {
             date: main.date,
             wti_price: main.wti_price,
-            brent_price: (lookup !== undefined) ? lookup['1'] : 0,
+            brent_price: (lookup !== undefined) ? lookup['1'] : 0
  
         };
     });
 
-    // Join dat with USD/RUB dataset using join function
-    dat = join(result3['data'], dat, "0", "date", function(main, lookup) {
-      return {
-            date: main.date,
-            wti_price: main.wti_price,
-            brent_price: main.brent_price,
-            rate_rub: (lookup !== undefined) ? lookup['1'] : 0
-        };
-    });
-
-    // Join dat with USD/RUB dataset using join function
-    dat = join(result4['data'], dat, "0", "date", function(main, lookup) {
-      return {
-            date: main.date,
-            wti_price: main.wti_price,
-            brent_price: main.brent_price,
-            rate_rub: main.rate_rub,
-            rate_cad: (lookup !== undefined) ? lookup['1'] : 0
-        };
-    });
+    // Add RUB and CAD value for 1 USD
+    $.each(dat, function(index,val){
+        item = result3['rates'][this.date]
+        rub_val = (item !== undefined) ? item['RUB'] : 0
+        cad_val = (item !== undefined) ? item['CAD'] : 0
+        // console.log(rub_val)
+        this.rate_rub = rub_val
+        this.rate_cad = cad_val
+      })
         
     per_change(dat,'wti_price')
     per_change(dat,'brent_price')
     per_change(dat,'rate_rub')
     per_change(dat,'rate_cad')
-    console.log(dat);
 
+    final_df = [];
     dat.forEach(function (d) {
-        d.date = new Date(d.date); // parse the date 
-        d.month = d3.time.month(d.date); // pre-calculate month for better performance
-        d.week = d3.time.week(d.date); // calculate the week
+        if (d.rate_rub !== 0 && 
+            d.rate_cad !== 0) {
+                d.date = new Date(d.date); // parse the date 
+                d.month = d.date.getMonth(); // pre-calculate month for better performance
+                d.week = d3.timeWeek(d.date); // calculate the week
+                final_df.push(d)
+          }
     });
   
-  // console.log(dat)
+  console.log(final_df)
 
   // Graph the dataset using dc.js
   ////////////////////////////////
-  var dateFormat = d3.time.format('%b %d %Y');
-  var numberFormat = d3.format('.2f');
-  var numberFormat4 = d3.format('.4f');
+  var dateFormat = d3.timeFormat('%b %d %Y');
+  var locale = d3.formatLocale({minus: "-"})
+  var numberFormat = locale.format('.2f');
+  var numberFormat4 = locale.format('.4f');
 
-  var ndx = crossfilter(dat); 
+  var ndx = crossfilter(final_df); 
   var all = ndx.groupAll();
 
   // vars 
@@ -188,9 +181,9 @@ $.when(
     .width(990)
     .height(200)
     // .margins({top: 30, right: 50, bottom: 25, left: 40})
-    .x(d3.time.scale().domain([startDate, endDate]))
-    .round(d3.time.month.round)
-    .xUnits(d3.time.months)
+    .x(d3.scaleTime().domain([startDate, endDate]))
+    .round(d3.timeMonth.round)
+    .xUnits(d3.timeMonths)
     .yAxisLabel("Price per barrel, $")
     .elasticY(true)
     .legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
@@ -234,10 +227,10 @@ $.when(
         })
     .centerBar(true)
     .gap(1)
-    .x(d3.time.scale().domain([startDate, endDate]))
-    .round(d3.time.week.round)
+    .x(d3.scaleTime().domain([startDate, endDate]))
+    .round(d3.timeWeek.round)
     .alwaysUseRounding(true)
-    .xUnits(d3.time.weeks)
+    .xUnits(d3.timeWeeks)
 
   linechart_rate
     .width(990).height(200)
@@ -253,9 +246,9 @@ $.when(
     .valueAccessor(function (d) {
             return d.value.avg;
         })
-    .x(d3.time.scale().domain([startDate, endDate]))
-    .round(d3.time.month.round)
-    .xUnits(d3.time.months)
+    .x(d3.scaleTime().domain([startDate, endDate]))
+    .round(d3.timeMonth.round)
+    .xUnits(d3.timeMonths)
     .elasticY(true)
     .brushOn(false)
     .title(function (d) {
@@ -279,10 +272,10 @@ $.when(
         })
     .centerBar(true)
     .gap(1)
-    .x(d3.time.scale().domain([startDate, endDate]))
-    .round(d3.time.week.round)
+    .x(d3.scaleTime().domain([startDate, endDate]))
+    .round(d3.timeWeek.round)
     .alwaysUseRounding(true)
-    .xUnits(d3.time.weeks)
+    .xUnits(d3.timeWeeks)
 
   linechart_rate2
     .width(990).height(200)
@@ -295,9 +288,9 @@ $.when(
     .valueAccessor(function (d) {
             return d.value.avg;
         })
-    .x(d3.time.scale().domain([startDate, endDate]))
-    .round(d3.time.month.round)
-    .xUnits(d3.time.months)
+    .x(d3.scaleTime().domain([startDate, endDate]))
+    .round(d3.timeMonth.round)
+    .xUnits(d3.timeMonths)
     .elasticY(true)
     .brushOn(false)
     .title(function (d) {
@@ -322,10 +315,10 @@ $.when(
         })
     .centerBar(true)
     .gap(1)
-    .x(d3.time.scale().domain([startDate, endDate]))
-    .round(d3.time.week.round)
+    .x(d3.scaleTime().domain([startDate, endDate]))
+    .round(d3.timeWeek.round)
     .alwaysUseRounding(true)
-    .xUnits(d3.time.weeks)
+    .xUnits(d3.timeWeeks)
     .yAxis().ticks(0);
 
   linechart_wti
@@ -350,9 +343,9 @@ $.when(
     .width(990)
     .height(200)
     // .margins({top: 30, right: 50, bottom: 25, left: 40})
-    .x(d3.time.scale().domain([startDate, endDate]))
-    .round(d3.time.month.round)
-    .xUnits(d3.time.months)
+    .x(d3.scaleTime().domain([startDate, endDate]))
+    .round(d3.timeMonth.round)
+    .xUnits(d3.timeMonths)
     .yAxisLabel("Price per barrel, $")
     .elasticY(true)
     .legend(dc.legend().x(840).y(50).itemHeight(13).gap(5))
@@ -386,7 +379,7 @@ $.when(
   .width(990)
   .dimension(dateDim)
   .group(function(d) { return " "})
-  .size(10)             // number of rows to return
+  .size(20)             // number of rows to return
   .columns([
     function(d) { return dateFormat(d.date)},
     function(d) { return d.wti_price; },
@@ -437,7 +430,7 @@ $.when(
             // Update Bar Chart
             barchart_rate
             .group(avgRateRubByWeekGroup)
-            .y(d3.scale.linear().domain([0, 75]))
+            .y(d3.scaleLinear().domain([0, 75]))
 
             //  Update composite chart
             composite
@@ -464,7 +457,7 @@ $.when(
 
             // Update data table headers
            $(".rate-name" ).replaceWith( "<font class='rate-name'>RUB</font>" );
-           $(".source" ).replaceWith( "<p class='muted source'>Source: Quandl: <a href ='https://www.quandl.com/data/CURRFX/USDRUB-Currency-Exchange-Rates-USD-vs-RUB' target='_blank'>USD/RUB</a></p>" );
+           $(".source" ).replaceWith( "<p class='muted source'>Source: Exchange Rates API: <a href ='https://exchangeratesapi.io/' target='_blank'>USD/RUB</a></p>" );
            
             return false;
         } else if (this.value == "CAD"){
@@ -500,7 +493,7 @@ $.when(
              // Update Bar Chart
              barchart_rate
                 .group(avgRateCadByWeekGroup)
-                .y(d3.scale.linear().domain([0.5, 1.5]))
+                .y(d3.scaleLinear().domain([0.5, 1.5]))
 
             //  Update composite chart
             composite
@@ -526,9 +519,9 @@ $.when(
             dc.redrawAll(); 
 
            // Update data table headers
-           $( ".rate-name" ).replaceWith( "<font class='rate-name'>CAD</font>" );
+           $(".rate-name" ).replaceWith( "<font class='rate-name'>CAD</font>" );
            // Update the rate graph source
-           $(".source" ).replaceWith( "<p class='muted source'>Source: Quandl: <a href ='https://www.quandl.com/data/CURRFX/USDCAD-Currency-Exchange-Rates-USD-vs-CAD' target='_blank'>USD/CAD</a></p>" );
+           $(".source" ).replaceWith( "<p class='muted source'>Source: Exchange Rates API: <a href ='https://exchangeratesapi.io/' target='_blank'>USD/CAD</a></p>" );
 
             return false;
 

@@ -26,7 +26,11 @@ kramdown:
 
 # redcarpet:
 #   extensions: ["fenced_code_blocks","no_intra_emphasis"]
-
+exclude:
+  - _posts/**/*.jpg
+  - _posts/**/*.png
+  - _posts/**/*.gif
+  
 gems:
  - jekyll-gist
  - jekyll-paginate
