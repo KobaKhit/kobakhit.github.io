@@ -8,16 +8,17 @@ ipynb: "/ipynb/2016-2-2-getting-started-julia.ipynb"
 nbviewer: 'https://nbviewer.jupyter.org/url/www.kobakhit.com/ipynb/2016-2-2-getting-started-julia.ipynb'
 ---
 
-In undergrad I wrote a tutorial on #Julia programming language in which I analyzed the output of the Collatz function. The Collatz Conjecture was really fascinating to me due to its seemingly simple wording and almost impossible to solve mystery. Since then, #Julia changed significantly, and Terence Tao made a contribution that gets us closer to the proof of the #CollatzConjecture. 
+In undergrad I wrote a tutorial on #Julia programming language in which I analyzed the output of the Collatz function. The Collatz Conjecture was really fascinating to me due to its seemingly simple wording and almost impossible to solve mystery. Since then, #Julia changed significantly, and Terence Tao made a contribution that gets us closer to the proof of the Collatz Conjecture. 
+
+View on Julia Notebook nbviewer: [https://lnkd.in/eGnHgy2](https://lnkd.in/eGnHgy2)
 
 ![alt text](info-graphic.jpg "Title")
 
 **Update:**
 In September 2019 Tao published a paper in which he proved that the Collatz Conjecture is "almost true" for "almost all numbers." 
 
-View on nbviewer: [https://lnkd.in/eGnHgy2](https://lnkd.in/eGnHgy2)
-
 Tao's Paper: [https://lnkd.in/eCus8YU](https://lnkd.in/eCus8YU)
+
 Tao's Blog Post: [https://lnkd.in/eb7ePAu](https://lnkd.in/eb7ePAu)
 
 ## Table of contents

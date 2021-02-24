@@ -298,15 +298,7 @@ ul.tabs {
 
 
 // Helper classes
-
-@import './imports/_spacing.css';
-
-/* Variables */
-/* Importing here will allow you to override any variables in the modules */
-@import './imports/_colors.css';
-@import './imports/_media-queries.css';
-@import './imports/_variables.css';
-
 .data-frame {
   margin-bottom: 1.5rem;
+  overflow-x: scroll;
 }
