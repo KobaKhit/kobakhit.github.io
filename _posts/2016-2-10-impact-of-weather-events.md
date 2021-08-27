@@ -199,11 +199,11 @@ r2$show('iframesrc', cdn = TRUE)
 <iframe srcdoc="&lt;!doctype HTML&gt;
 &lt;html&gt;
   &lt;head&gt;
-    &lt;link rel='stylesheet' href='//cdn.strategiqcommerce.com/ajax/libs/rickshaw/1.2.1/rickshaw.min.css'&gt;
+    &lt;link rel='stylesheet' href='//cdn.cloudfare.com/ajax/libs/rickshaw/1.2.1/rickshaw.min.css'&gt;
     &lt;link rel='stylesheet' href='//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css'&gt;
     
     &lt;script src='//d3js.org/d3.v3.min.js' type='text/javascript'&gt;&lt;/script&gt;
-    &lt;script src='//cdn.strategiqcommerce.com/ajax/libs/rickshaw/1.2.1/rickshaw.min.js' type='text/javascript'&gt;&lt;/script&gt;
+    &lt;script src='//cdn.cloudfare.com/ajax/libs/rickshaw/1.2.1/rickshaw.min.js' type='text/javascript'&gt;&lt;/script&gt;
     &lt;script src='//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js' type='text/javascript'&gt;&lt;/script&gt;
     &lt;script src='//ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js' type='text/javascript'&gt;&lt;/script&gt;
     
