@@ -15,32 +15,42 @@ og-title: Ruble vs Oil dashboard
 <div class='container' style='max-width:990px'>
   <div class='row'>
     <h1>Data Visuals</h1>
-    <h2>dc.js - Oil and Ruble dashboard</h2>
+    <h2>Oil vs Ruble with dc.js</h2>
     
     <!-- Share buttons. Go to www.addthis.com/dashboard to customize your tools -->
     <div class="addthis_sharing_toolbox"></div>
 
-    <p>
-        This is a simple dashboard that shows the futures price of oil as well as the price of a dollar in rubles. The reason I included the ruble is to show visually how it is dependent on the price of oil. There are other factors that affect the USD/RUB exchange rate like economic sanctions, political circumstaces, supply and demand, etc. However, by far the oil and gas industry has nearly direct influence on the ruble economy.
-    </p>
-    <p>
-      I used the <a href='http://dc-js.github.io/dc.js/' target='_blank'>javascript charting library dc.js</a> for data visualization, <a href ='http://square.github.io/crossfilter/' target='_blank'>crossfilter</a> for data manipulation, and <a href = 'https://www.quandl.com/' target='_blank'>quandl.com</a> for collecting data. Following resources were helpful for this exercise:
-      <ul >
-        <li><a href = 'http://dc-js.github.io/dc.js/docs/stock.html' target = '_blank'>dc.js Starting guide</a></li>
-        <li><a href = 'https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md' target = '_blank'>dc.js Master API</a></li>
-        <li><a href = 'https://github.com/square/crossfilter/wiki/API-Reference' target = '_blank'>Crossfilter API</a></li>
-        <li><a href = 'http://learnjsdata.com/index.html' target = '_blank'>Learn Data js</a></li>
-      </ul>
-    </p>
+    <div class = 'row'>
+      <div class="col l6 s12">
+        Charts below are meant to show significant correlation between the price of oil and RUB currency. 
+        Be sure to check out my <a href="https://replit.com/@KobaKhit/Forex-and-Oil-data#README.md" target='_blank'>Forex and Oil Data repl</a> to see how I am using free apis to get the data.
+        <code>dc.js</code> is my favorite javascript visualization library for its crossfiltering approach.
+      </div>
+      <div class="col l3 s12">
+        <strong>Charts</strong>
+        <ul >
+          <li><a href = 'https://dc-js.github.io/dc.js/' target = '_blank'>dc.js Starting guide</a></li>
+          <li><a href = 'http://crossfilter.github.io/crossfilter/' target = '_blank'>Crossfilter API</a></li>
+          <li><a href = 'http://learnjsdata.com/index.html' target = '_blank'>Learn Data js</a></li>
+        </ul>
+      </div>
 
-    <p>
-      The data is updated as soon as the Quandl database is updated, usually on a daily basis. 
-    </p>
-    <p>
-      <strong>TODO:</strong>
-      <p>-  Update Exchange rate api request.</p>
+      <div class="'col l3 s12">
+        <strong>Data and APIs</strong>
+        <ul >
+          <li><a href = 'https://exchangeratesapi.io/' target='_blank'>exchangeratesapi.io</a></li>
+          <li><a href = 'https://fred.stlouisfed.org/series/DCOILWTICO' target='_blank'>fred.stlouisfed.org</a></li>
+          <li><a href = 'https://replit.com/@KobaKhit/Forex-and-Oil-data' target='_blank'>Forex and Oil Data Repl</a></li>
+        </ul>
 
-    </p>
+      </div>
+      <p>
+        
+        
+      </p>
+    </div>
+
+
 
 
   </div>
@@ -55,7 +65,11 @@ og-title: Ruble vs Oil dashboard
     <div id='Bar_chart_oil'>       
     </div>
   </div>
-  <p class='muted'>Source: Quandl: <a href ='https://www.quandl.com/data/CHRIS/ICE_B1-Brent-Crude-Futures-Continuous-Contract-1-B1-Front-Month' target='_blank'>Brent</a> , <a href='https://www.quandl.com/data/CHRIS/CME_CL1-Crude-Oil-Futures-Continuous-Contract-1-CL1-Front-Month' target='_blank'>WTI</a></p>
+  <p class='muted'>Source: FRED: <a href ='https://fred.stlouisfed.org/series/DCOILBRENTEU' target='_blank'>Brent</a> , <a href='https://fred.stlouisfed.org/series/DCOILWTICO' target='_blank'>WTI</a></p>
+
+  <div class = 'row'>
+    
+  </div>
 
   <div class = 'row'>
     <div id='Line_chart_rate'>
@@ -81,28 +95,27 @@ og-title: Ruble vs Oil dashboard
         <a class='reset' href="javascript:dc.filterAll();barchart_com.filterAll();dc.redrawAll();" style="display: none;">reset</a>
     </div>
 
+    <div id='correlation_chart'></div>
+
+    <p>Rolling Correlation with a 60 day window between oil prices and RUB is <span id="number-display"></span></p>
+
     <!-- <div id='Bar_chart_com'>       
     </div> -->
   </div>
 
   <hr>
 
-  <div class='row col-lg-12'>
-    <div class='data-count'>
-          <span class='filter-count'></span> selected out of <span class='total-count'></span> records
-    </div>
-  </div>
   <!-- create a custom header -->
-  <table class='table table-hover highlight centered responsive-table' id='data-table' align='center' style="margin: 0px auto;">
+  <table class='table table-hover highlight centered responsive-table' id='data-table' align='center' style="margin: 0px auto; font-size:17px">
     <thead>
       <tr class='header' >
         <th>Date</th>
-        <th>WTI Price, $</th>
-        <th>WTI Price Change, %</th>
-        <th>Brent Price, $</th>
-        <th>Brent Price Change, %</th>
+        <th>WTI Price</th>
+        <th>WTI Price Change</th>
+        <th>Brent Price</th>
+        <th>Brent Price Change</th>
         <th><font class='rate-name'>RUB</font> per $</th>
-        <th><font class='rate-name'>RUB</font> per $ Change, %</th>
+        <th><font class='rate-name'>RUB</font> per $ Change</th>
       </tr>
     </thead>
   </table>
