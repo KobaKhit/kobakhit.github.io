@@ -1,0 +1,79 @@
+---
+layout: datvisual-noviewport
+og-title: SPY History
+---
+
+{% include dark-style.html %}
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega@5"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-lite@4.17.0"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm//vega-embed@6"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<body>
+#title
+    <div class='container'>
+        <div class = 'row'>
+            <div class="col l6 s12">
+                <p>
+                    This dashboard shows every year of the SPY index since 1993. 
+                    I was inspired by this <a href='https://www.instagram.com/p/CjiTLjdpBdH/?igshid=YmMyMTA2M2Y%3D' target="_blank">post</a> 
+                    and decided to recreate the chart using python.
+                </p>
+                <p>
+                    2022 is currently the second worst year for the stock market since 1993. 
+                    Using the correlation map we can see that 2022 was most similar to 2002 (74%) and 2008 (59%).
+                    If you hover over the correlation map, the corresponding year pairs will be highlighted in the line chart.
+                </p>
+            </div>
+            <div class="col l6 s12">
+                <p>
+                    I used yahoo finance to get the data and altair for plotting charts. 
+                    Altair is a powerful declarative python plotting library based on vega.
+                    I like it for its crossfiltering feature where one can define interactions between charts.
+                    Check the ipynb file to see the code behind these charts.
+                </p>
+                <ul id="spy-list">
+                    <style>
+                        #spy-list li {
+                            float: left;
+                            margin-left: 30px;
+                        }
+                    </style>
+                    <li><a href = 'https://github.com/ranaroussi/yfinance' target = '_blank'>Yahoo Finance</a></li>
+                    <li><a href = 'https://altair-viz.github.io/' target = '_blank'>Vega-Altair</a></li>
+                    <li><a href = 'https://nbviewer.org/url/www.kobakhit.com/data-visuals/spy-history/SPY%20History%20Chart.ipynb' target = '_blank'>SPY History.ipynb</a></li>
+                </ul>
+
+            </div>
+        </div>
+        
+        <div id="vis"></div>
+
+    </div>
+    
+
+    <script>
+
+        $.getJSON( 'spy_history_vega.json', function( data ) {
+            var spec=data; //json output 
+            (function(vegaEmbed) {
+                var embedOpt = {"mode": "vega-lite"};
+
+                function showError(el, error){
+                    el.innerHTML = ('<div class="error" style="color:red;">'
+                                    + '<p>JavaScript Error: ' + error.message + '</p>'
+                                    + "<p>This usually means there's a typo in your chart specification. "
+                                    + "See the javascript console for the full traceback.</p>"
+                                    + '</div>');
+                    throw error;
+                }
+            const el = document.getElementById('vis');
+            vegaEmbed("#vis", spec, embedOpt)
+                .catch(error => showError(el, error));
+            })(vegaEmbed);
+            });
+      </script>
+</body>
