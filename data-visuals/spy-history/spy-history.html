@@ -72,7 +72,7 @@ og-title: SPY History
                     throw error;
                 }
             const el = document.getElementById('vis');
-            vegaEmbed("#vis" width='100%' , spec, embedOpt)
+            vegaEmbed("#vis" , spec, embedOpt)
                 .catch(error => showError(el, error));
             })(vegaEmbed);
             });
