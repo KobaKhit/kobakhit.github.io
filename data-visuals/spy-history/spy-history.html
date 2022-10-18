@@ -51,7 +51,7 @@ og-title: SPY History
             </div>
         </div>
         
-        <div id="vis"></div>
+        <div id="vis" width='100%' ></div>
 
     </div>
     
@@ -72,7 +72,7 @@ og-title: SPY History
                     throw error;
                 }
             const el = document.getElementById('vis');
-            vegaEmbed("#vis", spec, embedOpt)
+            vegaEmbed("#vis" width='100%' , spec, embedOpt)
                 .catch(error => showError(el, error));
             })(vegaEmbed);
             });
