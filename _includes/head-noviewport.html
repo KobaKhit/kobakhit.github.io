@@ -8,7 +8,7 @@
   <meta property="og:title" content="{% if page.og-title %}{{ page.og-title | escape }}{% else %}{{ site.title | escape }}{% endif %}">
   <meta property="og:description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
   <meta property="og:url" content="{{%page.url | prepend: site.url %}}">
-  <meta property="og:image" content="{% if page.img %}{{ page.img | prepend: site.url }}{% else %}http://www.kobakhit.com/img/net.jpeg{% endif %}" />
+  <meta property="og:image" content="{% if page.og-img %}{{ page.og-img | prepend: site.url }}{% else %}http://www.kobakhit.com/img/net.jpeg{% endif %}" />
 
 
   <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}">
