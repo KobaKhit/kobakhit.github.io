@@ -11,7 +11,7 @@ email: kobakhit@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
   A blog where I write about data science, math, stats, web design and grad school.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://kobakhit.com" # the base hostname & protocol for your site
+url: "https://kobakhit.com" # the base hostname & protocol for your site
 twitter_username: kobakhit
 github_username:  kobakhit
 
