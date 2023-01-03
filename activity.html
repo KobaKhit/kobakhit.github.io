@@ -1,0 +1,18 @@
+---
+layout: page
+title: "Activity"
+---
+
+</div markdown='0'>
+</div makrdown = '0' comment = "container end. After this full width page">
+
+<!-- Post list -->
+<div class="container">
+<div class="row">
+{% for a in site.data.activity %}
+<div class="col s1 m1 l6" >
+<iframe class ='card' src={{a.link}} allowfullscreen="" title="Embedded post" width="504" height="748" frameborder="0"></iframe>
+</div>
+{% endfor %}
+</div>
+</div>

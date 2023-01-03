@@ -103,6 +103,19 @@ layout: index
       </li>
     </ul>
   </div>
+
+  <div class = "row">
+    <h1>Recent Activity <small>| <a href="/activity/">see all</a></small></h1>
+
+    <div class="center">
+      {% for a in site.data.activity limit:1 %}
+      <div class = "col s12 m12 l12 center" >
+        <iframe class="card" src={{a.link}} allowfullscreen="" title="Embedded post" width="504" height="748" frameborder="0"></iframe>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
   
   <div class = "row">
     <div class = "col s12 m4 l4" style = "padding:0px;">
