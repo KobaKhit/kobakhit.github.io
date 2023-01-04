@@ -1,19 +1,23 @@
 ---
 layout: page
-title: "Activity"
+title: "Recent Activity"
 permalink: /activity/
 ---
+
+
 
 </div markdown='0'>
 </div makrdown = '0' comment = "container end. After this full width page">
 
 <!-- Post list -->
 <div class="container">
-<div class="row">
-{% for a in site.data.activity %}
-<div class="col s1 m1 l6" >
-<iframe class ='card' src={{a.link}} allowfullscreen="" title="Embedded post" width="504" height="748" frameborder="0"></iframe>
-</div>
-{% endfor %}
-</div>
+    <div class="row">
+        <div style="max-width:1200px; margin: 0 auto">
+            {% for a in site.data.activity %}
+            <div class="col s12 m12 l6" style="max-width:604px;">
+                <iframe class ='card' src={{a.link}} allowfullscreen="" title="Embedded post" width="100%" height="748" frameborder="0"></iframe>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
