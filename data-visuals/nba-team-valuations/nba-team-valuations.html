@@ -68,15 +68,36 @@
       margin: 20px 0 10px 0;
     }
     
-    .toggle-buttons {
+    .controls-row {
+      display: flex;
+      gap: 30px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .toggle-group {
       display: flex;
       gap: 10px;
+      align-items: center;
+    }
+    
+    .toggle-label {
+      font-size: 11px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-family: 'Source Serif Pro', serif;
+    }
+    
+    .toggle-buttons {
+      display: flex;
+      gap: 6px;
     }
     
     .toggle-btn {
-      padding: 8px 20px;
-      font-size: 14px;
+      padding: 8px 16px;
+      font-size: 13px;
       font-family: 'Oswald', sans-serif;
       font-weight: 400;
       background: white;
@@ -89,6 +110,16 @@
     .toggle-btn.active {
       font-weight: 700;
       background: #1a1a2e;
+      color: white;
+    }
+    
+    .toggle-btn.view-btn {
+      border-color: #C8102E;
+      color: #C8102E;
+    }
+    
+    .toggle-btn.view-btn.active {
+      background: #C8102E;
       color: white;
     }
     
@@ -187,28 +218,21 @@
       color: #007A33;
     }
     
-    .legend {
-      display: flex;
-      gap: 30px;
-      margin-top: 30px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    
-    .legend-item {
-      font-family: 'Source Serif Pro', serif;
-      font-size: 13px;
-      color: #666;
+    .legend-inline {
       display: flex;
       align-items: center;
       gap: 8px;
+      margin-left: auto;
+      font-family: 'Source Serif Pro', serif;
+      font-size: 12px;
+      color: #666;
     }
     
     .legend-gradient {
-      width: 60px;
-      height: 12px;
+      width: 50px;
+      height: 10px;
       background: linear-gradient(90deg, #bbb 0%, #1a1a2e 100%);
-      border-radius: 6px;
+      border-radius: 5px;
     }
     
     .stats-section {
@@ -254,7 +278,7 @@
     .stat-team.clippers { color: #C8102E; }
     .stat-team.magic { color: #0077C0; }
     .stat-team.warriors { color: #1D428A; }
-    .stat-team.lakers { color: #552583; }
+    .stat-team.bulls { color: #CE1141; }
     
     .stat-detail {
       font-family: 'Source Serif Pro', serif;
@@ -305,14 +329,30 @@
     
     <!-- Description -->
     <p class="description">
-      Since 2012, the Warriors have surged from #8 to #1 (valued at $11B in 2025), while traditional powerhouses like the Knicks and Lakers have been overtaken. Ribbon thickness shows valuation. The valuations are sourced from <a href="https://www.forbes.com/sites/justinteitelbaum/2025/10/23/the-most-valuable-nba-teams-2025/utm_source=kobakhit&utm_medium=referral" target="_blank">Forbes annual reports</a>.
+      Since 2012, the Warriors have surged from #8 to #1 (valued at $11B in 2025), while traditional powerhouses like the Knicks and Lakers have been overtaken. Ribbon thickness shows valuation. The valuations are sourced from <a href="https://www.forbes.com/sites/justinteitelbaum/2025/10/23/the-most-valuable-nba-teams-2025/?utm_source=kobakhit&utm_medium=referral" target="_blank">Forbes annual reports</a>.
     </p>
     
     <!-- Toggle Buttons -->
-    <div class="toggle-buttons">
-      <button class="toggle-btn" data-top="10">TOP 10</button>
-      <button class="toggle-btn active" data-top="15">TOP 15</button>
-      <button class="toggle-btn" data-top="30">TOP 30</button>
+    <div class="controls-row">
+      <div class="toggle-group">
+        <span class="toggle-label">Teams:</span>
+        <div class="toggle-buttons">
+          <button class="toggle-btn top-btn" data-top="10">TOP 10</button>
+          <button class="toggle-btn top-btn active" data-top="15">TOP 15</button>
+          <button class="toggle-btn top-btn" data-top="30">TOP 30</button>
+        </div>
+      </div>
+      <div class="toggle-group">
+        <span class="toggle-label">View:</span>
+        <div class="toggle-buttons">
+          <button class="toggle-btn view-btn active" data-view="absolute">ABSOLUTE</button>
+          <button class="toggle-btn view-btn" data-view="normalized">NORMALIZED</button>
+        </div>
+      </div>
+      <div class="legend-inline">
+        <div class="legend-gradient"></div>
+        <span id="legend-text">Ribbon thickness = Franchise value</span>
+      </div>
     </div>
     
     <!-- Chart -->
@@ -342,14 +382,6 @@
       </div>
     </div>
     
-    <!-- Legend -->
-    <div class="legend">
-      <div class="legend-item">
-        <div class="legend-gradient"></div>
-        <span>Ribbon thickness = Franchise value</span>
-      </div>
-    </div>
-    
     <!-- Stats Section -->
     <div class="stats-section">
       <div class="stat-card">
@@ -369,8 +401,8 @@
       </div>
       <div class="stat-card">
         <span class="stat-label">Lowest Growth</span>
-        <span class="stat-team lakers">Lakers</span>
-        <span class="stat-detail">+1,011%</span>
+        <span class="stat-team bulls">Bulls</span>
+        <span class="stat-detail">+900%</span>
       </div>
     </div>
     
@@ -622,11 +654,27 @@
     
     // Chart dimensions - base values
     const width = 1100;
-    const padding = { top: 130, right: 180, bottom: 130, left: 60 };
+    const padding = { top: 50, right: 180, bottom: 130, left: 60 };
     const chartWidth = width - padding.left - padding.right;
 
     let showTop = 15;
     let hoveredTeam = null;
+    let isNormalized = false;
+
+    // Generate normalized data (indexed to 100 at 2012)
+    function getNormalizedData() {
+      const normalized = {};
+      years.forEach(year => {
+        normalized[year] = {};
+        Object.keys(rawData[year]).forEach(team => {
+          const baseValue = rawData[2012][team];
+          normalized[year][team] = (rawData[year][team] / baseValue) * 100;
+        });
+      });
+      return normalized;
+    }
+
+    const normalizedData = getNormalizedData();
 
     // Get responsive height based on showTop
     function getChartHeight() {
@@ -660,14 +708,48 @@
 
     const rankings = getRankings();
     const maxValue = Math.max(...Object.values(rawData[2025]));
+    const maxNormalizedValue = Math.max(...Object.values(normalizedData[2025]));
+
+    // Get the active data source based on view mode
+    function getData() {
+      return isNormalized ? normalizedData : rawData;
+    }
 
     // Scales
     function xScale(yearIndex) {
       return padding.left + (yearIndex / (years.length - 1)) * chartWidth;
     }
 
-    function thicknessScale(value) {
-      return Math.max(6, (value / maxValue) * 55);
+    // Calculate dynamic thickness scale factor to fit all ribbons
+    function getThicknessScaleFactor() {
+      const height = getChartHeight();
+      const chartHeight = height - padding.top - padding.bottom;
+      const teamsToShow = rankings[2025].slice(0, showTop).map(d => d.team);
+      const data = getData();
+      const maxVal = isNormalized ? maxNormalizedValue : maxValue;
+      
+      // Calculate total unscaled thickness for the year with highest total (usually 2025)
+      let maxTotalThickness = 0;
+      years.forEach(year => {
+        let totalThickness = 0;
+        teamsToShow.forEach(team => {
+          const value = data[year][team];
+          totalThickness += Math.max(6, (value / maxVal) * 55);
+        });
+        totalThickness += (teamsToShow.length - 1) * 2; // gaps between ribbons
+        maxTotalThickness = Math.max(maxTotalThickness, totalThickness);
+      });
+      
+      // If total exceeds available space, scale down
+      if (maxTotalThickness > chartHeight) {
+        return chartHeight / maxTotalThickness;
+      }
+      return 1;
+    }
+
+    function thicknessScale(value, scaleFactor = 1) {
+      const maxVal = isNormalized ? maxNormalizedValue : maxValue;
+      return Math.max(4, (value / maxVal) * 55 * scaleFactor);
     }
 
     // Calculate stacked positions
@@ -675,6 +757,8 @@
       const positions = {};
       const height = getChartHeight();
       const chartHeight = height - padding.top - padding.bottom;
+      const data = getData();
+      const scaleFactor = getThicknessScaleFactor();
       
       // Get the teams we're showing (based on 2025 rankings)
       const teamsToShow = rankings[2025].slice(0, showTop).map(d => d.team);
@@ -687,12 +771,15 @@
         
         // For each year, get the data for our selected teams and sort by that year's value
         const yearData = teamsToShow.map(team => {
-          const value = rawData[year][team];
-          return { team, value };
+          const value = data[year][team];
+          const rawValue = rawData[year][team]; // Always keep raw for tooltips
+          return { team, value, rawValue };
         }).sort((a, b) => a.value - b.value); // Sort ascending so we stack from bottom
         
+        const gapSize = 2 * scaleFactor; // Scale gaps too
+        
         yearData.forEach((item) => {
-          const thickness = thicknessScale(item.value);
+          const thickness = thicknessScale(item.value, scaleFactor);
           cumulativeY -= thickness;
           const centerY = cumulativeY + thickness / 2;
           
@@ -703,10 +790,11 @@
             y: centerY,
             thickness: thickness,
             rank: actualRank,
-            value: item.value
+            value: item.value,
+            rawValue: item.rawValue
           };
           
-          cumulativeY -= 2;
+          cumulativeY -= gapSize;
         });
       });
       
@@ -982,26 +1070,37 @@
         logo.setAttribute('preserveAspectRatio', 'xMidYMid meet');
         g.appendChild(logo);
 
-        // Team name
+        // Team name with valuation inline
         const nameText = createSVGElement('text');
         nameText.setAttribute('x', xScale(years.length - 1) + 10 + logoSize + 6);
-        nameText.setAttribute('y', pos.y + 2);
-        nameText.setAttribute('fill', teamColors[item.team]);
+        nameText.setAttribute('y', pos.y + 4);
         nameText.setAttribute('font-size', '12');
-        nameText.setAttribute('font-weight', '600');
         nameText.setAttribute('font-family', 'Oswald, sans-serif');
-        nameText.textContent = shortNames[item.team];
+        
+        // Team name span
+        const nameSpan = createSVGElement('tspan');
+        nameSpan.setAttribute('fill', teamColors[item.team]);
+        nameSpan.setAttribute('font-weight', '600');
+        nameSpan.textContent = shortNames[item.team];
+        nameText.appendChild(nameSpan);
+        
+        // Value span (inline) - shows valuation or growth % based on mode
+        const valueSpan = createSVGElement('tspan');
+        valueSpan.setAttribute('font-weight', '400');
+        valueSpan.setAttribute('font-family', 'Source Serif Pro, serif');
+        valueSpan.setAttribute('font-size', '10');
+        
+        if (isNormalized) {
+          const growth = ((rawData[2025][item.team] / rawData[2012][item.team] - 1) * 100).toFixed(0);
+          valueSpan.setAttribute('fill', '#007A33');
+          valueSpan.textContent = ` +${growth}%`;
+        } else {
+          valueSpan.setAttribute('fill', '#666');
+          valueSpan.textContent = ` $${(item.value / 1000).toFixed(1)}B`;
+        }
+        nameText.appendChild(valueSpan);
+        
         g.appendChild(nameText);
-
-        // Valuation
-        const valueText = createSVGElement('text');
-        valueText.setAttribute('x', xScale(years.length - 1) + 10 + logoSize + 6);
-        valueText.setAttribute('y', pos.y + 14);
-        valueText.setAttribute('fill', '#666');
-        valueText.setAttribute('font-size', '10');
-        valueText.setAttribute('font-family', 'Source Serif Pro, serif');
-        valueText.textContent = `$${(item.value / 1000).toFixed(1)}B`;
-        g.appendChild(valueText);
 
         g.addEventListener('mouseenter', () => {
           hoveredTeam = item.team;
@@ -1053,12 +1152,31 @@
       });
     }
 
-    // Toggle button handlers
-    document.querySelectorAll('.toggle-btn').forEach(btn => {
+    // Toggle button handlers - Top N buttons
+    document.querySelectorAll('.top-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.top-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         showTop = parseInt(btn.getAttribute('data-top'));
+        renderChart();
+      });
+    });
+
+    // Toggle button handlers - View mode buttons
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        isNormalized = btn.getAttribute('data-view') === 'normalized';
+        
+        // Update legend text
+        const legendText = document.getElementById('legend-text');
+        if (isNormalized) {
+          legendText.textContent = 'Ribbon thickness = Relative growth (indexed to 100 at 2012)';
+        } else {
+          legendText.textContent = 'Ribbon thickness = Franchise value';
+        }
+        
         renderChart();
       });
     });
