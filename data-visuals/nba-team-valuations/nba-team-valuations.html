@@ -1053,7 +1053,9 @@
         path.addEventListener('mouseleave', () => {
           hoveredTeam = null;
           updateHoverState();
-          if (!selectedTeam) {
+          if (selectedTeam) {
+            showTooltip(selectedTeam);
+          } else {
             hideTooltip();
           }
         });
@@ -1134,7 +1136,9 @@
         g.addEventListener('mouseleave', () => {
           hoveredTeam = null;
           updateHoverState();
-          if (!selectedTeam) {
+          if (selectedTeam) {
+            showTooltip(selectedTeam);
+          } else {
             hideTooltip();
           }
         });
