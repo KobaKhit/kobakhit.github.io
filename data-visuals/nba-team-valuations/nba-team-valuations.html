@@ -659,6 +659,7 @@
 
     let showTop = 15;
     let hoveredTeam = null;
+    let selectedTeam = null;
     let isNormalized = false;
 
     // Generate normalized data (indexed to 100 at 2012)
@@ -950,6 +951,14 @@
       bgRect.setAttribute('width', width);
       bgRect.setAttribute('height', height);
       bgRect.setAttribute('fill', 'url(#bgGradient)');
+      bgRect.style.cursor = 'default';
+      bgRect.addEventListener('click', () => {
+        if (selectedTeam) {
+          selectedTeam = null;
+          hideTooltip();
+          updateHoverState();
+        }
+      });
       svg.appendChild(bgRect);
 
       // Year columns
@@ -1044,7 +1053,21 @@
         path.addEventListener('mouseleave', () => {
           hoveredTeam = null;
           updateHoverState();
-          hideTooltip();
+          if (!selectedTeam) {
+            hideTooltip();
+          }
+        });
+
+        path.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (selectedTeam === team) {
+            selectedTeam = null;
+            hideTooltip();
+          } else {
+            selectedTeam = team;
+            showTooltip(team);
+          }
+          updateHoverState();
         });
 
         svg.appendChild(path);
@@ -1111,7 +1134,21 @@
         g.addEventListener('mouseleave', () => {
           hoveredTeam = null;
           updateHoverState();
-          hideTooltip();
+          if (!selectedTeam) {
+            hideTooltip();
+          }
+        });
+
+        g.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (selectedTeam === item.team) {
+            selectedTeam = null;
+            hideTooltip();
+          } else {
+            selectedTeam = item.team;
+            showTooltip(item.team);
+          }
+          updateHoverState();
         });
 
         svg.appendChild(g);
@@ -1122,11 +1159,12 @@
     function updateHoverState() {
       const ribbons = document.querySelectorAll('.ribbon');
       const labels = document.querySelectorAll('.label-group');
+      const activeTeam = hoveredTeam || selectedTeam;
 
       ribbons.forEach(ribbon => {
         const team = ribbon.getAttribute('data-team');
-        if (hoveredTeam) {
-          if (team === hoveredTeam) {
+        if (activeTeam) {
+          if (team === activeTeam) {
             ribbon.setAttribute('opacity', '1');
             ribbon.setAttribute('stroke', 'white');
             ribbon.setAttribute('stroke-width', '2.5');
@@ -1144,8 +1182,8 @@
 
       labels.forEach(label => {
         const team = label.getAttribute('data-team');
-        if (hoveredTeam) {
-          label.setAttribute('opacity', team === hoveredTeam ? '1' : '0.25');
+        if (activeTeam) {
+          label.setAttribute('opacity', team === activeTeam ? '1' : '0.25');
         } else {
           label.setAttribute('opacity', '1');
         }
