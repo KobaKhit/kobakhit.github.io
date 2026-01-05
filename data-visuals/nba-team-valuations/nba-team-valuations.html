@@ -124,6 +124,44 @@
       color: white;
     }
     
+    .toggle-btn.spy-btn {
+      border-color: #4CAF50;
+      color: #4CAF50;
+    }
+    
+    .toggle-btn.spy-btn.active {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    .spy-line {
+      fill: none;
+      stroke: #4CAF50;
+      stroke-width: 3;
+      stroke-dasharray: 8, 4;
+    }
+    
+    .spy-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      fill: white;
+    }
+    
+    .nba-avg-line {
+      fill: none;
+      stroke: #FF9800;
+      stroke-width: 3;
+      stroke-dasharray: 4, 4;
+    }
+    
+    .nba-avg-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      fill: white;
+    }
+    
     .chart-container {
       position: relative;
     }
@@ -330,7 +368,12 @@
     
     <!-- Description -->
     <p class="description">
-      Since 2012, the Warriors have surged from #8 to #1 (valued at $11B in 2025), while traditional powerhouses like the Knicks and Lakers have been overtaken. Ribbon thickness shows valuation. The valuations are sourced from <a href="https://www.forbes.com/sites/justinteitelbaum/2025/10/23/the-most-valuable-nba-teams-2025/?utm_source=kobakhit&utm_medium=referral" target="_blank">Forbes annual reports</a>.
+      In 2012, the Lakers ($900M), Knicks ($780M), Bulls ($600M), and Mavericks ($497M) were the top four most valuable franchises, with the Warriors at #8 ($450M). 
+      Fast forward to 2025: the league has exploded - fueled by media deals, tech billionaire owners, and global expansion. 
+      The Warriors ($11B) now reign supreme, while the Clippers rocketed from #20 to #4 after Steve Ballmer's purchase and new arena. 
+      As of 2025-10-31 the average NBA franchise grew +1,283% since 2012, dwarfing the S&P 500's +319% - making NBA teams one of the best-performing asset classes of the decade. 
+      Ribbon thickness shows valuation. 
+      Data sourced from <a href="https://www.forbes.com/sites/justinteitelbaum/2025/10/23/the-most-valuable-nba-teams-2025/?utm_source=kobakhit&utm_medium=referral" target="_blank">Forbes annual reports</a>.
     </p>
     
     <!-- Toggle Buttons -->
@@ -348,6 +391,12 @@
         <div class="toggle-buttons">
           <button class="toggle-btn view-btn active" data-view="absolute">ABSOLUTE</button>
           <button class="toggle-btn view-btn" data-view="normalized">NORMALIZED</button>
+        </div>
+      </div>
+      <div class="toggle-group">
+        <span class="toggle-label">Compare:</span>
+        <div class="toggle-buttons">
+          <button class="toggle-btn spy-btn" id="spy-toggle">S&P 500</button>
         </div>
       </div>
       <div class="legend-inline">
@@ -653,6 +702,23 @@
 
     const years = [2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
     
+    // S&P 500 (SPY) approximate year-end prices for comparison
+    const spyData = {
+      2012: 142,
+      2013: 184,
+      2015: 203,
+      2016: 225,
+      2017: 267,
+      2018: 249,
+      2019: 321,
+      2020: 373,
+      2021: 475,
+      2022: 383,
+      2023: 475,
+      2024: 590,
+      2025: 595
+    };
+    
     // Chart dimensions - base values
     const width = 1100;
     const padding = { top: 50, right: 180, bottom: 130, left: 60 };
@@ -662,6 +728,7 @@
     let hoveredTeam = null;
     let selectedTeam = null;
     let isNormalized = false;
+    let showSPY = false;
 
     // Generate normalized data (indexed to 100 at 2012)
     function getNormalizedData() {
@@ -1076,6 +1143,73 @@
         svg.appendChild(path);
       });
 
+      // Comparison lines (if enabled) - draw lines first (behind labels)
+      // Both lines show percentage growth (indexed to 100 in 2012) for meaningful comparison
+      let spyPoints = null;
+      let nbaAvgPoints = null;
+      if (showSPY) {
+        const height = getChartHeight();
+        const chartHeight = height - padding.top - padding.bottom;
+        const yRange = chartHeight * 0.8;
+        
+        // Calculate NBA league average for each year
+        const nbaAvgByYear = {};
+        const allTeams = Object.keys(rawData[2012]);
+        years.forEach(year => {
+          const total = allTeams.reduce((sum, team) => sum + rawData[year][team], 0);
+          nbaAvgByYear[year] = total / allTeams.length;
+        });
+        const nbaAvgBase = nbaAvgByYear[2012];
+        
+        // Calculate NBA average line points (normalized to 100 at 2012)
+        nbaAvgPoints = years.map((year, idx) => {
+          const avgNormalized = (nbaAvgByYear[year] / nbaAvgBase) * 100;
+          const y = padding.top + chartHeight - (avgNormalized / maxNormalizedValue) * yRange;
+          return { 
+            x: xScale(idx), 
+            y: Math.max(padding.top, Math.min(y, padding.top + chartHeight)),
+            value: nbaAvgByYear[year],
+            normalized: avgNormalized
+          };
+        });
+
+        // Draw NBA average line
+        let nbaAvgPathD = `M ${nbaAvgPoints[0].x} ${nbaAvgPoints[0].y}`;
+        for (let i = 1; i < nbaAvgPoints.length; i++) {
+          const prev = nbaAvgPoints[i - 1];
+          const curr = nbaAvgPoints[i];
+          const cpx = (prev.x + curr.x) / 2;
+          nbaAvgPathD += ` C ${cpx} ${prev.y}, ${cpx} ${curr.y}, ${curr.x} ${curr.y}`;
+        }
+
+        const nbaAvgLine = createSVGElement('path');
+        nbaAvgLine.setAttribute('d', nbaAvgPathD);
+        nbaAvgLine.setAttribute('class', 'nba-avg-line');
+        svg.appendChild(nbaAvgLine);
+        
+        // Calculate SPY y-positions
+        const spyBaseValue = spyData[2012];
+        spyPoints = years.map((year, idx) => {
+          const spyNormalized = (spyData[year] / spyBaseValue) * 100;
+          const y = padding.top + chartHeight - (spyNormalized / maxNormalizedValue) * yRange;
+          return { x: xScale(idx), y: Math.max(padding.top, Math.min(y, padding.top + chartHeight)) };
+        });
+
+        // Draw the SPY line
+        let spyPathD = `M ${spyPoints[0].x} ${spyPoints[0].y}`;
+        for (let i = 1; i < spyPoints.length; i++) {
+          const prev = spyPoints[i - 1];
+          const curr = spyPoints[i];
+          const cpx = (prev.x + curr.x) / 2;
+          spyPathD += ` C ${cpx} ${prev.y}, ${cpx} ${curr.y}, ${curr.x} ${curr.y}`;
+        }
+
+        const spyLine = createSVGElement('path');
+        spyLine.setAttribute('d', spyPathD);
+        spyLine.setAttribute('class', 'spy-line');
+        svg.appendChild(spyLine);
+      }
+
       // Right side labels with logos
       rankings[2025].slice(0, showTop).forEach((item) => {
         const pos = stackedPositions[2025][item.team];
@@ -1158,6 +1292,91 @@
 
         svg.appendChild(g);
       });
+
+      // Comparison labels and circles (drawn last to be in foreground)
+      if (showSPY && spyPoints && nbaAvgPoints) {
+        // NBA Average label and circles
+        const nbaLastPoint = nbaAvgPoints[nbaAvgPoints.length - 1];
+        const nbaAvgGrowth = ((nbaLastPoint.normalized) - 100).toFixed(0);
+        const nbaLabelText = `NBA Avg +${nbaAvgGrowth}%`;
+        const nbaLabelX = nbaLastPoint.x + 10;
+        const nbaLabelY = nbaLastPoint.y;
+        
+        // NBA Avg Pill background
+        const nbaPillWidth = 100;
+        const nbaPillHeight = 20;
+        const nbaAvgPill = createSVGElement('rect');
+        nbaAvgPill.setAttribute('x', nbaLabelX - 6);
+        nbaAvgPill.setAttribute('y', nbaLabelY - nbaPillHeight / 2 - 2);
+        nbaAvgPill.setAttribute('width', nbaPillWidth);
+        nbaAvgPill.setAttribute('height', nbaPillHeight);
+        nbaAvgPill.setAttribute('rx', nbaPillHeight / 2);
+        nbaAvgPill.setAttribute('ry', nbaPillHeight / 2);
+        nbaAvgPill.setAttribute('fill', '#FF9800');
+        svg.appendChild(nbaAvgPill);
+        
+        // NBA Avg Label text
+        const nbaAvgLabel = createSVGElement('text');
+        nbaAvgLabel.setAttribute('x', nbaLabelX);
+        nbaAvgLabel.setAttribute('y', nbaLabelY + 4);
+        nbaAvgLabel.setAttribute('class', 'nba-avg-label');
+        nbaAvgLabel.setAttribute('fill', 'white');
+        nbaAvgLabel.textContent = nbaLabelText;
+        svg.appendChild(nbaAvgLabel);
+
+        // NBA Avg circles at data points
+        nbaAvgPoints.forEach((point, idx) => {
+          const circle = createSVGElement('circle');
+          circle.setAttribute('cx', point.x);
+          circle.setAttribute('cy', point.y);
+          circle.setAttribute('r', '4');
+          circle.setAttribute('fill', '#FF9800');
+          circle.setAttribute('stroke', 'white');
+          circle.setAttribute('stroke-width', '2');
+          svg.appendChild(circle);
+        });
+
+        // S&P 500 label and circles
+        const lastPoint = spyPoints[spyPoints.length - 1];
+        const spyGrowth = ((spyData[2025] / spyData[2012] - 1) * 100).toFixed(0);
+        const labelText = `S&P 500 +${spyGrowth}%`;
+        const labelX = lastPoint.x + 10;
+        const labelY = lastPoint.y;
+        
+        // SPY Pill background
+        const pillWidth = 105;
+        const pillHeight = 20;
+        const spyPill = createSVGElement('rect');
+        spyPill.setAttribute('x', labelX - 6);
+        spyPill.setAttribute('y', labelY - pillHeight / 2 - 2);
+        spyPill.setAttribute('width', pillWidth);
+        spyPill.setAttribute('height', pillHeight);
+        spyPill.setAttribute('rx', pillHeight / 2);
+        spyPill.setAttribute('ry', pillHeight / 2);
+        spyPill.setAttribute('fill', '#4CAF50');
+        svg.appendChild(spyPill);
+        
+        // SPY Label text
+        const spyLabel = createSVGElement('text');
+        spyLabel.setAttribute('x', labelX);
+        spyLabel.setAttribute('y', labelY + 4);
+        spyLabel.setAttribute('class', 'spy-label');
+        spyLabel.setAttribute('fill', 'white');
+        spyLabel.textContent = labelText;
+        svg.appendChild(spyLabel);
+
+        // SPY circles at data points
+        spyPoints.forEach((point, idx) => {
+          const circle = createSVGElement('circle');
+          circle.setAttribute('cx', point.x);
+          circle.setAttribute('cy', point.y);
+          circle.setAttribute('r', '4');
+          circle.setAttribute('fill', '#4CAF50');
+          circle.setAttribute('stroke', 'white');
+          circle.setAttribute('stroke-width', '2');
+          svg.appendChild(circle);
+        });
+      }
     }
 
     // Update hover state
@@ -1222,6 +1441,13 @@
         
         renderChart();
       });
+    });
+
+    // Toggle button handler - S&P 500 comparison
+    document.getElementById('spy-toggle').addEventListener('click', function() {
+      showSPY = !showSPY;
+      this.classList.toggle('active', showSPY);
+      renderChart();
     });
 
     // Initial render
