@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:image" content="/data-visuals/nba-team-valuations/nba-team-valuations-screen.png" />
+  <title>NBA Valuations 2012-2025</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Source+Serif+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: linear-gradient(180deg, #F5F0E8 0%, #EBE4D8 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+      font-family: 'Oswald', sans-serif;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      margin-bottom: 10px;
+    }
+    
+    .title {
+      font-size: clamp(56px, 10vw, 120px);
+      font-weight: 700;
+      color: #1a1a2e;
+      line-height: 0.85;
+      margin: 5px 0 15px 0;
+      letter-spacing: -3px;
+      text-transform: uppercase;
+    }
+    
+    .subtitle {
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 700;
+      color: #C8102E;
+      line-height: 0.95;
+      margin: 5px 0 15px 0;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+    }
+    
+    .year-badge {
+      display: inline-block;
+      background: #1a1a2e;
+      color: #F5F0E8;
+      padding: 10px 24px;
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: 3px;
+    }
+    
+    .description {
+      font-family: 'Source Serif Pro', Georgia, serif;
+      font-size: 17px;
+      color: #444;
+      width: 100%;
+      line-height: 1.6;
+      margin: 20px 0 10px 0;
+    }
+    
+    .toggle-buttons {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    
+    .toggle-btn {
+      padding: 8px 20px;
+      font-size: 14px;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 400;
+      background: white;
+      color: #1a1a2e;
+      border: 2px solid #1a1a2e;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .toggle-btn.active {
+      font-weight: 700;
+      background: #1a1a2e;
+      color: white;
+    }
+    
+    .chart-container {
+      position: relative;
+    }
+    
+    .chart-svg {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 4px 20px rgba(0,0,0,0.08));
+    }
+    
+    .ribbon {
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+    
+    .ribbon:hover {
+      opacity: 1 !important;
+    }
+    
+    .tooltip {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: white;
+      padding: 16px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+      min-width: 220px;
+      z-index: 10;
+      display: none;
+      border-left: 5px solid #1a1a2e;
+    }
+    
+    .tooltip.visible {
+      display: block;
+    }
+    
+    .tooltip-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    
+    .tooltip-logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+    
+    .tooltip-title {
+      font-size: 18px;
+      font-weight: 700;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+    }
+    
+    .tooltip-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      font-family: 'Source Serif Pro', serif;
+    }
+    
+    .tooltip-label {
+      font-size: 11px;
+      color: #888;
+    }
+    
+    .tooltip-value {
+      font-size: 14px;
+    }
+    
+    .tooltip-value strong {
+      font-weight: 600;
+    }
+    
+    .tooltip-value .rank {
+      color: #888;
+      margin-left: 6px;
+    }
+    
+    .tooltip-growth {
+      border-top: 1px solid #eee;
+      margin-top: 12px;
+      padding-top: 12px;
+      font-family: 'Source Serif Pro', serif;
+    }
+    
+    .tooltip-growth-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #007A33;
+    }
+    
+    .legend {
+      display: flex;
+      gap: 30px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .legend-item {
+      font-family: 'Source Serif Pro', serif;
+      font-size: 13px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .legend-gradient {
+      width: 60px;
+      height: 12px;
+      background: linear-gradient(90deg, #bbb 0%, #1a1a2e 100%);
+      border-radius: 6px;
+    }
+    
+    .stats-section {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: 12px;
+      margin-top: 25px;
+    }
+    
+    .stat-card {
+      background: rgba(255,255,255,0.5);
+      border: 1px solid #e0dbd3;
+      border-radius: 6px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: background 0.2s;
+    }
+    
+    .stat-card:hover {
+      background: rgba(255,255,255,0.8);
+    }
+    
+    .stat-label {
+      font-family: 'Source Serif Pro', serif;
+      font-size: 11px;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    
+    .stat-team {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .stat-team.clippers { color: #C8102E; }
+    .stat-team.magic { color: #0077C0; }
+    .stat-team.warriors { color: #1D428A; }
+    .stat-team.lakers { color: #552583; }
+    
+    .stat-detail {
+      font-family: 'Source Serif Pro', serif;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    @media (max-width: 480px) {
+      .stats-section {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #d0c9bc;
+      font-size: 11px;
+      color: #888;
+      font-family: 'Source Serif Pro', serif;
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .footer-author {
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      color: #1a1a2e;
+      font-size: 13px;
+    }
+    
+    .label-group {
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1 class="title">NBA <span style="color: #C8102E;">VALUATIONS</span></h1>
+      <div class="year-badge">2012–2025</div>
+    </div>
+    
+    <!-- Description -->
+    <p class="description">
+      Since 2012, the Warriors have surged from #8 to #1 (valued at $11B in 2025), while traditional powerhouses like the Knicks and Lakers have been overtaken. Ribbon thickness shows valuation.
+    </p>
+    
+    <!-- Toggle Buttons -->
+    <div class="toggle-buttons">
+      <button class="toggle-btn" data-top="10">TOP 10</button>
+      <button class="toggle-btn active" data-top="15">TOP 15</button>
+      <button class="toggle-btn" data-top="30">TOP 30</button>
+    </div>
+    
+    <!-- Chart -->
+    <div class="chart-container">
+      <svg id="chart" class="chart-svg" viewBox="0 0 1100 1000"></svg>
+      
+      <!-- Tooltip -->
+      <div id="tooltip" class="tooltip">
+        <div class="tooltip-header">
+          <img id="tooltip-logo" class="tooltip-logo" src="" alt="">
+          <div id="tooltip-title" class="tooltip-title"></div>
+        </div>
+        <div class="tooltip-grid">
+          <div>
+            <div class="tooltip-label">2012</div>
+            <div id="tooltip-2012" class="tooltip-value"></div>
+          </div>
+          <div>
+            <div class="tooltip-label">2025</div>
+            <div id="tooltip-2025" class="tooltip-value"></div>
+          </div>
+        </div>
+        <div class="tooltip-growth">
+          <div class="tooltip-label">Value Growth</div>
+          <div id="tooltip-growth" class="tooltip-growth-value"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-gradient"></div>
+        <span>Ribbon thickness = Franchise value</span>
+      </div>
+    </div>
+    
+    <!-- Stats Section -->
+    <div class="stats-section">
+      <div class="stat-card">
+        <span class="stat-label">Biggest Riser</span>
+        <span class="stat-team clippers">Clippers</span>
+        <span class="stat-detail">#20 → #4</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Biggest Slider</span>
+        <span class="stat-team magic">Magic</span>
+        <span class="stat-detail">#11 → #27</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Biggest Growth</span>
+        <span class="stat-team warriors">Warriors</span>
+        <span class="stat-detail">+2,344%</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Lowest Growth</span>
+        <span class="stat-team lakers">Lakers</span>
+        <span class="stat-detail">+1,011%</span>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <span>Values in current U.S. dollars (not adjusted for inflation) | Source: Forbes NBA Valuations 2012-2025</span>
+      <span class="footer-author"><a href="http://www.kobakhit.com" target="_blank">@kobakhit</a></span>
+    </div>
+  </div>
+
+  <script>
+    // Complete Forbes NBA Valuations Data 2012-2024 (in millions)
+    const rawData = {
+      2012: {
+        "Los Angeles Lakers": 900, "New York Knicks": 780, "Chicago Bulls": 600, "Dallas Mavericks": 497,
+        "Boston Celtics": 482, "Miami Heat": 457, "Houston Rockets": 453, "Golden State Warriors": 450,
+        "San Antonio Spurs": 418, "Phoenix Suns": 395, "Orlando Magic": 385, "Toronto Raptors": 382,
+        "Portland Trail Blazers": 370, "Brooklyn Nets": 357, "Oklahoma City Thunder": 348, "Utah Jazz": 335,
+        "Detroit Pistons": 332, "Cleveland Cavaliers": 329, "Washington Wizards": 328, "Los Angeles Clippers": 324,
+        "Denver Nuggets": 316, "Philadelphia 76ers": 314, "Sacramento Kings": 300, "New Orleans Pelicans": 285,
+        "Indiana Pacers": 283, "Charlotte Hornets": 277, "Minnesota Timberwolves": 272, "Atlanta Hawks": 270,
+        "Memphis Grizzlies": 269, "Milwaukee Bucks": 268
+      },
+      2013: {
+        "New York Knicks": 1100, "Los Angeles Lakers": 1000, "Chicago Bulls": 800, "Boston Celtics": 730,
+        "Dallas Mavericks": 685, "Miami Heat": 625, "Houston Rockets": 568, "Golden State Warriors": 555,
+        "Brooklyn Nets": 530, "San Antonio Spurs": 527, "Sacramento Kings": 525, "Oklahoma City Thunder": 475,
+        "Phoenix Suns": 474, "Orlando Magic": 470, "Portland Trail Blazers": 457, "Cleveland Cavaliers": 434,
+        "Utah Jazz": 432, "Los Angeles Clippers": 430, "Denver Nuggets": 427, "Philadelphia 76ers": 418,
+        "Toronto Raptors": 405, "Detroit Pistons": 400, "Washington Wizards": 397, "Indiana Pacers": 383,
+        "Memphis Grizzlies": 377, "Minnesota Timberwolves": 364, "New Orleans Pelicans": 340, "Atlanta Hawks": 316,
+        "Charlotte Hornets": 315, "Milwaukee Bucks": 312
+      },
+      2015: {
+        "Los Angeles Lakers": 2600, "New York Knicks": 2500, "Chicago Bulls": 2000, "Boston Celtics": 1700,
+        "Los Angeles Clippers": 1600, "Brooklyn Nets": 1500, "Golden State Warriors": 1300, "Houston Rockets": 1250,
+        "Miami Heat": 1175, "Dallas Mavericks": 1150, "San Antonio Spurs": 1050, "Cleveland Cavaliers": 1000,
+        "Phoenix Suns": 990, "Toronto Raptors": 920, "Portland Trail Blazers": 900, "Washington Wizards": 880,
+        "Oklahoma City Thunder": 870, "Sacramento Kings": 850, "Orlando Magic": 825, "Utah Jazz": 800,
+        "Denver Nuggets": 780, "Detroit Pistons": 750, "Indiana Pacers": 740, "Atlanta Hawks": 730,
+        "Memphis Grizzlies": 700, "Charlotte Hornets": 680, "Minnesota Timberwolves": 660, "Philadelphia 76ers": 650,
+        "Milwaukee Bucks": 600, "New Orleans Pelicans": 580
+      },
+      2016: {
+        "New York Knicks": 3000, "Los Angeles Lakers": 2700, "Chicago Bulls": 2300, "Boston Celtics": 2100,
+        "Los Angeles Clippers": 2000, "Golden State Warriors": 1900, "Brooklyn Nets": 1700, "Houston Rockets": 1500,
+        "Dallas Mavericks": 1400, "Miami Heat": 1300, "San Antonio Spurs": 1150, "Cleveland Cavaliers": 1100,
+        "Phoenix Suns": 1000, "Toronto Raptors": 980, "Portland Trail Blazers": 975, "Washington Wizards": 960,
+        "Oklahoma City Thunder": 950, "Sacramento Kings": 925, "Orlando Magic": 900, "Utah Jazz": 875,
+        "Denver Nuggets": 855, "Detroit Pistons": 850, "Indiana Pacers": 840, "Atlanta Hawks": 825,
+        "Memphis Grizzlies": 780, "Charlotte Hornets": 750, "Minnesota Timberwolves": 720, "Philadelphia 76ers": 700,
+        "Milwaukee Bucks": 675, "New Orleans Pelicans": 650
+      },
+      2017: {
+        "New York Knicks": 3300, "Los Angeles Lakers": 3000, "Golden State Warriors": 2600, "Chicago Bulls": 2500,
+        "Boston Celtics": 2200, "Los Angeles Clippers": 2000, "Brooklyn Nets": 1800, "Houston Rockets": 1650,
+        "Dallas Mavericks": 1450, "Miami Heat": 1350, "Cleveland Cavaliers": 1200, "San Antonio Spurs": 1175,
+        "Toronto Raptors": 1125, "Phoenix Suns": 1100, "Sacramento Kings": 1075, "Portland Trail Blazers": 1050,
+        "Oklahoma City Thunder": 1025, "Washington Wizards": 1000, "Orlando Magic": 920, "Utah Jazz": 910,
+        "Detroit Pistons": 900, "Denver Nuggets": 890, "Atlanta Hawks": 885, "Indiana Pacers": 880,
+        "Philadelphia 76ers": 800, "Memphis Grizzlies": 790, "Milwaukee Bucks": 785, "Charlotte Hornets": 780,
+        "Minnesota Timberwolves": 770, "New Orleans Pelicans": 750
+      },
+      2018: {
+        "New York Knicks": 3600, "Los Angeles Lakers": 3300, "Golden State Warriors": 3100, "Chicago Bulls": 2600,
+        "Boston Celtics": 2500, "Brooklyn Nets": 2300, "Houston Rockets": 2200, "Los Angeles Clippers": 2150,
+        "Dallas Mavericks": 1900, "Miami Heat": 1700, "San Antonio Spurs": 1550, "Toronto Raptors": 1400,
+        "Sacramento Kings": 1375, "Washington Wizards": 1350, "Cleveland Cavaliers": 1325, "Portland Trail Blazers": 1300,
+        "Phoenix Suns": 1280, "Oklahoma City Thunder": 1250, "Orlando Magic": 1225, "Utah Jazz": 1200,
+        "Philadelphia 76ers": 1180, "Indiana Pacers": 1175, "Atlanta Hawks": 1150, "Denver Nuggets": 1125,
+        "Detroit Pistons": 1100, "Milwaukee Bucks": 1075, "Minnesota Timberwolves": 1060, "Charlotte Hornets": 1050,
+        "Memphis Grizzlies": 1025, "New Orleans Pelicans": 1000
+      },
+      2019: {
+        "New York Knicks": 4000, "Los Angeles Lakers": 3700, "Golden State Warriors": 3500, "Chicago Bulls": 2900,
+        "Boston Celtics": 2800, "Brooklyn Nets": 2350, "Houston Rockets": 2300, "Dallas Mavericks": 2250,
+        "Los Angeles Clippers": 2200, "Miami Heat": 1750, "Toronto Raptors": 1675, "Philadelphia 76ers": 1650,
+        "San Antonio Spurs": 1625, "Portland Trail Blazers": 1600, "Sacramento Kings": 1575, "Washington Wizards": 1550,
+        "Phoenix Suns": 1500, "Oklahoma City Thunder": 1475, "Utah Jazz": 1425, "Indiana Pacers": 1400,
+        "Denver Nuggets": 1375, "Milwaukee Bucks": 1350, "Orlando Magic": 1325, "Atlanta Hawks": 1300,
+        "Cleveland Cavaliers": 1275, "Detroit Pistons": 1270, "Minnesota Timberwolves": 1260, "Charlotte Hornets": 1250,
+        "New Orleans Pelicans": 1220, "Memphis Grizzlies": 1200
+      },
+      2020: {
+        "New York Knicks": 4600, "Los Angeles Lakers": 4400, "Golden State Warriors": 4300, "Chicago Bulls": 3200,
+        "Boston Celtics": 3100, "Los Angeles Clippers": 2600, "Brooklyn Nets": 2500, "Houston Rockets": 2475,
+        "Dallas Mavericks": 2400, "Toronto Raptors": 2100, "Philadelphia 76ers": 2000, "Miami Heat": 1950,
+        "Portland Trail Blazers": 1850, "San Antonio Spurs": 1800, "Sacramento Kings": 1775, "Washington Wizards": 1750,
+        "Phoenix Suns": 1625, "Denver Nuggets": 1600, "Milwaukee Bucks": 1580, "Oklahoma City Thunder": 1575,
+        "Utah Jazz": 1550, "Indiana Pacers": 1525, "Atlanta Hawks": 1520, "Cleveland Cavaliers": 1510,
+        "Charlotte Hornets": 1500, "Detroit Pistons": 1450, "Orlando Magic": 1430, "Minnesota Timberwolves": 1375,
+        "New Orleans Pelicans": 1350, "Memphis Grizzlies": 1300
+      },
+      2021: {
+        "New York Knicks": 5000, "Golden State Warriors": 4700, "Los Angeles Lakers": 4600, "Chicago Bulls": 3300,
+        "Boston Celtics": 3200, "Los Angeles Clippers": 2750, "Brooklyn Nets": 2650, "Houston Rockets": 2500,
+        "Dallas Mavericks": 2450, "Toronto Raptors": 2150, "Philadelphia 76ers": 2075, "Miami Heat": 2000,
+        "Portland Trail Blazers": 1900, "San Antonio Spurs": 1850, "Sacramento Kings": 1825, "Washington Wizards": 1800,
+        "Phoenix Suns": 1700, "Utah Jazz": 1660, "Denver Nuggets": 1650, "Milwaukee Bucks": 1625,
+        "Oklahoma City Thunder": 1575, "Cleveland Cavaliers": 1560, "Indiana Pacers": 1550, "Atlanta Hawks": 1520,
+        "Charlotte Hornets": 1500, "Orlando Magic": 1460, "Detroit Pistons": 1450, "Minnesota Timberwolves": 1400,
+        "New Orleans Pelicans": 1350, "Memphis Grizzlies": 1300
+      },
+      2022: {
+        "Golden State Warriors": 7000, "New York Knicks": 6100, "Los Angeles Lakers": 5900, "Chicago Bulls": 4100,
+        "Boston Celtics": 4000, "Los Angeles Clippers": 3900, "Brooklyn Nets": 3500, "Dallas Mavericks": 3300,
+        "Houston Rockets": 3200, "Philadelphia 76ers": 3150, "Toronto Raptors": 3100, "Miami Heat": 3000,
+        "Phoenix Suns": 2700, "Washington Wizards": 2500, "Milwaukee Bucks": 2300, "Portland Trail Blazers": 2100,
+        "Cleveland Cavaliers": 2050, "Sacramento Kings": 2030, "Utah Jazz": 2025, "San Antonio Spurs": 2000,
+        "Atlanta Hawks": 1975, "Denver Nuggets": 1930, "Detroit Pistons": 1900, "Oklahoma City Thunder": 1875,
+        "Orlando Magic": 1850, "Indiana Pacers": 1800, "Charlotte Hornets": 1700, "Minnesota Timberwolves": 1670,
+        "Memphis Grizzlies": 1650, "New Orleans Pelicans": 1600
+      },
+      2023: {
+        "Golden State Warriors": 7700, "New York Knicks": 6600, "Los Angeles Lakers": 6400, "Boston Celtics": 4700,
+        "Los Angeles Clippers": 4650, "Chicago Bulls": 4600, "Dallas Mavericks": 4500, "Houston Rockets": 4400,
+        "Philadelphia 76ers": 4300, "Toronto Raptors": 4100, "Phoenix Suns": 4000, "Miami Heat": 3900,
+        "Brooklyn Nets": 3850, "Washington Wizards": 3500, "Denver Nuggets": 3370, "Cleveland Cavaliers": 3350,
+        "Sacramento Kings": 3330, "Atlanta Hawks": 3320, "San Antonio Spurs": 3250, "Milwaukee Bucks": 3200,
+        "Utah Jazz": 3090, "Portland Trail Blazers": 3080, "Detroit Pistons": 3070, "Oklahoma City Thunder": 3050,
+        "Charlotte Hornets": 3000, "Orlando Magic": 2950, "Indiana Pacers": 2900, "New Orleans Pelicans": 2550,
+        "Minnesota Timberwolves": 2500, "Memphis Grizzlies": 2400
+      },
+      2024: {
+        "Golden State Warriors": 8800, "New York Knicks": 7500, "Los Angeles Lakers": 7100, "Boston Celtics": 6000,
+        "Los Angeles Clippers": 5500, "Chicago Bulls": 5000, "Houston Rockets": 4900, "Brooklyn Nets": 4800,
+        "Dallas Mavericks": 4700, "Philadelphia 76ers": 4600, "Toronto Raptors": 4400, "Phoenix Suns": 4300,
+        "Miami Heat": 4250, "Washington Wizards": 4100, "Milwaukee Bucks": 4000, "Cleveland Cavaliers": 3950,
+        "Denver Nuggets": 3900, "San Antonio Spurs": 3850, "Atlanta Hawks": 3800, "Sacramento Kings": 3700,
+        "Oklahoma City Thunder": 3650, "Indiana Pacers": 3600, "Utah Jazz": 3550, "Portland Trail Blazers": 3500,
+        "Detroit Pistons": 3400, "Charlotte Hornets": 3300, "Orlando Magic": 3200, "Minnesota Timberwolves": 3100,
+        "New Orleans Pelicans": 3050, "Memphis Grizzlies": 3000
+      },
+      2025: {
+        "Golden State Warriors": 11000, "Los Angeles Lakers": 10000, "New York Knicks": 9750, "Los Angeles Clippers": 7500,
+        "Boston Celtics": 6700, "Chicago Bulls": 6000, "Houston Rockets": 5900, "Miami Heat": 5700,
+        "Brooklyn Nets": 5600, "Philadelphia 76ers": 5450, "Phoenix Suns": 5425, "Toronto Raptors": 5400,
+        "Dallas Mavericks": 5100, "Atlanta Hawks": 5000, "Cleveland Cavaliers": 4800, "Washington Wizards": 4700,
+        "Denver Nuggets": 4600, "Milwaukee Bucks": 4500, "Portland Trail Blazers": 4000, "San Antonio Spurs": 3900,
+        "Sacramento Kings": 3875, "Utah Jazz": 3850, "Indiana Pacers": 3800, "Oklahoma City Thunder": 3750,
+        "Charlotte Hornets": 3600, "Detroit Pistons": 3550, "Orlando Magic": 3500, "Minnesota Timberwolves": 3450,
+        "New Orleans Pelicans": 3400, "Memphis Grizzlies": 3300
+      }
+    };
+
+    // Team colors
+    const teamColors = {
+      "Golden State Warriors": "#1D428A",
+      "New York Knicks": "#F58426",
+      "Los Angeles Lakers": "#552583",
+      "Boston Celtics": "#007A33",
+      "Los Angeles Clippers": "#C8102E",
+      "Chicago Bulls": "#CE1141",
+      "Houston Rockets": "#BA0C2F",
+      "Brooklyn Nets": "#000000",
+      "Dallas Mavericks": "#00538C",
+      "Philadelphia 76ers": "#006BB6",
+      "Toronto Raptors": "#CE1141",
+      "Phoenix Suns": "#E56020",
+      "Miami Heat": "#98002E",
+      "Washington Wizards": "#002B5C",
+      "Milwaukee Bucks": "#00471B",
+      "Cleveland Cavaliers": "#860038",
+      "Denver Nuggets": "#0E2240",
+      "San Antonio Spurs": "#C4CED4",
+      "Atlanta Hawks": "#E03A3E",
+      "Sacramento Kings": "#5A2D81",
+      "Oklahoma City Thunder": "#007AC1",
+      "Indiana Pacers": "#002D62",
+      "Utah Jazz": "#00471B",
+      "Portland Trail Blazers": "#E03A3E",
+      "Detroit Pistons": "#C8102E",
+      "Charlotte Hornets": "#1D1160",
+      "Orlando Magic": "#0077C0",
+      "Minnesota Timberwolves": "#0C2340",
+      "New Orleans Pelicans": "#85714D",
+      "Memphis Grizzlies": "#5D76A9"
+    };
+
+    // Short names
+    const shortNames = {
+      "Golden State Warriors": "Warriors",
+      "New York Knicks": "Knicks",
+      "Los Angeles Lakers": "Lakers",
+      "Boston Celtics": "Celtics",
+      "Los Angeles Clippers": "Clippers",
+      "Chicago Bulls": "Bulls",
+      "Houston Rockets": "Rockets",
+      "Brooklyn Nets": "Nets",
+      "Dallas Mavericks": "Mavericks",
+      "Philadelphia 76ers": "76ers",
+      "Toronto Raptors": "Raptors",
+      "Phoenix Suns": "Suns",
+      "Miami Heat": "Heat",
+      "Washington Wizards": "Wizards",
+      "Milwaukee Bucks": "Bucks",
+      "Cleveland Cavaliers": "Cavaliers",
+      "Denver Nuggets": "Nuggets",
+      "San Antonio Spurs": "Spurs",
+      "Atlanta Hawks": "Hawks",
+      "Sacramento Kings": "Kings",
+      "Oklahoma City Thunder": "Thunder",
+      "Indiana Pacers": "Pacers",
+      "Utah Jazz": "Jazz",
+      "Portland Trail Blazers": "Blazers",
+      "Detroit Pistons": "Pistons",
+      "Charlotte Hornets": "Hornets",
+      "Orlando Magic": "Magic",
+      "Minnesota Timberwolves": "T-Wolves",
+      "New Orleans Pelicans": "Pelicans",
+      "Memphis Grizzlies": "Grizzlies"
+    };
+
+    // Team logos
+    const teamLogos = {
+      "Atlanta Hawks": "https://content.sportslogos.net/logos/6/220/full/8190_atlanta_hawks-primary-2021.png",
+      "Boston Celtics": "https://content.sportslogos.net/logos/6/213/full/boston_celtics_logo_primary_19977628.png",
+      "Brooklyn Nets": "https://content.sportslogos.net/logos/6/3786/full/brooklyn_nets_logo_primary_20135043.png",
+      "Charlotte Hornets": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/Charlotte_Hornets_%282014%29.svg/500px-Charlotte_Hornets_%282014%29.svg.png?20171104082530",
+      "Chicago Bulls": "https://content.sportslogos.net/logos/6/221/full/chicago_bulls_logo_primary_19672598.png",
+      "Cleveland Cavaliers": "https://content.sportslogos.net/logos/6/222/full/cleveland_cavaliers_logo_primary_2023_sportslogosnet-5369.png",
+      "Dallas Mavericks": "https://content.sportslogos.net/logos/6/228/full/3463_dallas_mavericks-primary-2018.png",
+      "Denver Nuggets": "https://upload.wikimedia.org/wikipedia/en/thumb/7/76/Denver_Nuggets.svg/330px-Denver_Nuggets.svg.png",
+      "Detroit Pistons": "https://content.sportslogos.net/logos/6/223/full/detroit_pistons_logo_primary_20185710.png",
+      "Golden State Warriors": "https://content.sportslogos.net/logos/6/235/full/3152_golden_state_warriors-primary-2020.png",
+      "Houston Rockets": "https://content.sportslogos.net/logos/6/230/full/6830_houston_rockets-primary-2020.png",
+      "Indiana Pacers": "https://content.sportslogos.net/logos/6/224/full/indiana-pacers-logo-primary-2026-22496872026.png",
+      "Los Angeles Clippers": "http://content.sportslogos.net/logos/6/236/full/los_angeles_clippers_logo_primary_2025_sportslogosnet-5542.png",
+      "Los Angeles Lakers": "https://content.sportslogos.net/logos/6/237/full/los_angeles_lakers_logo_primary_2024_sportslogosnet-7324.png",
+      "Memphis Grizzlies": "https://upload.wikimedia.org/wikipedia/en/thumb/f/f1/Memphis_Grizzlies.svg/330px-Memphis_Grizzlies.svg.png",
+      "Miami Heat": "https://upload.wikimedia.org/wikipedia/en/thumb/f/fb/Miami_Heat_logo.svg/250px-Miami_Heat_logo.svg.png",
+      "Milwaukee Bucks": "https://content.sportslogos.net/logos/6/225/full/milwaukee_bucks_logo_primary_20165763.png",
+      "Minnesota Timberwolves": "https://upload.wikimedia.org/wikipedia/en/c/c2/Minnesota_Timberwolves_logo.svg",
+      "New Orleans Pelicans": "https://upload.wikimedia.org/wikipedia/en/thumb/0/0d/New_Orleans_Pelicans_logo.svg/500px-New_Orleans_Pelicans_logo.svg.png",
+      "New York Knicks": "https://content.sportslogos.net/logos/6/216/full/new_york_knicks_logo_primary_2024_sportslogosnet-7170.png",
+      "Oklahoma City Thunder": "https://content.sportslogos.net/logos/6/2687/full/oklahoma-city-thunder-logo-primary-2009-9699.png",
+      "Orlando Magic": "https://content.sportslogos.net/logos/6/217/full/orlando_magic_logo_primary_20117178.png",
+      "Philadelphia 76ers": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Philadelphia-76ers-Logo-1977-1996.png/1200px-Philadelphia-76ers-Logo-1977-1996.png",
+      "Phoenix Suns": "https://content.sportslogos.net/logos/6/238/full/phoenix_suns_logo_primary_20143696.png",
+      "Portland Trail Blazers": "https://upload.wikimedia.org/wikipedia/commons/9/93/TrailBlazers.png",
+      "Sacramento Kings": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c7/SacramentoKings.svg/330px-SacramentoKings.svg.png",
+      "San Antonio Spurs": "https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/San_Antonio_Spurs.svg/500px-San_Antonio_Spurs.svg.png",
+      "Toronto Raptors": "https://content.sportslogos.net/logos/6/227/full/7024_toronto_raptors-primary-2021.png",
+      "Utah Jazz": "https://content.sportslogos.net/logos/6/234/full/utah-jazz-logo-primary-2026-1109.png",
+      "Washington Wizards": "https://upload.wikimedia.org/wikipedia/en/thumb/0/02/Washington_Wizards_logo.svg/330px-Washington_Wizards_logo.svg.png"
+    };
+
+    const years = [2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025];
+    
+    // Chart dimensions - base values
+    const width = 1100;
+    const padding = { top: 130, right: 180, bottom: 130, left: 60 };
+    const chartWidth = width - padding.left - padding.right;
+
+    let showTop = 15;
+    let hoveredTeam = null;
+
+    // Get responsive height based on showTop
+    function getChartHeight() {
+      if (showTop === 10) return 525;
+      if (showTop === 15) return 675;
+      return 1000; // 30 teams
+    }
+
+    function getHeight() {
+      return getChartHeight() + padding.top + padding.bottom - 220; // Adjust for padding
+    }
+
+    // Update SVG viewBox
+    function updateViewBox() {
+      const svg = document.getElementById('chart');
+      const totalHeight = getChartHeight();
+      svg.setAttribute('viewBox', `0 0 ${width} ${totalHeight}`);
+    }
+
+    // Calculate rankings
+    function getRankings() {
+      const result = {};
+      years.forEach(year => {
+        const sorted = Object.entries(rawData[year])
+          .sort((a, b) => b[1] - a[1])
+          .map(([team, value], idx) => ({ team, value, rank: idx + 1 }));
+        result[year] = sorted;
+      });
+      return result;
+    }
+
+    const rankings = getRankings();
+    const maxValue = Math.max(...Object.values(rawData[2025]));
+
+    // Scales
+    function xScale(yearIndex) {
+      return padding.left + (yearIndex / (years.length - 1)) * chartWidth;
+    }
+
+    function thicknessScale(value) {
+      return Math.max(6, (value / maxValue) * 55);
+    }
+
+    // Calculate stacked positions
+    function getStackedPositions() {
+      const positions = {};
+      const height = getChartHeight();
+      const chartHeight = height - padding.top - padding.bottom;
+      
+      // Get the teams we're showing (based on 2025 rankings)
+      const teamsToShow = rankings[2025].slice(0, showTop).map(d => d.team);
+      
+      years.forEach(year => {
+        const bottomY = padding.top + chartHeight;
+        let cumulativeY = bottomY;
+        
+        positions[year] = {};
+        
+        // For each year, get the data for our selected teams and sort by that year's value
+        const yearData = teamsToShow.map(team => {
+          const value = rawData[year][team];
+          return { team, value };
+        }).sort((a, b) => a.value - b.value); // Sort ascending so we stack from bottom
+        
+        yearData.forEach((item) => {
+          const thickness = thicknessScale(item.value);
+          cumulativeY -= thickness;
+          const centerY = cumulativeY + thickness / 2;
+          
+          // Find actual rank in full rankings for this year
+          const actualRank = rankings[year].findIndex(d => d.team === item.team) + 1;
+          
+          positions[year][item.team] = {
+            y: centerY,
+            thickness: thickness,
+            rank: actualRank,
+            value: item.value
+          };
+          
+          cumulativeY -= 2;
+        });
+      });
+      
+      return positions;
+    }
+
+    // Generate ribbon path
+    function generateRibbonPath(team, stackedPositions) {
+      const points = [];
+      
+      years.forEach((year, yearIdx) => {
+        const pos = stackedPositions[year][team];
+        if (pos) {
+          points.push({
+            x: xScale(yearIdx),
+            y: pos.y,
+            thickness: pos.thickness,
+            value: pos.value,
+            rank: pos.rank,
+            year
+          });
+        }
+      });
+
+      if (points.length < 2) return null;
+
+      let pathTop = '';
+      let pathBottom = '';
+
+      for (let i = 0; i < points.length; i++) {
+        const p = points[i];
+        const halfThick = p.thickness / 2;
+
+        if (i === 0) {
+          pathTop = `M ${p.x} ${p.y - halfThick}`;
+          pathBottom = `M ${p.x} ${p.y + halfThick}`;
+        } else {
+          const prev = points[i - 1];
+          const prevHalfThick = prev.thickness / 2;
+          const cpx = (prev.x + p.x) / 2;
+
+          pathTop += ` C ${cpx} ${prev.y - prevHalfThick}, ${cpx} ${p.y - halfThick}, ${p.x} ${p.y - halfThick}`;
+          pathBottom += ` C ${cpx} ${prev.y + prevHalfThick}, ${cpx} ${p.y + halfThick}, ${p.x} ${p.y + halfThick}`;
+        }
+      }
+
+      const lastPoint = points[points.length - 1];
+      const lastHalfThick = lastPoint.thickness / 2;
+      
+      let fullPath = pathTop;
+      fullPath += ` L ${lastPoint.x} ${lastPoint.y + lastHalfThick}`;
+      
+      for (let i = points.length - 1; i > 0; i--) {
+        const p = points[i];
+        const prev = points[i - 1];
+        const halfThick = p.thickness / 2;
+        const prevHalfThick = prev.thickness / 2;
+        const cpx = (prev.x + p.x) / 2;
+        
+        fullPath += ` C ${cpx} ${p.y + halfThick}, ${cpx} ${prev.y + prevHalfThick}, ${prev.x} ${prev.y + prevHalfThick}`;
+      }
+      
+      fullPath += ' Z';
+
+      return { path: fullPath, points };
+    }
+
+    // Get teams to show - based on 2025 rankings only
+    function getTeamsToShow() {
+      // Get top N teams based on 2025 (most recent year) rankings
+      return rankings[2025].slice(0, showTop).map(d => d.team);
+    }
+
+    // Sort teams for layering
+    function getSortedTeams(teamsToShow) {
+      return teamsToShow.sort((a, b) => {
+        const rankA = rankings[2025].find(d => d.team === a)?.rank || 31;
+        const rankB = rankings[2025].find(d => d.team === b)?.rank || 31;
+        return rankB - rankA;
+      });
+    }
+
+    // Create SVG namespace helper
+    function createSVGElement(type) {
+      return document.createElementNS('http://www.w3.org/2000/svg', type);
+    }
+
+    // Show tooltip
+    function showTooltip(team) {
+      const tooltip = document.getElementById('tooltip');
+      const rank2012 = rankings[2012].find(d => d.team === team)?.rank;
+      const rank2025 = rankings[2025].find(d => d.team === team)?.rank;
+      const growth = ((rawData[2025][team] / rawData[2012][team] - 1) * 100).toFixed(0);
+      
+      document.getElementById('tooltip-logo').src = teamLogos[team];
+      document.getElementById('tooltip-logo').alt = team;
+      document.getElementById('tooltip-title').textContent = shortNames[team];
+      document.getElementById('tooltip-title').style.color = teamColors[team];
+      document.getElementById('tooltip-2012').innerHTML = `<strong>$${rawData[2012][team]}M</strong><span class="rank">#${rank2012}</span>`;
+      document.getElementById('tooltip-2025').innerHTML = `<strong>$${(rawData[2025][team] / 1000).toFixed(2)}B</strong><span class="rank">#${rank2025}</span>`;
+      document.getElementById('tooltip-growth').textContent = `+${growth}%`;
+      
+      tooltip.style.borderLeftColor = teamColors[team];
+      tooltip.classList.add('visible');
+    }
+
+    // Hide tooltip
+    function hideTooltip() {
+      document.getElementById('tooltip').classList.remove('visible');
+    }
+
+    // Render chart
+    function renderChart() {
+      const svg = document.getElementById('chart');
+      svg.innerHTML = '';
+      
+      // Update viewBox for responsive height
+      updateViewBox();
+      
+      const height = getChartHeight();
+      const chartHeight = height - padding.top - padding.bottom;
+      
+      const stackedPositions = getStackedPositions();
+      const teamsToShow = getTeamsToShow();
+      const sortedTeams = getSortedTeams(teamsToShow);
+
+      // Background gradient
+      const defs = createSVGElement('defs');
+      const gradient = createSVGElement('linearGradient');
+      gradient.setAttribute('id', 'bgGradient');
+      gradient.setAttribute('x1', '0%');
+      gradient.setAttribute('y1', '0%');
+      gradient.setAttribute('x2', '0%');
+      gradient.setAttribute('y2', '100%');
+      
+      const stop1 = createSVGElement('stop');
+      stop1.setAttribute('offset', '0%');
+      stop1.setAttribute('stop-color', '#F5F0E8');
+      
+      const stop2 = createSVGElement('stop');
+      stop2.setAttribute('offset', '100%');
+      stop2.setAttribute('stop-color', '#EBE4D8');
+      
+      gradient.appendChild(stop1);
+      gradient.appendChild(stop2);
+      defs.appendChild(gradient);
+      svg.appendChild(defs);
+
+      // Background rect
+      const bgRect = createSVGElement('rect');
+      bgRect.setAttribute('x', '0');
+      bgRect.setAttribute('y', '0');
+      bgRect.setAttribute('width', width);
+      bgRect.setAttribute('height', height);
+      bgRect.setAttribute('fill', 'url(#bgGradient)');
+      svg.appendChild(bgRect);
+
+      // Year columns
+      years.forEach((year, idx) => {
+        const x = xScale(idx);
+        const isFirst = idx === 0;
+        const isLast = idx === years.length - 1;
+
+        // Vertical line
+        const line = createSVGElement('line');
+        line.setAttribute('x1', x);
+        line.setAttribute('y1', padding.top - 20);
+        line.setAttribute('x2', x);
+        line.setAttribute('y2', height - padding.bottom + 40);
+        line.setAttribute('stroke', '#d0c9bc');
+        line.setAttribute('stroke-width', '1');
+        line.setAttribute('opacity', '0.5');
+        svg.appendChild(line);
+
+        // Year label at bottom
+        const yearLabel = createSVGElement('text');
+        yearLabel.setAttribute('x', x);
+        yearLabel.setAttribute('y', height - padding.bottom + 60);
+        yearLabel.setAttribute('text-anchor', 'middle');
+        yearLabel.setAttribute('fill', '#1a1a2e');
+        yearLabel.setAttribute('font-size', '18');
+        yearLabel.setAttribute('font-weight', '600');
+        yearLabel.setAttribute('font-family', 'Oswald, sans-serif');
+        yearLabel.textContent = year;
+        svg.appendChild(yearLabel);
+
+        // Average value labels
+        if (isFirst || isLast) {
+          const avgLabel = createSVGElement('text');
+          avgLabel.setAttribute('x', x);
+          avgLabel.setAttribute('y', height - padding.bottom + 78);
+          avgLabel.setAttribute('text-anchor', 'middle');
+          avgLabel.setAttribute('fill', '#666');
+          avgLabel.setAttribute('font-size', '11');
+          avgLabel.setAttribute('font-family', 'Source Serif Pro, serif');
+          avgLabel.textContent = isFirst ? 'Avg: $393M' : 'Avg: $5.43B';
+          svg.appendChild(avgLabel);
+        }
+      });
+
+      // Data source and attribution below x-axis
+      const sourceText = createSVGElement('text');
+      sourceText.setAttribute('x', padding.left);
+      sourceText.setAttribute('y', height - padding.bottom + 110);
+      sourceText.setAttribute('text-anchor', 'start');
+      sourceText.setAttribute('fill', '#888');
+      sourceText.setAttribute('font-size', '11');
+      sourceText.setAttribute('font-family', 'Source Serif Pro, serif');
+      sourceText.textContent = 'Values in current U.S. dollars (not adjusted for inflation) | Source: Forbes NBA Valuations 2012-2025';
+      svg.appendChild(sourceText);
+
+      const attribution = createSVGElement('text');
+      attribution.setAttribute('x', width - padding.right);
+      attribution.setAttribute('y', height - padding.bottom + 110);
+      attribution.setAttribute('text-anchor', 'end');
+      attribution.setAttribute('fill', '#1a1a2e');
+      attribution.setAttribute('font-size', '13');
+      attribution.setAttribute('font-weight', '600');
+      attribution.setAttribute('font-family', 'Oswald, sans-serif');
+      attribution.textContent = '@kobakhit';
+      attribution.style.cursor = 'pointer';
+      attribution.addEventListener('click', () => {
+        window.open('http://www.kobakhit.com', '_blank');
+      });
+      svg.appendChild(attribution);
+
+      // Team ribbons
+      sortedTeams.forEach(team => {
+        const ribbonData = generateRibbonPath(team, stackedPositions);
+        if (!ribbonData) return;
+
+        const path = createSVGElement('path');
+        path.setAttribute('d', ribbonData.path);
+        path.setAttribute('fill', teamColors[team]);
+        path.setAttribute('opacity', '0.9');
+        path.setAttribute('stroke', 'rgba(255,255,255,0.5)');
+        path.setAttribute('stroke-width', '0.5');
+        path.setAttribute('class', 'ribbon');
+        path.setAttribute('data-team', team);
+
+        path.addEventListener('mouseenter', () => {
+          hoveredTeam = team;
+          updateHoverState();
+          showTooltip(team);
+        });
+
+        path.addEventListener('mouseleave', () => {
+          hoveredTeam = null;
+          updateHoverState();
+          hideTooltip();
+        });
+
+        svg.appendChild(path);
+      });
+
+      // Right side labels with logos
+      rankings[2025].slice(0, showTop).forEach((item) => {
+        const pos = stackedPositions[2025][item.team];
+        if (!pos) return;
+
+        const logoSize = 28;
+        const g = createSVGElement('g');
+        g.setAttribute('class', 'label-group');
+        g.setAttribute('data-team', item.team);
+
+        // Logo
+        const logo = createSVGElement('image');
+        logo.setAttribute('href', teamLogos[item.team]);
+        logo.setAttribute('x', xScale(years.length - 1) + 10);
+        logo.setAttribute('y', pos.y - logoSize / 2);
+        logo.setAttribute('width', logoSize);
+        logo.setAttribute('height', logoSize);
+        logo.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        g.appendChild(logo);
+
+        // Team name
+        const nameText = createSVGElement('text');
+        nameText.setAttribute('x', xScale(years.length - 1) + 10 + logoSize + 6);
+        nameText.setAttribute('y', pos.y + 2);
+        nameText.setAttribute('fill', teamColors[item.team]);
+        nameText.setAttribute('font-size', '12');
+        nameText.setAttribute('font-weight', '600');
+        nameText.setAttribute('font-family', 'Oswald, sans-serif');
+        nameText.textContent = shortNames[item.team];
+        g.appendChild(nameText);
+
+        // Valuation
+        const valueText = createSVGElement('text');
+        valueText.setAttribute('x', xScale(years.length - 1) + 10 + logoSize + 6);
+        valueText.setAttribute('y', pos.y + 14);
+        valueText.setAttribute('fill', '#666');
+        valueText.setAttribute('font-size', '10');
+        valueText.setAttribute('font-family', 'Source Serif Pro, serif');
+        valueText.textContent = `$${(item.value / 1000).toFixed(1)}B`;
+        g.appendChild(valueText);
+
+        g.addEventListener('mouseenter', () => {
+          hoveredTeam = item.team;
+          updateHoverState();
+          showTooltip(item.team);
+        });
+
+        g.addEventListener('mouseleave', () => {
+          hoveredTeam = null;
+          updateHoverState();
+          hideTooltip();
+        });
+
+        svg.appendChild(g);
+      });
+    }
+
+    // Update hover state
+    function updateHoverState() {
+      const ribbons = document.querySelectorAll('.ribbon');
+      const labels = document.querySelectorAll('.label-group');
+
+      ribbons.forEach(ribbon => {
+        const team = ribbon.getAttribute('data-team');
+        if (hoveredTeam) {
+          if (team === hoveredTeam) {
+            ribbon.setAttribute('opacity', '1');
+            ribbon.setAttribute('stroke', 'white');
+            ribbon.setAttribute('stroke-width', '2.5');
+          } else {
+            ribbon.setAttribute('opacity', '0.12');
+            ribbon.setAttribute('stroke', 'rgba(255,255,255,0.5)');
+            ribbon.setAttribute('stroke-width', '0.5');
+          }
+        } else {
+          ribbon.setAttribute('opacity', '0.9');
+          ribbon.setAttribute('stroke', 'rgba(255,255,255,0.5)');
+          ribbon.setAttribute('stroke-width', '0.5');
+        }
+      });
+
+      labels.forEach(label => {
+        const team = label.getAttribute('data-team');
+        if (hoveredTeam) {
+          label.setAttribute('opacity', team === hoveredTeam ? '1' : '0.25');
+        } else {
+          label.setAttribute('opacity', '1');
+        }
+      });
+    }
+
+    // Toggle button handlers
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showTop = parseInt(btn.getAttribute('data-top'));
+        renderChart();
+      });
+    });
+
+    // Initial render
+    renderChart();
+  </script>
+</body>
+</html>
