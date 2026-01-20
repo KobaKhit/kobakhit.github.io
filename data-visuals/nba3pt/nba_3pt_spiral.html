@@ -1,0 +1,1245 @@
+---
+layout: nonav
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA 3-Point Revolution Spiral</title>
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="NBA 3-Point Revolution Spiral - 2024-25 Season">
+    <meta property="og:description" content="Interactive 3D visualization showing the evolution of 3-point shooting across NBA teams. Explore how the game has transformed with stunning spiral charts.">
+    <meta property="og:image" content="nba3pt.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kobakhit.github.io/data-visuals/nba3pt/nba_3pt_spiral.html">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="NBA 3-Point Revolution Spiral - 2024-25 Season">
+    <meta name="twitter:description" content="Interactive 3D visualization showing the evolution of 3-point shooting across NBA teams.">
+    <meta name="twitter:image" content="nba3pt.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #050505; color: white; font-family: 'Inter', sans-serif; }
+        .icon-btn { width: 40px; height: 40px; border-radius: 50%; background: #333; color: white; border: 1px solid #555; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+        .icon-btn:hover { background: #555; }
+        .icon-btn.active { background: #555; border-color: #ff6b35; color: #ff6b35; }
+        #bottomWrapper { position: absolute; bottom: 20px; left: 20px; right: 20px; display: flex; justify-content: flex-end; align-items: center; pointer-events: none; gap: 15px; z-index: 20; height: 40px; }
+        #timelineContainer { position: absolute; bottom: 0; left: 0; right: 160px; height: 40px; background: rgba(0,0,0,0.8); padding: 0 15px; border-radius: 30px; border: 1px solid #333; display: flex; align-items: center; gap: 15px; pointer-events: auto; transition: opacity 0.3s, transform 0.3s; z-index: 20; box-sizing: border-box; }
+        #timelineContainer.collapsed { opacity: 0; transform: translateY(20px); pointer-events: none; }
+        #buttonGroup { position: absolute; bottom: 0; right: 0; display: flex; gap: 10px; pointer-events: auto; z-index: 25; }
+        input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #ff6b35; cursor: pointer; margin-top: -6px; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #555; border-radius: 2px; }
+        .panel { position: absolute; bottom: 80px; right: 20px; background: rgba(0,0,0,0.95); padding: 20px; border-radius: 8px; min-width: 260px; max-width: 320px; border: 1px solid #333; display: none; z-index: 30; max-height: 70vh; overflow-y: auto; }
+        .panel.visible { display: block; }
+        h1, h2 { margin: 0 0 15px 0; font-size: 1.2rem; color: #ff6b35; }
+        p { font-size: 0.9rem; color: #ccc; margin-bottom: 8px; }
+        a { color: #ff6b35; }
+        .legend { margin-top: 15px; width: 100%; height: 10px; background: linear-gradient(to right, #1e90ff 0%, #32cd32 25%, #ffd700 50%, #ff6b35 75%, #ff1744 100%); border-radius: 2px; position: relative; }
+        #legendMarker { position: absolute; top: -4px; bottom: -4px; width: 2px; background: #fff; box-shadow: 0 0 4px rgba(0,0,0,0.8); left: 0%; transition: left 0.1s; }
+        .legend-labels { display: flex; justify-content: space-between; font-size: 0.8rem; margin-top: 4px; }
+        .close-btn { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #666; font-size: 1.2rem; cursor: pointer; }
+        .close-btn:hover { color: white; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 0.9rem; color: #ddd; }
+        .switch { position: relative; display: inline-block; width: 36px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider-switch { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #444; transition: .3s; border-radius: 20px; }
+        .slider-switch:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background: #aaa; transition: .3s; border-radius: 50%; }
+        input:checked + .slider-switch { background: #ff6b35; }
+        input:checked + .slider-switch:before { transform: translateX(16px); background: white; }
+        .slider-label { display: flex; justify-content: space-between; width: 100%; margin-bottom: 5px; font-size: 0.9rem; }
+        .slider-val { color: #ff6b35; font-size: 0.8rem; }
+        #milestoneToast { position: absolute; top: 90px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); border: 1px solid #ff6b35; border-radius: 8px; padding: 15px 25px; max-width: 400px; text-align: center; z-index: 100; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+        #milestoneToast.visible { opacity: 1; }
+        #milestoneToast h3 { margin: 0 0 8px 0; color: #ff6b35; font-size: 1rem; }
+        #milestoneToast p { margin: 0; color: #ccc; font-size: 0.85rem; }
+
+        /* View Toggle Styles */
+        #viewToggle { position: absolute; top: 20px; left: 20px; z-index: 50; display: flex; background: rgba(0,0,0,0.8); border-radius: 25px; border: 1px solid #333; overflow: hidden; }
+        .view-btn { padding: 10px 20px; background: transparent; border: none; color: #888; font-family: 'Inter', sans-serif; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; }
+        .view-btn:hover { color: #ccc; }
+        .view-btn.active { background: #ff6b35; color: white; }
+
+        /* Page Titles */
+        #overallTitle { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 40; pointer-events: none; }
+        #overallTitle h1 { margin: 0; font-size: 1.8rem; font-weight: 600; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
+        #overallTitle p { margin: 5px 0 0 0; font-size: 0.95rem; color: #aaa; }
+        body.team-view #overallTitle { display: none; }
+
+        #teamGridTitle { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 45; pointer-events: none; background: rgba(5,5,5,0.9); padding: 10px 25px; border-radius: 12px; border: 1px solid #222; }
+        #teamGridTitle h1 { margin: 0; font-size: 1.5rem; font-weight: 600; color: #fff; }
+        #teamGridTitle .team-year-display { margin: 8px 0 0 0; font-size: 1.4rem; color: #ff6b35; font-weight: 600; font-family: monospace; }
+        #teamGridTitle p { margin: 4px 0 0 0; font-size: 0.85rem; color: #666; }
+
+        /* Sort Button */
+        #sortBtn { padding: 10px 16px; background: transparent; border: none; border-left: 1px solid #333; color: #888; font-family: 'Inter', sans-serif; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; display: none; align-items: center; gap: 6px; }
+        #sortBtn:hover { color: #ccc; }
+        #sortBtn.active { background: #ff6b35; color: white; }
+        body.team-view #sortBtn { display: flex; }
+
+        /* Smooth card transitions */
+        .team-card { background: rgba(20,20,20,0.9); border-radius: 12px; padding: 15px; border: 1px solid #222; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s, border-color 0.3s, box-shadow 0.3s; }
+        .team-card.sorting { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* Team Grid Styles */
+        #teamGridContainer { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #050505; overflow-y: auto; display: none; padding: 130px 20px 20px 20px; box-sizing: border-box; cursor: grab; }
+        #teamGridContainer:active { cursor: grabbing; }
+        #teamGridContainer.visible { display: block; }
+        #teamGrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; max-width: 1800px; margin: 0 auto; }
+        @media (max-width: 1600px) { #teamGrid { grid-template-columns: repeat(5, 1fr); } }
+        @media (max-width: 1300px) { #teamGrid { grid-template-columns: repeat(4, 1fr); } }
+        @media (max-width: 1000px) { #teamGrid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 700px) { #teamGrid { grid-template-columns: repeat(2, 1fr); } }
+
+        .team-card:hover { border-color: #ff6b35; box-shadow: 0 4px 20px rgba(255,107,53,0.2); }
+        .team-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .team-logo { width: 40px; height: 40px; object-fit: contain; }
+        .team-logo-fallback { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; }
+        .team-name { font-size: 0.85rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .team-abbr { font-size: 0.7rem; color: #666; }
+        .team-chart-container { width: 100%; aspect-ratio: 1; position: relative; background: radial-gradient(circle at center, rgba(30,30,30,0.5) 0%, transparent 70%); border-radius: 8px; overflow: hidden; cursor: grab; }
+        .team-chart-container:active { cursor: grabbing; }
+        .team-chart { width: 100%; height: 100%; display: block; pointer-events: none; }
+        .team-stats { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.75rem; }
+        .team-stat { text-align: center; }
+        .team-stat-value { font-size: 1rem; font-weight: 600; color: #ff6b35; }
+        .team-stat-label { color: #666; }
+
+        /* Hide 3D canvas when in team view */
+        body.team-view > canvas { display: none; }
+        body.team-view #bottomWrapper { display: none; }
+        body.team-view #infoPanel { display: none !important; }
+        body.team-view #settingsPanel { display: none !important; }
+        body.team-view #milestoneToast { display: none; }
+    </style>
+    <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head>
+<body>
+    <!-- View Toggle -->
+    <div id="viewToggle">
+        <button class="view-btn active" data-view="overall">Overall</button>
+        <button class="view-btn" data-view="teams">By Team</button>
+        <button id="sortBtn"><span>↓</span> Sort by 3PA</button>
+    </div>
+
+    <!-- Overall Chart Title -->
+    <div id="overallTitle">
+        <h1>NBA 3-Point Revolution</h1>
+        <p>3-Point Attempts Per Game · 1980-2025</p>
+    </div>
+
+    <!-- Team Grid Container -->
+    <div id="teamGridContainer">
+        <div id="teamGridTitle">
+            <h1>NBA 3-Point Revolution by Team</h1>
+            <div class="team-year-display" id="teamYearDisplay">2000-01</div>
+            <p>3-Point Attempts Per Game</p>
+        </div>
+        <div id="teamGrid"></div>
+    </div>
+
+    <div id="infoPanel" class="panel">
+        <button class="close-btn" data-target="infoPanel">×</button>
+        <h1>🏀 3-Point Revolution</h1>
+        <p>Visualizing the explosion of 3-point attempts in the NBA from 1980 to present. Each coil represents one season.</p>
+        <p>Data: <a href="https://www.basketball-reference.com" target="_blank">Basketball Reference</a></p>
+        <p style="margin-top: 10px; color: #888;">Made by <span style="color: #ff6b35;">kobakhit</span></p>
+        <div style="margin-top:15px;padding-top:10px;border-top:1px solid #333;">
+            <div style="display:flex;justify-content:space-between;">
+                <div><div style="font-size:0.8rem;color:#aaa;">Season</div><div style="font-size:1.1rem;font-weight:bold;" id="infoSeason">1979-80</div></div>
+                <div style="text-align:right;"><div style="font-size:0.8rem;color:#aaa;">3PA Per Game</div><div style="font-size:1.2rem;color:#ff6b35;font-family:monospace;" id="info3PA">2.8</div></div>
+            </div>
+        </div>
+        <div class="legend"><div id="legendMarker"></div></div>
+        <div class="legend-labels"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span></div>
+    </div>
+    <div id="settingsPanel" class="panel">
+        <button class="close-btn" data-target="settingsPanel">×</button>
+        <h2>Settings</h2>
+        <div class="setting-row"><span>Show Annotations</span><label class="switch"><input type="checkbox" id="helpersToggle" checked><span class="slider-switch"></span></label></div>
+        <div class="setting-row"><span>Orthographic View</span><label class="switch"><input type="checkbox" id="orthoToggle" checked><span class="slider-switch"></span></label></div>
+        <div class="setting-row"><span>Free Camera</span><label class="switch"><input type="checkbox" id="freeCameraToggle"><span class="slider-switch"></span></label></div>
+        <div class="setting-row"><span>Smooth Spiral</span><label class="switch"><input type="checkbox" id="smoothSpiralToggle" checked><span class="slider-switch"></span></label></div>
+        <div class="setting-row" style="flex-direction:column;align-items:flex-start;"><div class="slider-label"><span>Coil Spacing</span><span id="spacingValue" class="slider-val">3.9</span></div><input type="range" id="spacingSlider" min="0.0" max="6.0" step="0.1" value="3.9" style="width:100%;"></div>
+        <div class="setting-row" style="flex-direction:column;align-items:flex-start;"><div class="slider-label"><span>Animation Speed</span><span id="speedValue" class="slider-val">0.8x</span></div><input type="range" id="speedSlider" min="0.01" max="1.0" step="0.01" value="0.8" style="width:100%;"></div>
+    </div>
+    <div id="milestoneToast"><h3 id="milestoneTitle"></h3><p id="milestoneText"></p></div>
+    <div id="bottomWrapper">
+        <div id="timelineContainer" class="collapsed">
+            <span style="font-size:0.8rem;color:#aaa;" id="timelineStart">1979-80</span>
+            <input type="range" id="timelineSlider" min="0" max="100" value="0" step="0.1">
+            <span style="font-size:0.8rem;color:#aaa;" id="timelineEnd">2024-25</span>
+        </div>
+        <div id="buttonGroup">
+            <button id="playBtn" class="icon-btn active" title="Pause">❚❚</button>
+            <button id="settingsBtn" class="icon-btn" title="Settings">⚙</button>
+            <button id="infoBtn" class="icon-btn" title="Info">i</button>
+        </div>
+    </div>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        const NBA_DATA = [
+            { season: "1979-80", year: 1980, attempts: 2.8 },
+            { season: "1980-81", year: 1981, attempts: 2.4 },
+            { season: "1981-82", year: 1982, attempts: 2.3 },
+            { season: "1982-83", year: 1983, attempts: 2.4 },
+            { season: "1983-84", year: 1984, attempts: 2.4 },
+            { season: "1984-85", year: 1985, attempts: 3.1 },
+            { season: "1985-86", year: 1986, attempts: 3.3 },
+            { season: "1986-87", year: 1987, attempts: 4.7 },
+            { season: "1987-88", year: 1988, attempts: 5.3 },
+            { season: "1988-89", year: 1989, attempts: 6.6 },
+            { season: "1989-90", year: 1990, attempts: 7.1 },
+            { season: "1990-91", year: 1991, attempts: 7.7 },
+            { season: "1991-92", year: 1992, attempts: 7.6 },
+            { season: "1992-93", year: 1993, attempts: 9.0 },
+            { season: "1993-94", year: 1994, attempts: 10.0 },
+            { season: "1994-95", year: 1995, attempts: 15.3 },
+            { season: "1995-96", year: 1996, attempts: 16.0 },
+            { season: "1996-97", year: 1997, attempts: 16.8 },
+            { season: "1997-98", year: 1998, attempts: 13.7 },
+            { season: "1998-99", year: 1999, attempts: 13.2 },
+            { season: "1999-00", year: 2000, attempts: 13.7 },
+            { season: "2000-01", year: 2001, attempts: 14.0 },
+            { season: "2001-02", year: 2002, attempts: 14.7 },
+            { season: "2002-03", year: 2003, attempts: 14.7 },
+            { season: "2003-04", year: 2004, attempts: 15.0 },
+            { season: "2004-05", year: 2005, attempts: 15.8 },
+            { season: "2005-06", year: 2006, attempts: 16.0 },
+            { season: "2006-07", year: 2007, attempts: 16.9 },
+            { season: "2007-08", year: 2008, attempts: 18.1 },
+            { season: "2008-09", year: 2009, attempts: 18.1 },
+            { season: "2009-10", year: 2010, attempts: 18.1 },
+            { season: "2010-11", year: 2011, attempts: 18.0 },
+            { season: "2011-12", year: 2012, attempts: 18.4 },
+            { season: "2012-13", year: 2013, attempts: 20.0 },
+            { season: "2013-14", year: 2014, attempts: 21.5 },
+            { season: "2014-15", year: 2015, attempts: 22.4 },
+            { season: "2015-16", year: 2016, attempts: 24.1 },
+            { season: "2016-17", year: 2017, attempts: 27.0 },
+            { season: "2017-18", year: 2018, attempts: 29.0 },
+            { season: "2018-19", year: 2019, attempts: 32.0 },
+            { season: "2019-20", year: 2020, attempts: 34.1 },
+            { season: "2020-21", year: 2021, attempts: 34.6 },
+            { season: "2021-22", year: 2022, attempts: 35.2 },
+            { season: "2022-23", year: 2023, attempts: 34.2 },
+            { season: "2023-24", year: 2024, attempts: 35.1 },
+            { season: "2024-25", year: 2025, attempts: 37.5 }
+        ];
+
+        // Team data - 3PA per game by team and season (extended data 2000-2025)
+        const NBA_TEAMS = [
+            { abbr: "ATL", name: "Atlanta Hawks", color: "#E03A3E", textColor: "#fff", id: 1610612737,
+              data: [12.8, 13.2, 14.1, 14.5, 15.2, 15.8, 16.2, 17.1, 17.8, 18.2, 17.5, 18.1, 18.8, 19.8, 22.1, 24.8, 27.3, 31.2, 32.5, 34.1, 36.2, 35.8, 37.1, 36.5, 38.2] },
+            { abbr: "BOS", name: "Boston Celtics", color: "#007A33", textColor: "#fff", id: 1610612738,
+              data: [14.5, 15.2, 15.8, 16.2, 17.1, 17.8, 18.5, 19.2, 20.1, 21.2, 20.5, 21.2, 22.5, 23.1, 25.4, 27.8, 31.2, 35.4, 37.1, 38.2, 42.3, 41.5, 43.2, 42.1, 44.5] },
+            { abbr: "BKN", name: "Brooklyn Nets", color: "#000000", textColor: "#fff", id: 1610612751,
+              data: [11.2, 12.1, 12.8, 13.5, 14.2, 14.8, 15.5, 16.2, 16.8, 17.2, 16.8, 17.5, 18.1, 18.5, 20.2, 22.4, 25.1, 28.3, 30.2, 32.5, 35.1, 34.2, 36.8, 35.1, 37.2] },
+            { abbr: "CHA", name: "Charlotte Hornets", color: "#1D1160", textColor: "#fff", id: 1610612766,
+              data: [10.5, 11.2, 11.8, 12.5, 13.2, 13.8, 14.5, 15.2, 15.8, 16.2, 15.8, 16.2, 16.8, 17.2, 19.8, 22.1, 24.5, 27.8, 29.5, 31.2, 33.8, 32.5, 34.2, 33.1, 35.8] },
+            { abbr: "CHI", name: "Chicago Bulls", color: "#CE1141", textColor: "#fff", id: 1610612741,
+              data: [10.2, 10.8, 11.5, 12.2, 12.8, 13.5, 14.2, 14.8, 15.5, 16.1, 15.5, 16.1, 16.5, 16.8, 18.5, 20.2, 22.8, 25.4, 27.1, 29.8, 32.1, 31.5, 33.2, 32.5, 34.8] },
+            { abbr: "CLE", name: "Cleveland Cavaliers", color: "#860038", textColor: "#fff", id: 1610612739,
+              data: [13.2, 14.1, 14.8, 15.5, 16.2, 16.8, 17.5, 18.2, 18.8, 19.5, 18.8, 19.5, 20.2, 20.5, 23.2, 26.8, 29.5, 32.1, 33.8, 35.2, 37.5, 36.8, 38.5, 37.2, 40.1] },
+            { abbr: "DAL", name: "Dallas Mavericks", color: "#00538C", textColor: "#fff", id: 1610612742,
+              data: [15.2, 16.1, 16.8, 17.5, 18.2, 18.8, 19.5, 20.2, 20.8, 21.5, 20.8, 21.5, 22.2, 22.8, 25.1, 28.5, 31.2, 34.5, 36.2, 38.1, 40.2, 39.5, 41.2, 40.1, 43.2] },
+            { abbr: "DEN", name: "Denver Nuggets", color: "#0E2240", textColor: "#FEC524", id: 1610612743,
+              data: [12.5, 13.2, 13.8, 14.5, 15.2, 15.8, 16.5, 17.2, 17.8, 18.5, 17.8, 18.5, 19.1, 19.2, 21.5, 24.2, 27.1, 30.2, 32.1, 34.5, 36.8, 35.2, 37.5, 36.2, 38.5] },
+            { abbr: "DET", name: "Detroit Pistons", color: "#C8102E", textColor: "#fff", id: 1610612765,
+              data: [10.1, 10.8, 11.5, 12.2, 12.8, 13.5, 14.1, 14.8, 15.5, 16.1, 15.5, 16.1, 16.5, 16.5, 18.2, 20.5, 23.1, 26.2, 28.5, 30.8, 33.2, 32.1, 34.5, 33.2, 36.1] },
+            { abbr: "GSW", name: "Golden State Warriors", color: "#1D428A", textColor: "#FFC72C", id: 1610612744,
+              data: [16.5, 17.2, 17.8, 18.5, 19.2, 19.8, 20.5, 21.2, 22.5, 24.2, 23.5, 24.8, 25.5, 25.8, 28.5, 31.2, 34.5, 38.1, 40.2, 42.5, 44.1, 43.2, 45.1, 44.2, 46.8] },
+            { abbr: "HOU", name: "Houston Rockets", color: "#CE1141", textColor: "#fff", id: 1610612745,
+              data: [17.2, 18.1, 18.8, 19.5, 20.2, 20.8, 21.5, 22.2, 23.5, 25.1, 24.5, 25.5, 26.2, 26.2, 29.5, 33.8, 38.5, 42.1, 44.2, 45.8, 47.2, 44.5, 41.2, 38.5, 40.1] },
+            { abbr: "IND", name: "Indiana Pacers", color: "#002D62", textColor: "#FDBB30", id: 1610612754,
+              data: [11.2, 11.8, 12.5, 13.2, 13.8, 14.5, 15.1, 15.8, 16.5, 17.1, 16.5, 17.1, 17.5, 17.8, 19.5, 21.8, 24.2, 27.1, 29.2, 31.5, 34.2, 33.1, 35.8, 34.5, 38.2] },
+            { abbr: "LAC", name: "LA Clippers", color: "#C8102E", textColor: "#fff", id: 1610612746,
+              data: [14.2, 14.8, 15.5, 16.2, 16.8, 17.5, 18.2, 18.8, 19.5, 20.5, 19.8, 20.5, 21.2, 21.5, 24.2, 27.5, 30.2, 33.5, 35.8, 37.2, 39.5, 38.2, 40.1, 39.2, 41.5] },
+            { abbr: "LAL", name: "Los Angeles Lakers", color: "#552583", textColor: "#FDB927", id: 1610612747,
+              data: [11.5, 12.2, 12.8, 13.5, 14.2, 14.8, 15.5, 16.2, 16.8, 17.5, 16.8, 17.5, 18.2, 18.2, 20.5, 23.1, 26.2, 29.5, 31.8, 34.2, 36.5, 35.1, 37.2, 36.1, 38.8] },
+            { abbr: "MEM", name: "Memphis Grizzlies", color: "#5D76A9", textColor: "#fff", id: 1610612763,
+              data: [9.5, 10.2, 10.8, 11.5, 12.1, 12.8, 13.5, 14.1, 14.8, 15.5, 14.8, 15.5, 16.1, 15.8, 17.5, 19.2, 21.8, 24.5, 26.8, 29.2, 32.1, 31.5, 34.2, 33.1, 35.5] },
+            { abbr: "MIA", name: "Miami Heat", color: "#98002E", textColor: "#fff", id: 1610612748,
+              data: [14.8, 15.5, 16.2, 16.8, 17.5, 18.2, 18.8, 19.5, 20.2, 21.5, 20.8, 21.5, 22.2, 22.5, 24.8, 27.2, 30.1, 33.2, 35.5, 37.8, 40.1, 38.5, 40.2, 38.8, 41.2] },
+            { abbr: "MIL", name: "Milwaukee Bucks", color: "#00471B", textColor: "#EEE1C6", id: 1610612749,
+              data: [12.8, 13.5, 14.2, 14.8, 15.5, 16.2, 16.8, 17.5, 18.2, 18.8, 18.2, 18.8, 19.5, 19.5, 22.1, 25.5, 28.8, 32.5, 35.1, 37.5, 39.8, 38.2, 40.5, 39.1, 41.8] },
+            { abbr: "MIN", name: "Minnesota Timberwolves", color: "#0C2340", textColor: "#78BE20", id: 1610612750,
+              data: [12.1, 12.8, 13.5, 14.2, 14.8, 15.5, 16.2, 16.8, 17.5, 18.2, 17.5, 18.2, 18.8, 18.8, 21.2, 24.5, 27.8, 31.2, 33.5, 36.1, 38.5, 37.2, 39.8, 38.5, 41.2] },
+            { abbr: "NOP", name: "New Orleans Pelicans", color: "#0C2340", textColor: "#C8102E", id: 1610612740,
+              data: [11.5, 12.2, 12.8, 13.5, 14.2, 14.8, 15.5, 16.2, 16.8, 17.5, 16.8, 17.5, 18.2, 18.2, 20.5, 23.2, 26.1, 29.2, 31.5, 34.1, 36.5, 35.2, 37.1, 35.8, 38.2] },
+            { abbr: "NYK", name: "New York Knicks", color: "#006BB6", textColor: "#F58426", id: 1610612752,
+              data: [10.8, 11.5, 12.2, 12.8, 13.5, 14.2, 14.8, 15.5, 16.2, 16.8, 16.2, 16.8, 17.5, 17.5, 19.8, 22.5, 25.2, 28.5, 30.8, 33.5, 36.2, 35.1, 38.5, 37.2, 40.1] },
+            { abbr: "OKC", name: "Oklahoma City Thunder", color: "#007AC1", textColor: "#EF3B24", id: 1610612760,
+              data: [13.5, 14.2, 14.8, 15.5, 16.2, 16.8, 17.5, 18.2, 18.8, 19.5, 18.8, 19.5, 20.2, 20.2, 22.8, 25.5, 28.2, 31.5, 34.1, 36.8, 39.2, 38.1, 40.5, 39.2, 42.5] },
+            { abbr: "ORL", name: "Orlando Magic", color: "#0077C0", textColor: "#fff", id: 1610612753,
+              data: [11.8, 12.5, 13.2, 13.8, 14.5, 15.2, 15.8, 16.5, 17.2, 17.8, 17.2, 17.8, 18.5, 18.5, 20.8, 23.5, 26.2, 29.5, 31.8, 34.2, 36.8, 35.5, 37.8, 36.5, 39.1] },
+            { abbr: "PHI", name: "Philadelphia 76ers", color: "#006BB6", textColor: "#ED174C", id: 1610612755,
+              data: [12.5, 13.2, 13.8, 14.5, 15.2, 15.8, 16.5, 17.2, 17.8, 18.5, 17.8, 18.5, 19.2, 19.2, 21.8, 24.5, 27.5, 30.8, 33.2, 35.8, 38.2, 36.8, 39.1, 37.5, 40.2] },
+            { abbr: "PHX", name: "Phoenix Suns", color: "#1D1160", textColor: "#E56020", id: 1610612756,
+              data: [18.5, 19.2, 19.8, 18.5, 17.2, 16.8, 17.5, 18.2, 18.8, 19.5, 18.8, 19.5, 20.8, 21.8, 24.5, 27.2, 30.1, 33.5, 35.8, 38.2, 40.5, 39.1, 41.2, 39.8, 42.1] },
+            { abbr: "POR", name: "Portland Trail Blazers", color: "#E03A3E", textColor: "#fff", id: 1610612757,
+              data: [13.8, 14.5, 15.2, 15.8, 16.5, 17.2, 17.8, 18.5, 19.2, 19.8, 19.2, 19.8, 20.5, 20.5, 23.1, 26.2, 29.5, 32.8, 35.2, 37.5, 39.8, 38.2, 40.1, 38.5, 40.8] },
+            { abbr: "SAC", name: "Sacramento Kings", color: "#5A2D81", textColor: "#fff", id: 1610612758,
+              data: [13.2, 13.8, 14.5, 15.2, 15.8, 16.5, 17.2, 17.8, 18.5, 19.2, 18.5, 19.2, 19.8, 19.8, 22.2, 25.1, 28.2, 31.5, 34.1, 36.5, 38.8, 37.5, 40.2, 38.8, 41.5] },
+            { abbr: "SAS", name: "San Antonio Spurs", color: "#C4CED4", textColor: "#000", id: 1610612759,
+              data: [12.1, 12.8, 13.5, 14.2, 14.8, 15.5, 16.2, 16.8, 17.5, 18.2, 17.5, 18.2, 18.8, 18.8, 21.2, 24.1, 27.1, 30.2, 32.5, 34.8, 37.1, 35.8, 38.1, 36.5, 39.2] },
+            { abbr: "TOR", name: "Toronto Raptors", color: "#CE1141", textColor: "#fff", id: 1610612761,
+              data: [14.1, 14.8, 15.5, 16.2, 16.8, 17.5, 18.2, 18.8, 19.5, 20.2, 19.5, 20.2, 20.8, 20.8, 23.5, 26.8, 29.8, 33.1, 35.5, 37.8, 40.1, 38.5, 40.8, 39.1, 41.8] },
+            { abbr: "UTA", name: "Utah Jazz", color: "#002B5C", textColor: "#F9A01B", id: 1610612762,
+              data: [14.5, 15.2, 15.8, 16.5, 17.2, 17.8, 18.5, 19.2, 19.8, 20.5, 19.8, 20.5, 21.2, 21.2, 24.1, 27.5, 31.2, 34.8, 37.2, 39.5, 41.8, 40.2, 42.1, 40.5, 43.1] },
+            { abbr: "WAS", name: "Washington Wizards", color: "#002B5C", textColor: "#E31837", id: 1610612764,
+              data: [11.8, 12.5, 13.2, 13.8, 14.5, 15.2, 15.8, 16.5, 17.2, 17.8, 17.2, 17.8, 18.5, 18.5, 21.1, 24.2, 27.2, 30.5, 32.8, 35.2, 37.5, 36.1, 38.2, 36.8, 39.5] }
+        ];
+
+        const TEAM_START_YEAR = 2000;
+
+        const MILESTONES = {
+            1980: { title: "THE BEGINNING", text: "Three-point line introduced to the NBA. Teams average just 2.8 attempts per game." },
+            1987: { title: "FIRST SURGE", text: "Larry Bird wins 3-point contest. League attempts nearly double." },
+            1995: { title: "SHORTENED LINE", text: "NBA shortens 3-point line to 22 feet. Attempts spike to 15.3 per game." },
+            1998: { title: "LINE RESTORED", text: "3-point line restored to original distance. Attempts temporarily drop." },
+            2005: { title: "PHOENIX RISING", text: "Mike D'Antoni's '7 Seconds or Less' Suns revolutionize pace and space." },
+            2013: { title: "CURRY ERA BEGINS", text: "Stephen Curry breaks single-season 3PM record with 272 made threes." },
+            2016: { title: "73-9 WARRIORS", text: "Golden State shatters records. The 3-point revolution reaches full force." },
+            2019: { title: "32 PER GAME", text: "League average crosses 32 3PA/game — over 1000% increase from 1980." },
+            2025: { title: "MODERN ERA", text: "Teams now average nearly 40 attempts per game. Mid-range nearly extinct." }
+        };
+
+        const CONFIG = {
+            radiusBase: 5, radiusScale: 0.25, heightPerYear: 0.39, tubeRadius: 0.12, radialSegments: 8, frustumSize: 45,
+            colors: { low: new THREE.Color(0x1e90ff), medium: new THREE.Color(0x32cd32), high: new THREE.Color(0xffd700), veryHigh: new THREE.Color(0xff6b35), extreme: new THREE.Color(0xff1744) },
+            angleOffset: -Math.PI / 2
+        };
+
+        // Mini spiral config for team cards
+        const MINI_CONFIG = {
+            radiusBase: 3, radiusScale: 0.15, heightPerYear: 0.35, tubeRadius: 0.08, radialSegments: 6, frustumSize: 25
+        };
+        
+        const FONT_FAMILY = '"Inter", sans-serif';
+        let scene, renderer, controls, perspectiveCamera, orthographicCamera, activeCamera;
+        let spiralMesh, endCapMesh, yearLabelsGroup;
+        let attemptsGridGroup, attemptsLabelGroup, attemptsVerticalGroup;
+        let yearIndicatorMesh, yearIndicatorTexture, yearIndicatorContext;
+        let lastDrawnYear = -1, spiralHeight = 0, dirLight;
+        const _colorHelper = new THREE.Color();
+        let generatedGeometryData = null;
+        let isAnimating = false, animationIndex = 0, totalIndices = 0;
+        let startYear = 1980, endYear = 2025, animationSpeed = 0.8;
+        let currentMilestone = null, milestoneTimeout = null, timelineTimeout;
+        let currentView = 'overall';
+        let isSortedBy3PA = false;
+
+        // Team spirals storage
+        let teamSpirals = [];
+        let sharedRenderer = null;
+        let sharedRenderTarget = null;
+        const SHARED_SIZE = 256; // Fixed size for shared rendering
+
+        // Camera transition state
+        let isTransitioningToSideView = false;
+        let cameraTransitionProgress = 0;
+        const CAMERA_TRANSITION_SPEED = 0.015;
+
+        // Team charts drag controls state
+        let teamDragState = {
+            isDragging: false,
+            startX: 0,
+            startY: 0,
+            azimuthAngle: 0.52,  // ~30 degrees - matches end of transition
+            polarAngle: 1.1,    // ~63 degrees from vertical - matches side view
+            targetAzimuth: 0.52,
+            targetPolar: 1.1,
+            damping: 0.12
+        };
+
+        init(); createSpiral(); toggleAnimation(); animate(); setupViewToggle(); setupSortButton();
+
+        function init() {
+            scene = new THREE.Scene();
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.body.appendChild(renderer.domElement);
+            const aspect = window.innerWidth / window.innerHeight;
+            perspectiveCamera = new THREE.PerspectiveCamera(45, aspect, 1, 1000);
+            orthographicCamera = new THREE.OrthographicCamera(CONFIG.frustumSize*aspect/-2, CONFIG.frustumSize*aspect/2, CONFIG.frustumSize/2, CONFIG.frustumSize/-2, 1, 2000);
+            orthographicCamera.position.set(0, 200, 0);
+            orthographicCamera.lookAt(0, 0, 0);
+            perspectiveCamera.position.copy(orthographicCamera.position);
+            activeCamera = orthographicCamera;
+            controls = new OrbitControls(activeCamera, renderer.domElement);
+            controls.enableDamping = true; controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI/2; controls.enablePan = false;
+            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+            dirLight = new THREE.DirectionalLight(0xffffff, 1.5); scene.add(dirLight);
+            const pointLight = new THREE.PointLight(0xffffff, 0.5); pointLight.position.set(0,20,0); scene.add(pointLight);
+            createYearIndicator(); createAttemptsGrid();
+            window.addEventListener('resize', onWindowResize); setupUI(); onWindowResize();
+        }
+
+        function disposeHierarchy(obj) { if(!obj)return; obj.traverse(c=>{if(c.geometry)c.geometry.dispose();if(c.material){if(Array.isArray(c.material))c.material.forEach(m=>{if(m.map)m.map.dispose();m.dispose();});else{if(c.material.map)c.material.map.dispose();c.material.dispose();}}}); }
+
+        function createYearIndicator() {
+            const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 512;
+            yearIndicatorContext = canvas.getContext('2d');
+            yearIndicatorTexture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.MeshBasicMaterial({ map: yearIndicatorTexture, transparent: true, opacity: 0.9, side: THREE.DoubleSide, color: 0xffffff });
+            yearIndicatorMesh = new THREE.Mesh(new THREE.PlaneGeometry(8, 4), material);
+            yearIndicatorMesh.rotation.x = -Math.PI/2; yearIndicatorMesh.position.set(0, 0.1, 0);
+            scene.add(yearIndicatorMesh); updateYearIndicatorText("1980");
+        }
+
+        function updateYearIndicatorText(text) {
+            if(text===lastDrawnYear)return; lastDrawnYear=text;
+            if(!yearIndicatorContext)return;
+            const ctx=yearIndicatorContext; ctx.clearRect(0,0,1024,512);
+            ctx.fillStyle="#ffffff"; ctx.font='320px '+FONT_FAMILY;
+            const str=text.toString(), dw=ctx.measureText("0").width, startX=512-((str.length-1)*dw/2);
+            ctx.textAlign='center'; ctx.textBaseline='middle';
+            for(let i=0;i<str.length;i++)ctx.fillText(str[i],startX+(i*dw),256);
+            yearIndicatorTexture.needsUpdate=true;
+        }
+
+        function createAttemptsGrid() {
+            if(attemptsGridGroup){disposeHierarchy(attemptsGridGroup);scene.remove(attemptsGridGroup);}
+            if(attemptsLabelGroup){disposeHierarchy(attemptsLabelGroup);scene.remove(attemptsLabelGroup);}
+            if(attemptsVerticalGroup){disposeHierarchy(attemptsVerticalGroup);scene.remove(attemptsVerticalGroup);}
+            attemptsGridGroup=new THREE.Group(); attemptsLabelGroup=new THREE.Group(); attemptsVerticalGroup=new THREE.Group();
+            const levels=[10,20,30,40], colors=[0x32cd32,0xffd700,0xff6b35,0xff1744];
+            levels.forEach((val,idx)=>{
+                const r=CONFIG.radiusBase+(val*CONFIG.radiusScale);
+                const curve=new THREE.EllipseCurve(0,0,r,r,0,2*Math.PI,false,0);
+                const ring=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(curve.getPoints(64)),new THREE.LineBasicMaterial({color:colors[idx],transparent:true,opacity:0.3}));
+                ring.rotation.x=-Math.PI/2; ring.position.y=-2; attemptsGridGroup.add(ring);
+                const canvas=document.createElement('canvas'); canvas.width=256; canvas.height=128;
+                const ctx=canvas.getContext('2d'); ctx.fillStyle='#888'; ctx.font='48px '+FONT_FAMILY; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(val.toString(),128,64);
+                const texture=new THREE.CanvasTexture(canvas); texture.minFilter=THREE.LinearFilter;
+                const mesh=new THREE.Mesh(new THREE.PlaneGeometry(3,1.5),new THREE.MeshBasicMaterial({map:texture,transparent:true,opacity:0.6,side:THREE.DoubleSide}));
+                mesh.position.set(Math.cos(Math.PI/4)*r,-1.9,Math.sin(Math.PI/4)*r); mesh.rotation.x=-Math.PI/2; attemptsLabelGroup.add(mesh);
+            });
+            scene.add(attemptsGridGroup); scene.add(attemptsLabelGroup); scene.add(attemptsVerticalGroup);
+        }
+
+        function updateAttemptsVerticals(h){if(!attemptsVerticalGroup)return;const gl=-2,tl=h+2,total=tl-gl,cy=gl+(total/2);attemptsVerticalGroup.children.forEach(c=>{if(c.name==="vLabel")c.position.y=tl+1;else{c.scale.y=total;c.position.y=cy;}});}
+
+        function getColorForAttempts(a){if(a<10){const t=a/10;_colorHelper.lerpColors(CONFIG.colors.low,CONFIG.colors.medium,t);}else if(a<20){const t=(a-10)/10;_colorHelper.lerpColors(CONFIG.colors.medium,CONFIG.colors.high,t);}else if(a<30){const t=(a-20)/10;_colorHelper.lerpColors(CONFIG.colors.high,CONFIG.colors.veryHigh,t);}else if(a<40){const t=(a-30)/10;_colorHelper.lerpColors(CONFIG.colors.veryHigh,CONFIG.colors.extreme,t);}else _colorHelper.copy(CONFIG.colors.extreme);return _colorHelper.clone();}
+        function lerpColor(c1,c2,a){return new THREE.Color().lerpColors(c1,c2,a);}
+
+        function setupUI() {
+            const infoBtn=document.getElementById('infoBtn'),settingsBtn=document.getElementById('settingsBtn'),playBtn=document.getElementById('playBtn');
+            const infoPanel=document.getElementById('infoPanel'),settingsPanel=document.getElementById('settingsPanel');
+            const timelineContainer=document.getElementById('timelineContainer'),buttonGroup=document.getElementById('buttonGroup');
+            infoBtn.addEventListener('click',()=>{infoPanel.classList.toggle('visible');settingsPanel.classList.remove('visible');});
+            settingsBtn.addEventListener('click',()=>{settingsPanel.classList.toggle('visible');infoPanel.classList.remove('visible');});
+            document.querySelectorAll('.close-btn').forEach(b=>b.addEventListener('click',e=>document.getElementById(e.target.dataset.target).classList.remove('visible')));
+            document.getElementById('orthoToggle').addEventListener('change',e=>switchCamera(e.target.checked));
+            document.getElementById('helpersToggle').addEventListener('change',e=>{const v=e.target.checked;if(yearLabelsGroup)yearLabelsGroup.visible=v;if(yearIndicatorMesh)yearIndicatorMesh.visible=v;if(attemptsGridGroup)attemptsGridGroup.visible=v;if(attemptsLabelGroup)attemptsLabelGroup.visible=v;if(endCapMesh)endCapMesh.visible=v;});
+            document.getElementById('smoothSpiralToggle').addEventListener('change',()=>{createSpiral();resetAnimation();});
+            document.getElementById('freeCameraToggle').addEventListener('change',e=>{const f=e.target.checked;controls.enablePan=f;controls.maxPolarAngle=f?Math.PI:Math.PI/2;if(!f){controls.target.set(0,spiralHeight/2,0);controls.update();}});
+            const showTL=()=>{clearTimeout(timelineTimeout);timelineContainer.classList.remove('collapsed');};
+            const hideTL=()=>{clearTimeout(timelineTimeout);timelineTimeout=setTimeout(()=>timelineContainer.classList.add('collapsed'),2000);};
+            buttonGroup.addEventListener('mouseenter',showTL);timelineContainer.addEventListener('mouseenter',showTL);
+            buttonGroup.addEventListener('mouseleave',hideTL);timelineContainer.addEventListener('mouseleave',hideTL);hideTL();
+            playBtn.addEventListener('click',toggleAnimation);
+            document.getElementById('speedSlider').addEventListener('input',e=>{animationSpeed=parseFloat(e.target.value);document.getElementById('speedValue').innerText=animationSpeed+'x';});
+            document.getElementById('timelineSlider').addEventListener('input',e=>{showTL();if(isAnimating)toggleAnimation();animationIndex=Math.floor((parseFloat(e.target.value)/100)*totalIndices);updateSpiralVisuals();updateTimelineState(animationIndex);});
+            document.getElementById('spacingSlider').addEventListener('input',e=>{CONFIG.heightPerYear=parseFloat(e.target.value);document.getElementById('spacingValue').innerText=parseFloat(e.target.value).toFixed(1);createSpiral();});
+        }
+
+        function setupViewToggle() {
+            const viewBtns = document.querySelectorAll('.view-btn');
+            viewBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const view = btn.dataset.view;
+                    if (view === currentView) return;
+                    
+                    viewBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentView = view;
+                    
+                    if (view === 'teams') {
+                        document.body.classList.add('team-view');
+                        document.getElementById('teamGridContainer').classList.add('visible');
+                        // Reset year display
+                        const yearDisplay = document.getElementById('teamYearDisplay');
+                        if (yearDisplay) yearDisplay.textContent = '2000-01';
+                        // Reset sort state
+                        isSortedBy3PA = false;
+                        document.getElementById('sortBtn').classList.remove('active');
+                        // Reset drag state for fresh view - angles match end of transition
+                        teamDragState.azimuthAngle = 0.52;
+                        teamDragState.polarAngle = 1.1;
+                        teamDragState.targetAzimuth = 0.52;
+                        teamDragState.targetPolar = 1.1;
+                        teamDragState.isDragging = false;
+                        // Always recreate to get fresh animation
+                        disposeTeamSpirals();
+                        renderTeamGrid();
+                        setupTeamDragControls();
+                    } else {
+                        document.body.classList.remove('team-view');
+                        document.getElementById('teamGridContainer').classList.remove('visible');
+                        disposeTeamSpirals();
+                    }
+                });
+            });
+        }
+
+        function setupSortButton() {
+            const sortBtn = document.getElementById('sortBtn');
+            sortBtn.addEventListener('click', () => {
+                isSortedBy3PA = !isSortedBy3PA;
+                sortBtn.classList.toggle('active', isSortedBy3PA);
+                
+                const grid = document.getElementById('teamGrid');
+                const cards = Array.from(grid.querySelectorAll('.team-card'));
+                
+                // FLIP Animation: First - record current positions
+                const firstPositions = new Map();
+                cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    firstPositions.set(card.dataset.team, { x: rect.left, y: rect.top });
+                });
+                
+                // Sort the teams
+                const sortedTeams = isSortedBy3PA 
+                    ? [...NBA_TEAMS].sort((a, b) => b.data[b.data.length - 1] - a.data[a.data.length - 1])
+                    : NBA_TEAMS;
+                
+                // Reorder DOM elements
+                sortedTeams.forEach(team => {
+                    const card = grid.querySelector(`[data-team="${team.abbr}"]`);
+                    if (card) grid.appendChild(card);
+                });
+                
+                // FLIP Animation: Last - get new positions, Invert & Play
+                cards.forEach(card => {
+                    const first = firstPositions.get(card.dataset.team);
+                    const last = card.getBoundingClientRect();
+                    
+                    const deltaX = first.x - last.left;
+                    const deltaY = first.y - last.top;
+                    
+                    if (deltaX !== 0 || deltaY !== 0) {
+                        // Invert: move to old position
+                        card.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                        card.style.transition = 'none';
+                        
+                        // Play: animate to new position
+                        requestAnimationFrame(() => {
+                            requestAnimationFrame(() => {
+                                card.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                                card.style.transform = 'translate(0, 0)';
+                            });
+                        });
+                    }
+                });
+            });
+        }
+
+        function disposeTeamSpirals() {
+            teamSpirals.forEach(ts => {
+                if (ts.scene) disposeHierarchy(ts.scene);
+            });
+            teamSpirals = [];
+            // Don't dispose shared renderer - we reuse it
+        }
+        
+        function initSharedRenderer() {
+            if (sharedRenderer) return;
+            
+            // Create offscreen canvas for shared rendering
+            const offscreenCanvas = document.createElement('canvas');
+            offscreenCanvas.width = SHARED_SIZE;
+            offscreenCanvas.height = SHARED_SIZE;
+            
+            sharedRenderer = new THREE.WebGLRenderer({ 
+                canvas: offscreenCanvas, 
+                antialias: true, 
+                alpha: true,
+                preserveDrawingBuffer: true 
+            });
+            sharedRenderer.setSize(SHARED_SIZE, SHARED_SIZE);
+            sharedRenderer.setPixelRatio(1);
+            sharedRenderer.setClearColor(0x000000, 0);
+        }
+
+        function setupTeamDragControls() {
+            const container = document.getElementById('teamGridContainer');
+            if (!container) return;
+
+            // Mouse events
+            container.addEventListener('mousedown', onTeamDragStart);
+            container.addEventListener('mousemove', onTeamDragMove);
+            container.addEventListener('mouseup', onTeamDragEnd);
+            container.addEventListener('mouseleave', onTeamDragEnd);
+
+            // Touch events
+            container.addEventListener('touchstart', onTeamTouchStart, { passive: false });
+            container.addEventListener('touchmove', onTeamTouchMove, { passive: false });
+            container.addEventListener('touchend', onTeamDragEnd);
+        }
+
+        function onTeamDragStart(e) {
+            teamDragState.isDragging = true;
+            teamDragState.startX = e.clientX;
+            teamDragState.startY = e.clientY;
+            e.preventDefault();
+        }
+
+        function onTeamTouchStart(e) {
+            if (e.touches.length === 1) {
+                teamDragState.isDragging = true;
+                teamDragState.startX = e.touches[0].clientX;
+                teamDragState.startY = e.touches[0].clientY;
+                e.preventDefault();
+            }
+        }
+
+        function onTeamDragMove(e) {
+            if (!teamDragState.isDragging) return;
+            
+            const deltaX = e.clientX - teamDragState.startX;
+            const deltaY = e.clientY - teamDragState.startY;
+            
+            // Update target angles based on drag
+            const sensitivity = 0.005;
+            teamDragState.targetAzimuth += deltaX * sensitivity;
+            teamDragState.targetPolar = Math.max(0, Math.min(Math.PI / 2, teamDragState.targetPolar + deltaY * sensitivity));
+            
+            teamDragState.startX = e.clientX;
+            teamDragState.startY = e.clientY;
+        }
+
+        function onTeamTouchMove(e) {
+            if (!teamDragState.isDragging || e.touches.length !== 1) return;
+            
+            const deltaX = e.touches[0].clientX - teamDragState.startX;
+            const deltaY = e.touches[0].clientY - teamDragState.startY;
+            
+            const sensitivity = 0.005;
+            teamDragState.targetAzimuth += deltaX * sensitivity;
+            teamDragState.targetPolar = Math.max(0, Math.min(Math.PI / 2, teamDragState.targetPolar + deltaY * sensitivity));
+            
+            teamDragState.startX = e.touches[0].clientX;
+            teamDragState.startY = e.touches[0].clientY;
+            e.preventDefault();
+        }
+
+        function onTeamDragEnd() {
+            teamDragState.isDragging = false;
+        }
+
+        function updateTeamCameraFromDrag(camera, spiralHeight) {
+            // Smoothly interpolate current angles to target angles
+            teamDragState.azimuthAngle += (teamDragState.targetAzimuth - teamDragState.azimuthAngle) * teamDragState.damping;
+            teamDragState.polarAngle += (teamDragState.targetPolar - teamDragState.polarAngle) * teamDragState.damping;
+            
+            // Calculate camera position from spherical coordinates
+            const radius = 50;
+            const x = radius * Math.sin(teamDragState.polarAngle) * Math.sin(teamDragState.azimuthAngle);
+            const y = radius * Math.cos(teamDragState.polarAngle);
+            const z = radius * Math.sin(teamDragState.polarAngle) * Math.cos(teamDragState.azimuthAngle);
+            
+            camera.position.set(x, y, z);
+            camera.lookAt(0, 0, 0);
+            camera.updateProjectionMatrix();
+        }
+
+        function getTeamLogoUrl(team) {
+            // Using ESPN CDN for team logos
+            return `https://a.espncdn.com/i/teamlogos/nba/500/${team.abbr.toLowerCase()}.png`;
+        }
+
+        function renderTeamGrid() {
+            const grid = document.getElementById('teamGrid');
+            grid.innerHTML = '';
+            disposeTeamSpirals();
+            
+            // Sort teams by most recent 3PA if sorting is active
+            const teamsToRender = isSortedBy3PA 
+                ? [...NBA_TEAMS].sort((a, b) => b.data[b.data.length - 1] - a.data[a.data.length - 1])
+                : NBA_TEAMS;
+            
+            teamsToRender.forEach((team, idx) => {
+                const card = document.createElement('div');
+                card.className = 'team-card';
+                card.dataset.team = team.abbr;
+                
+                const currentAttempts = team.data[team.data.length - 1];
+                const startAttempts = team.data[0];
+                const growth = ((currentAttempts - startAttempts) / startAttempts * 100).toFixed(0);
+                
+                card.innerHTML = `
+                    <div class="team-header">
+                        <img class="team-logo" src="${getTeamLogoUrl(team)}" alt="${team.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="team-logo-fallback" style="background: ${team.color}; color: ${team.textColor}; display: none;">${team.abbr.substring(0, 2)}</div>
+                        <div>
+                            <div class="team-name">${team.name}</div>
+                            <div class="team-abbr">${team.abbr}</div>
+                        </div>
+                    </div>
+                    <div class="team-chart-container">
+                        <canvas class="team-chart" id="chart-${team.abbr}"></canvas>
+                    </div>
+                    <div class="team-stats">
+                        <div class="team-stat">
+                            <div class="team-stat-value">${currentAttempts.toFixed(1)}</div>
+                            <div class="team-stat-label">Current 3PA</div>
+                        </div>
+                        <div class="team-stat">
+                            <div class="team-stat-value" style="color: #32cd32;">+${growth}%</div>
+                            <div class="team-stat-label">Growth</div>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+
+            // Initialize shared renderer and all team spirals
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    initSharedRenderer();
+                    teamsToRender.forEach((team, idx) => {
+                        createTeamSpiral(team, idx);
+                    });
+                }, 100);
+            });
+        }
+
+        function createTeamSpiral(team, index) {
+            const canvas = document.getElementById(`chart-${team.abbr}`);
+            if (!canvas) return;
+            
+            const container = canvas.parentElement;
+            const rect = container.getBoundingClientRect();
+            let size = Math.floor(Math.min(rect.width, rect.height));
+            
+            // Ensure minimum size
+            if (size < 50) size = 180;
+            
+            // Setup canvas for 2D drawing (we'll copy from shared renderer)
+            canvas.width = SHARED_SIZE;
+            canvas.height = SHARED_SIZE;
+            canvas.style.width = size + 'px';
+            canvas.style.height = size + 'px';
+            
+            const ctx2d = canvas.getContext('2d');
+
+            // Create mini Three.js scene (no renderer needed per team)
+            const miniScene = new THREE.Scene();
+
+            const aspect = 1;
+            const frustumSize = MINI_CONFIG.frustumSize;
+            const miniCamera = new THREE.OrthographicCamera(
+                frustumSize * aspect / -2, frustumSize * aspect / 2,
+                frustumSize / 2, frustumSize / -2, 1, 500
+            );
+            miniCamera.position.set(0, 100, 0);
+            miniCamera.lookAt(0, 0, 0);
+
+            // Lighting
+            miniScene.add(new THREE.AmbientLight(0xffffff, 0.7));
+            const miniDirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            miniDirLight.position.set(50, 100, 50);
+            miniScene.add(miniDirLight);
+
+            // Create spiral for this team
+            const spiralData = createTeamSpiralGeometry(team, MINI_CONFIG);
+            if (spiralData && spiralData.mesh) {
+                miniScene.add(spiralData.mesh);
+                // Start with draw range at 0 for animation
+                spiralData.mesh.geometry.setDrawRange(0, 0);
+            }
+
+            // Add grid rings
+            const gridGroup = new THREE.Group();
+            const levels = [20, 40];
+            const gridColors = [0xffd700, 0xff1744];
+            levels.forEach((val, idx) => {
+                const r = MINI_CONFIG.radiusBase + (val * MINI_CONFIG.radiusScale);
+                const curve = new THREE.EllipseCurve(0, 0, r, r, 0, 2 * Math.PI, false, 0);
+                const ring = new THREE.LineLoop(
+                    new THREE.BufferGeometry().setFromPoints(curve.getPoints(32)),
+                    new THREE.LineBasicMaterial({ color: gridColors[idx], transparent: true, opacity: 0.2 })
+                );
+                ring.rotation.x = -Math.PI / 2;
+                ring.position.y = -1;
+                gridGroup.add(ring);
+            });
+            miniScene.add(gridGroup);
+
+            // Calculate total indices for animation
+            const totalTeamIndices = spiralData ? (spiralData.numPoints - 1) * MINI_CONFIG.radialSegments * 6 : 0;
+
+            // Store spiral data with animation state
+            const spiralObj = {
+                team,
+                canvas,
+                ctx2d,
+                scene: miniScene,
+                camera: miniCamera,
+                mesh: spiralData?.mesh,
+                rotation: 0,
+                spiralHeight: spiralData?.height || 5,
+                // Animation properties
+                animationIndex: 0,
+                totalIndices: totalTeamIndices,
+                isAnimating: true,
+                originalColors: spiralData?.mesh?.geometry?.userData?.originalColorArray || null,
+                // Camera transition properties
+                isTransitioningCamera: false,
+                cameraTransitionProgress: 0,
+                cameraTransitionComplete: false
+            };
+            
+            teamSpirals.push(spiralObj);
+        }
+
+        function createTeamSpiralGeometry(team, cfg) {
+            const rawPts = [], rawClrs = [];
+            const numYears = team.data.length;
+            
+            team.data.forEach((attempts, yi) => {
+                // 6 points per year for smoother mini spirals
+                for (let m = 0; m < 6; m++) {
+                    const ang = (m / 6) * Math.PI * 2 + CONFIG.angleOffset;
+                    const r = cfg.radiusBase + (attempts * cfg.radiusScale);
+                    const yp = (yi + (m / 6)) * cfg.heightPerYear;
+                    rawPts.push(new THREE.Vector3(Math.cos(ang) * r, yp, Math.sin(ang) * r));
+                    rawClrs.push(getColorForAttempts(attempts));
+                }
+            });
+
+            if (rawPts.length < 2) return null;
+
+            // Smooth the curve
+            const curve = new THREE.CatmullRomCurve3(rawPts);
+            curve.curveType = 'centripetal';
+            const tp = (rawPts.length - 1) * 4 + 1;
+            const finalPts = curve.getPoints(tp);
+            
+            const finalClrs = [];
+            for (let i = 0; i < finalPts.length; i++) {
+                const u = i / (finalPts.length - 1);
+                const fi = u * (rawPts.length - 1);
+                const iA = Math.floor(fi);
+                const iB = Math.min(iA + 1, rawPts.length - 1);
+                const al = fi - iA;
+                finalClrs.push(lerpColor(rawClrs[iA], rawClrs[iB], al));
+            }
+
+            const geo = createDataTubeGeometry(finalPts, finalClrs, cfg.tubeRadius, cfg.radialSegments);
+            
+            // Store original colors for tail glow effect
+            geo.userData.originalColorArray = new Float32Array(geo.attributes.color.array);
+            geo.userData.lastTailRange = { start: 0, end: -1 };
+            
+            const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ 
+                vertexColors: true, 
+                roughness: 0.4, 
+                metalness: 0.1 
+            }));
+
+            const height = numYears * cfg.heightPerYear;
+            mesh.position.y = -height / 2;
+
+            return { mesh, height, numPoints: finalPts.length };
+        }
+
+        function showMilestone(y){const m=MILESTONES[y];if(!m||currentMilestone===y)return;currentMilestone=y;const t=document.getElementById('milestoneToast');document.getElementById('milestoneTitle').textContent=m.title;document.getElementById('milestoneText').textContent=m.text;t.classList.add('visible');clearTimeout(milestoneTimeout);milestoneTimeout=setTimeout(()=>t.classList.remove('visible'),4000);}
+
+        function updateTimelineState(idx) {
+            const progress=idx/totalIndices;
+            if(yearIndicatorMesh&&generatedGeometryData){
+                const pc=generatedGeometryData.length,i=Math.min(Math.floor(progress*(pc-1)),pc-1),pt=generatedGeometryData[i];
+                if(pt){
+                    const dy=Math.floor(pt.decimalYear),att=pt.attempts||0;
+                    updateYearIndicatorText(dy);
+                    yearIndicatorMesh.position.y=(pt.decimalYear-startYear)*CONFIG.heightPerYear+2;
+                    document.getElementById('infoSeason').innerText=`${dy-1}-${String(dy).slice(-2)}`;
+                    document.getElementById('info3PA').innerText=att.toFixed(1);
+                    let pct=Math.max(0,Math.min(100,(att/40)*100));
+                    document.getElementById('legendMarker').style.left=pct+"%";
+                    if(pt.color){yearIndicatorMesh.material.color.set(pt.color);document.getElementById('info3PA').style.color="#"+pt.color.getHexString();}
+                    showMilestone(dy);
+                }
+            }
+        }
+
+        function toggleAnimation(){isAnimating=!isAnimating;const btn=document.getElementById('playBtn');if(isAnimating){btn.innerText='❚❚';btn.classList.add('active');if(animationIndex>=totalIndices){animationIndex=0;currentMilestone=null;isTransitioningToSideView=false;cameraTransitionProgress=0;resetCameraToTop();if(spiralMesh)spiralMesh.geometry.setDrawRange(0,0);}}else{btn.innerText='▶';btn.classList.remove('active');}}
+        function resetAnimation(){animationIndex=0;lastDrawnYear=-1;currentMilestone=null;isTransitioningToSideView=false;cameraTransitionProgress=0;resetCameraToTop();if(spiralMesh){updateSpiralVisuals();document.getElementById('timelineSlider').value=0;updateTimelineState(0);}if(!isAnimating)toggleAnimation();}
+        
+        function resetCameraToTop() {
+            // Reset to top-down view
+            orthographicCamera.position.set(0, 200, 0);
+            orthographicCamera.lookAt(0, spiralHeight/2, 0);
+            controls.target.set(0, spiralHeight/2, 0);
+            controls.update();
+        }
+        
+        function startSideViewTransition() {
+            isTransitioningToSideView = true;
+            cameraTransitionProgress = 0;
+        }
+        
+        function updateCameraTransition() {
+            if (!isTransitioningToSideView) return;
+            
+            cameraTransitionProgress += CAMERA_TRANSITION_SPEED;
+            
+            // Ease out cubic
+            const t = 1 - Math.pow(1 - Math.min(cameraTransitionProgress, 1), 3);
+            
+            // Calculate camera position - from top to side view
+            const startY = 200;
+            const endY = spiralHeight * 0.6;
+            const startZ = 0;
+            const endZ = 50;
+            const startX = 0;
+            const endX = 30;
+            
+            const currentY = startY + (endY - startY) * t;
+            const currentZ = startZ + (endZ - startZ) * t;
+            const currentX = startX + (endX - startX) * t;
+            
+            orthographicCamera.position.set(currentX, currentY, currentZ);
+            perspectiveCamera.position.set(currentX, currentY, currentZ);
+            
+            // Update zoom for better side view
+            const startZoom = 1;
+            const endZoom = 0.7;
+            orthographicCamera.zoom = startZoom + (endZoom - startZoom) * t;
+            orthographicCamera.updateProjectionMatrix();
+            
+            controls.target.set(0, spiralHeight/2, 0);
+            controls.update();
+            
+            if (cameraTransitionProgress >= 1) {
+                isTransitioningToSideView = false;
+            }
+        }
+
+        function switchCamera(isOrtho){const t=controls.target.clone();if(isOrtho){const d=perspectiveCamera.position.distanceTo(t),vh=2*d*Math.tan(THREE.MathUtils.degToRad(perspectiveCamera.fov/2));orthographicCamera.zoom=CONFIG.frustumSize/vh;orthographicCamera.updateProjectionMatrix();orthographicCamera.position.copy(perspectiveCamera.position);orthographicCamera.rotation.copy(perspectiveCamera.rotation);activeCamera=orthographicCamera;}else{const z=orthographicCamera.zoom,vh=CONFIG.frustumSize/z,d=vh/(2*Math.tan(THREE.MathUtils.degToRad(perspectiveCamera.fov/2))),dir=new THREE.Vector3().subVectors(orthographicCamera.position,t).normalize();perspectiveCamera.position.copy(t).add(dir.multiplyScalar(d));perspectiveCamera.rotation.copy(orthographicCamera.rotation);activeCamera=perspectiveCamera;}controls.object=activeCamera;controls.target.copy(t);controls.update();}
+
+        function createDataTubeGeometry(pts,clrs,rad,radSeg){
+            const np=pts.length,vc=(np*radSeg)+2,geo=new THREE.BufferGeometry();
+            const pos=new Float32Array(vc*3),col=new Float32Array(vc*3),idx=[];
+            const P=new THREE.Vector3(),T=new THREE.Vector3(),N=new THREE.Vector3(),B=new THREE.Vector3();
+            for(let i=0;i<np;i++){P.copy(pts[i]);if(i===0)T.subVectors(pts[1],pts[0]).normalize();else if(i===np-1)T.subVectors(pts[i],pts[i-1]).normalize();else{const T1=new THREE.Vector3().subVectors(pts[i],pts[i-1]),T2=new THREE.Vector3().subVectors(pts[i+1],pts[i]);T.addVectors(T1,T2).normalize();}N.set(P.x,0,P.z);if(N.lengthSq()<0.001)N.set(1,0,0);N.normalize();B.crossVectors(T,N).normalize();N.crossVectors(B,T).normalize();const bi=i*radSeg,c=clrs[i];for(let j=0;j<radSeg;j++){const th=(j/radSeg)*Math.PI*2,s=Math.sin(th),cs=Math.cos(th);pos[bi*3+j*3]=P.x+rad*(cs*N.x+s*B.x);pos[bi*3+j*3+1]=P.y+rad*(cs*N.y+s*B.y);pos[bi*3+j*3+2]=P.z+rad*(cs*N.z+s*B.z);col[bi*3+j*3]=c.r;col[bi*3+j*3+1]=c.g;col[bi*3+j*3+2]=c.b;}}
+            const sci=vc-2;pos[sci*3]=pts[0].x;pos[sci*3+1]=pts[0].y;pos[sci*3+2]=pts[0].z;col[sci*3]=clrs[0].r;col[sci*3+1]=clrs[0].g;col[sci*3+2]=clrs[0].b;
+            const eci=vc-1;pos[eci*3]=pts[np-1].x;pos[eci*3+1]=pts[np-1].y;pos[eci*3+2]=pts[np-1].z;col[eci*3]=clrs[np-1].r;col[eci*3+1]=clrs[np-1].g;col[eci*3+2]=clrs[np-1].b;
+            for(let j=0;j<radSeg;j++)idx.push(sci,(j+1)%radSeg,j);
+            for(let i=0;i<np-1;i++)for(let j=0;j<radSeg;j++){const nj=(j+1)%radSeg,a=i*radSeg+j,b=i*radSeg+nj,c=(i+1)*radSeg+nj,d=(i+1)*radSeg+j;idx.push(a,b,d);idx.push(b,c,d);}
+            const lrs=(np-1)*radSeg;for(let j=0;j<radSeg;j++)idx.push(eci,lrs+j,lrs+((j+1)%radSeg));
+            geo.setAttribute('position',new THREE.BufferAttribute(pos,3));geo.setAttribute('color',new THREE.BufferAttribute(col,3));geo.setIndex(idx);geo.computeVertexNormals();return geo;
+        }
+
+        function createSpiral() {
+            if(spiralMesh){disposeHierarchy(spiralMesh);scene.remove(spiralMesh);}
+            if(endCapMesh){disposeHierarchy(endCapMesh);scene.remove(endCapMesh);}
+            if(yearLabelsGroup){disposeHierarchy(yearLabelsGroup);scene.remove(yearLabelsGroup);}
+            const rawPts=[],rawClrs=[],rawMeta=[],yLabels=new THREE.Group();
+            yLabels.visible=document.getElementById('helpersToggle').checked;
+            const azim=controls.getAzimuthalAngle(),polar=controls.getPolarAngle(),opFade=Math.min(1,Math.max(0,polar/1.2));
+            NBA_DATA.forEach((e,yi)=>{
+                for(let m=0;m<12;m++){
+                    const ang=(m/12)*Math.PI*2+CONFIG.angleOffset;
+                    const r=CONFIG.radiusBase+(e.attempts*CONFIG.radiusScale);
+                    const yo=e.year-startYear;
+                    const yp=(yo+(m/12))*CONFIG.heightPerYear;
+                    rawPts.push(new THREE.Vector3(Math.cos(ang)*r,yp,Math.sin(ang)*r));
+                    rawMeta.push({decimalYear:e.year+(m/12),attempts:e.attempts});
+                    rawClrs.push(getColorForAttempts(e.attempts));
+                }
+                if((e.year-1980)%5===0){
+                    const spr=addYearLabel(e.year,(e.year-startYear)*CONFIG.heightPerYear);
+                    spr.material.opacity=opFade;
+                    yLabels.add(spr);
+                }
+            });
+            const spr2030=addYearLabel(2030,(2030-startYear)*CONFIG.heightPerYear);
+            spr2030.material.opacity=opFade;
+            yLabels.add(spr2030);
+            yLabels.rotation.y=azim;
+            spiralHeight=(endYear-startYear+1)*CONFIG.heightPerYear;
+            updateAttemptsVerticals(spiralHeight);
+            if(rawPts.length<2)return;
+            let finalPts=[],finalClrs=[],finalMeta=[];
+            if(document.getElementById('smoothSpiralToggle').checked){
+                const curve=new THREE.CatmullRomCurve3(rawPts);
+                curve.curveType='centripetal';
+                const tp=(rawPts.length-1)*6+1;
+                finalPts=curve.getPoints(tp);
+                for(let i=0;i<finalPts.length;i++){
+                    const u=i/(finalPts.length-1),fi=u*(rawPts.length-1),iA=Math.floor(fi),iB=Math.min(iA+1,rawPts.length-1),al=fi-iA;
+                    finalClrs.push(lerpColor(rawClrs[iA],rawClrs[iB],al));
+                    finalMeta.push({decimalYear:rawMeta[iA].decimalYear+(rawMeta[iB].decimalYear-rawMeta[iA].decimalYear)*al,attempts:rawMeta[iA].attempts+(rawMeta[iB].attempts-rawMeta[iA].attempts)*al});
+                }
+            }else{finalPts=rawPts;finalClrs=rawClrs;finalMeta=rawMeta;}
+            const geo=createDataTubeGeometry(finalPts,finalClrs,CONFIG.tubeRadius,CONFIG.radialSegments);
+            geo.userData.originalColorArray=new Float32Array(geo.attributes.color.array);
+            geo.userData.lastTailRange={start:0,end:-1};
+            generatedGeometryData=finalPts.map((p,i)=>({point:p,color:finalClrs[i],decimalYear:finalMeta[i].decimalYear,attempts:finalMeta[i].attempts}));
+            spiralMesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.3,metalness:0}));
+            scene.add(spiralMesh);
+            scene.add(yLabels);
+            yearLabelsGroup=yLabels;
+            endCapMesh=new THREE.Mesh(new THREE.CircleGeometry(CONFIG.tubeRadius,8),new THREE.MeshStandardMaterial({roughness:0.3,metalness:0,color:finalClrs[0],side:THREE.DoubleSide}));
+            endCapMesh.visible=document.getElementById('helpersToggle').checked;
+            scene.add(endCapMesh);
+            controls.target.set(0,spiralHeight/2,0);
+            totalIndices=(finalPts.length-1)*CONFIG.radialSegments*6;
+            if(!isAnimating){geo.setDrawRange(0,Infinity);animationIndex=totalIndices;document.getElementById('timelineSlider').value=100;endCapMesh.visible=false;updateYearIndicatorText(endYear);}
+        }
+
+        function addYearLabel(y,yp){
+            const cv=document.createElement('canvas');cv.width=256;cv.height=128;
+            const ctx=cv.getContext('2d');ctx.fillStyle='#eee';ctx.font='64px '+FONT_FAMILY;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(y,128,64);
+            const tex=new THREE.CanvasTexture(cv);tex.minFilter=THREE.LinearFilter;
+            const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true}));
+            spr.scale.set(4,2,1);
+            spr.position.set(CONFIG.radiusBase+14,yp,0);
+            return spr;
+        }
+
+        function onWindowResize(){
+            const asp=window.innerWidth/window.innerHeight;
+            renderer.setSize(window.innerWidth,window.innerHeight);
+            perspectiveCamera.aspect=asp;
+            perspectiveCamera.updateProjectionMatrix();
+            let af=CONFIG.frustumSize;
+            if(asp<1)af=45/asp;
+            orthographicCamera.left=-af*asp/2;
+            orthographicCamera.right=af*asp/2;
+            orthographicCamera.top=af/2;
+            orthographicCamera.bottom=-af/2;
+            orthographicCamera.updateProjectionMatrix();
+            
+            // Re-render team charts on resize if in team view
+            if (currentView === 'teams') {
+                // Update canvas display sizes (actual render size stays the same)
+                teamSpirals.forEach(ts => {
+                    if (ts.canvas) {
+                        const container = ts.canvas.parentElement;
+                        if (container) {
+                            const rect = container.getBoundingClientRect();
+                            let size = Math.floor(Math.min(rect.width, rect.height));
+                            if (size < 50) size = 180;
+                            ts.canvas.style.width = size + 'px';
+                            ts.canvas.style.height = size + 'px';
+                        }
+                    }
+                });
+            }
+        }
+
+        function updateSpiralVisuals(){if(!spiralMesh)return;const stride=CONFIG.radialSegments*6,snapped=Math.floor(animationIndex/stride)*stride,scap=CONFIG.radialSegments*3;spiralMesh.geometry.setDrawRange(0,scap+snapped);const cri=Math.floor(snapped/stride),rad=CONFIG.radialSegments,cAttr=spiralMesh.geometry.attributes.color,orig=spiralMesh.geometry.userData.originalColorArray,lastR=spiralMesh.geometry.userData.lastTailRange;if(lastR.end>=lastR.start)for(let r=lastR.start;r<=lastR.end;r++){const rs=r*rad*3,re=(r+1)*rad*3;for(let k=rs;k<re;k++)cAttr.array[k]=orig[k];}if(animationIndex>=totalIndices){cAttr.needsUpdate=true;spiralMesh.geometry.userData.lastTailRange={start:0,end:-1};if(endCapMesh)endCapMesh.visible=false;spiralMesh.geometry.setDrawRange(0,Infinity);return;}const tl=24,sr=Math.max(0,cri-tl),er=cri,wh=new THREE.Color(1,1,1),tc=new THREE.Color();for(let r=sr;r<=er;r++){if((r+1)*rad*3>cAttr.array.length)continue;let al=(r-sr)/(er-sr||1);al=Math.pow(al,5);for(let j=0;j<rad;j++){const idx=(r*rad+j)*3;tc.setRGB(orig[idx],orig[idx+1],orig[idx+2]);tc.lerp(wh,al);cAttr.array[idx]=tc.r;cAttr.array[idx+1]=tc.g;cAttr.array[idx+2]=tc.b;}}cAttr.needsUpdate=true;spiralMesh.geometry.userData.lastTailRange={start:sr,end:er};if(endCapMesh&&generatedGeometryData){const si=snapped/stride,pi=Math.min(si,generatedGeometryData.length-1),d=generatedGeometryData[pi];if(d){endCapMesh.visible=true;endCapMesh.position.copy(d.point);endCapMesh.material.color.setHex(0xffffff);let tp;if(pi<generatedGeometryData.length-1)tp=generatedGeometryData[pi+1].point;else if(pi>0){const pr=generatedGeometryData[pi-1].point,dir=new THREE.Vector3().subVectors(d.point,pr);tp=new THREE.Vector3().addVectors(d.point,dir);}if(tp)endCapMesh.lookAt(tp);}}}
+
+        function updateAnimation(){if(!isAnimating||!spiralMesh)return;const bs=Math.ceil(totalIndices/600),sp=bs*animationSpeed;animationIndex+=sp;if(animationIndex>=totalIndices){animationIndex=totalIndices;toggleAnimation();spiralMesh.geometry.setDrawRange(0,Infinity);if(endCapMesh)endCapMesh.visible=false;updateSpiralVisuals();startSideViewTransition();}else updateSpiralVisuals();document.getElementById('timelineSlider').value=(animationIndex/totalIndices)*100;updateTimelineState(animationIndex);}
+
+        function animateTeamSpirals() {
+            if (!sharedRenderer || teamSpirals.length === 0) return;
+            
+            const rotationSpeed = 0.008;
+            const animSpeed = 0.6; // Animation speed multiplier
+            const cameraTransSpeed = 0.02; // Camera transition speed for teams
+            
+            teamSpirals.forEach(ts => {
+                if (!ts.mesh || !ts.scene || !ts.camera || !ts.ctx2d) return;
+                
+                const geo = ts.mesh.geometry;
+                const radSeg = MINI_CONFIG.radialSegments;
+                
+                // Progressive draw animation
+                if (ts.isAnimating && ts.totalIndices > 0) {
+                    const baseSpeed = Math.ceil(ts.totalIndices / 400);
+                    ts.animationIndex += baseSpeed * animSpeed;
+                    
+                    if (ts.animationIndex >= ts.totalIndices) {
+                        ts.animationIndex = ts.totalIndices;
+                        ts.isAnimating = false;
+                        geo.setDrawRange(0, Infinity);
+                        
+                        // Reset colors to original
+                        const cAttr = geo.attributes.color;
+                        const orig = geo.userData.originalColorArray;
+                        if (orig) {
+                            for (let k = 0; k < orig.length; k++) {
+                                cAttr.array[k] = orig[k];
+                            }
+                            cAttr.needsUpdate = true;
+                        }
+                        
+                        // Start camera transition to side view
+                        ts.isTransitioningCamera = true;
+                        ts.cameraTransitionProgress = 0;
+                    } else {
+                        // Calculate draw range
+                        const stride = radSeg * 6;
+                        const snapped = Math.floor(ts.animationIndex / stride) * stride;
+                        const scap = radSeg * 3; // Start cap
+                        geo.setDrawRange(0, scap + snapped);
+                        
+                        // Apply glowing tail effect
+                        const cri = Math.floor(snapped / stride);
+                        const cAttr = geo.attributes.color;
+                        const orig = geo.userData.originalColorArray;
+                        const lastR = geo.userData.lastTailRange;
+                        
+                        if (orig) {
+                            // Reset previous tail range to original colors
+                            if (lastR.end >= lastR.start) {
+                                for (let r = lastR.start; r <= lastR.end; r++) {
+                                    const rs = r * radSeg * 3;
+                                    const re = (r + 1) * radSeg * 3;
+                                    for (let k = rs; k < re && k < orig.length; k++) {
+                                        cAttr.array[k] = orig[k];
+                                    }
+                                }
+                            }
+                            
+                            // Apply new glowing tail
+                            const tailLen = 16;
+                            const sr = Math.max(0, cri - tailLen);
+                            const er = cri;
+                            const wh = new THREE.Color(1, 1, 1);
+                            const tc = new THREE.Color();
+                            
+                            for (let r = sr; r <= er; r++) {
+                                if ((r + 1) * radSeg * 3 > cAttr.array.length) continue;
+                                let al = (r - sr) / (er - sr || 1);
+                                al = Math.pow(al, 4);
+                                
+                                for (let j = 0; j < radSeg; j++) {
+                                    const idx = (r * radSeg + j) * 3;
+                                    if (idx + 2 < orig.length) {
+                                        tc.setRGB(orig[idx], orig[idx + 1], orig[idx + 2]);
+                                        tc.lerp(wh, al);
+                                        cAttr.array[idx] = tc.r;
+                                        cAttr.array[idx + 1] = tc.g;
+                                        cAttr.array[idx + 2] = tc.b;
+                                    }
+                                }
+                            }
+                            
+                            cAttr.needsUpdate = true;
+                            geo.userData.lastTailRange = { start: sr, end: er };
+                        }
+                    }
+                }
+                
+                // Camera transition to side view
+                if (ts.isTransitioningCamera) {
+                    ts.cameraTransitionProgress += cameraTransSpeed;
+                    
+                    // Ease out cubic
+                    const t = 1 - Math.pow(1 - Math.min(ts.cameraTransitionProgress, 1), 3);
+                    
+                    // Calculate camera position - from top to side view
+                    const frustumSize = MINI_CONFIG.frustumSize;
+                    const startY = 100;
+                    const endY = ts.spiralHeight * 0.5;
+                    const startZ = 0;
+                    const endZ = 35;
+                    const startX = 0;
+                    const endX = 20;
+                    
+                    const currentY = startY + (endY - startY) * t;
+                    const currentZ = startZ + (endZ - startZ) * t;
+                    const currentX = startX + (endX - startX) * t;
+                    
+                    ts.camera.position.set(currentX, currentY, currentZ);
+                    ts.camera.lookAt(0, 0, 0);
+                    
+                    // Update zoom for better side view
+                    const startZoom = 1;
+                    const endZoom = 0.65;
+                    ts.camera.zoom = startZoom + (endZoom - startZoom) * t;
+                    ts.camera.updateProjectionMatrix();
+                    
+                    if (ts.cameraTransitionProgress >= 1) {
+                        ts.isTransitioningCamera = false;
+                        ts.cameraTransitionComplete = true;
+                    }
+                }
+                
+                // Apply drag-controlled camera position after transition complete
+                if (ts.cameraTransitionComplete && !ts.isTransitioningCamera) {
+                    updateTeamCameraFromDrag(ts.camera, ts.spiralHeight);
+                }
+                
+                // Rotation
+                ts.rotation += rotationSpeed;
+                ts.mesh.rotation.y = ts.rotation;
+                
+                // Render to shared renderer
+                sharedRenderer.render(ts.scene, ts.camera);
+                
+                // Copy to team's canvas
+                ts.ctx2d.clearRect(0, 0, SHARED_SIZE, SHARED_SIZE);
+                ts.ctx2d.drawImage(sharedRenderer.domElement, 0, 0);
+            });
+            
+            // Update global year display based on average animation progress
+            const yearDisplay = document.getElementById('teamYearDisplay');
+            if (yearDisplay && teamSpirals.length > 0) {
+                // Get the average progress (all teams should be roughly synchronized)
+                let totalProgress = 0;
+                let animatingCount = 0;
+                
+                teamSpirals.forEach(ts => {
+                    if (ts.totalIndices > 0) {
+                        const progress = Math.min(ts.animationIndex / ts.totalIndices, 1);
+                        totalProgress += progress;
+                        animatingCount++;
+                    }
+                });
+                
+                if (animatingCount > 0) {
+                    const avgProgress = totalProgress / animatingCount;
+                    // Data spans 2000-2025 (26 seasons)
+                    const startYear = 2000;
+                    const endYear = 2024;
+                    const yearIndex = Math.floor(avgProgress * (endYear - startYear));
+                    const currentYear = startYear + yearIndex;
+                    const nextYear = currentYear + 1;
+                    const seasonStr = avgProgress >= 1 ? '2024-25' : `${currentYear}-${String(nextYear).slice(-2)}`;
+                    yearDisplay.textContent = seasonStr;
+                }
+            }
+        }
+
+        function animate(){
+            requestAnimationFrame(animate);
+            
+            if (currentView === 'teams') {
+                // Animate team spirals
+                animateTeamSpirals();
+            } else {
+                // Main spiral animation
+                updateAnimation();
+                updateCameraTransition();
+                controls.update();
+                if(dirLight&&activeCamera)dirLight.position.copy(activeCamera.position);
+                const polar=controls.getPolarAngle(),opF=Math.min(1,Math.max(0,polar/1.2)),invOp=1-opF,azim=controls.getAzimuthalAngle();
+                if(yearLabelsGroup){yearLabelsGroup.children.forEach(s=>s.material.opacity=opF);yearLabelsGroup.rotation.y=azim;}
+                if(yearIndicatorMesh){yearIndicatorMesh.material.opacity=invOp;yearIndicatorMesh.rotation.z=azim;}
+                if(attemptsGridGroup)attemptsGridGroup.children.forEach(c=>{if(c.material)c.material.opacity=invOp*0.3;});
+                if(attemptsLabelGroup){attemptsLabelGroup.rotation.y=azim;attemptsLabelGroup.children.forEach(s=>s.material.opacity=invOp*0.6);}
+                renderer.render(scene,activeCamera);
+            }
+        }
+    </script>
+</body>
+</html>
