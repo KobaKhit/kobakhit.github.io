@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NBA 3-Point Revolution Spiral</title>
+    <title>NBA 3-Point Evolution</title>
     
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="NBA 3-Point Revolution Spiral - 2024-25 Season">
+    <meta property="og:title" content="NBA 3-Point Evolution - 2024-25 Season">
     <meta property="og:description" content="Interactive 3D visualization showing the evolution of 3-point shooting across NBA teams. Explore how the game has transformed with stunning spiral charts.">
     <meta property="og:image" content="nba3pt.png">
     <meta property="og:type" content="website">
@@ -14,7 +14,7 @@
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="NBA 3-Point Revolution Spiral - 2024-25 Season">
+    <meta name="twitter:title" content="NBA 3-Point Evolution - 2024-25 Season">
     <meta name="twitter:description" content="Interactive 3D visualization showing the evolution of 3-point shooting across NBA teams.">
     <meta name="twitter:image" content="nba3pt.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,6 +34,7 @@
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #555; border-radius: 2px; }
         .panel { position: absolute; bottom: 80px; right: 20px; background: rgba(0,0,0,0.95); padding: 20px; border-radius: 8px; min-width: 260px; max-width: 320px; border: 1px solid #333; display: none; z-index: 30; max-height: 70vh; overflow-y: auto; }
         .panel.visible { display: block; }
+        @media (max-width: 480px) { .panel { bottom: 60px; right: 10px; left: 10px; min-width: auto; max-width: none; padding: 15px; } }
         h1, h2 { margin: 0 0 15px 0; font-size: 1.2rem; color: #ff6b35; }
         p { font-size: 0.9rem; color: #ccc; margin-bottom: 8px; }
         a { color: #ff6b35; }
@@ -51,52 +52,95 @@
         input:checked + .slider-switch:before { transform: translateX(16px); background: white; }
         .slider-label { display: flex; justify-content: space-between; width: 100%; margin-bottom: 5px; font-size: 0.9rem; }
         .slider-val { color: #ff6b35; font-size: 0.8rem; }
-        #milestoneToast { position: absolute; top: 90px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); border: 1px solid #ff6b35; border-radius: 8px; padding: 15px 25px; max-width: 400px; text-align: center; z-index: 100; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+        #milestoneToast { position: absolute; top: 90px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); border: 1px solid #ff6b35; border-radius: 8px; padding: 15px 25px; max-width: 400px; text-align: center; z-index: 100; opacity: 0; transition: opacity 0.5s; pointer-events: none; display: none; }
         #milestoneToast.visible { opacity: 1; }
         #milestoneToast h3 { margin: 0 0 8px 0; color: #ff6b35; font-size: 1rem; }
         #milestoneToast p { margin: 0; color: #ccc; font-size: 0.85rem; }
+        
+        /* Milestone Timeline Panel */
+        #milestoneTimeline { position: absolute; top: 80px; left: 20px; width: 280px; max-height: calc(100vh - 180px); background: rgba(0,0,0,0.85); border: 1px solid #333; border-radius: 12px; z-index: 35; overflow: hidden; display: flex; flex-direction: column; backdrop-filter: blur(10px); }
+        #milestoneTimelineHeader { padding: 12px 15px; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: #888; font-weight: 600; }
+        .timeline-icon { font-size: 1.1rem; }
+        #milestoneList { flex: 1; overflow-y: auto; padding: 10px 0; }
+        #milestoneList::-webkit-scrollbar { width: 4px; }
+        #milestoneList::-webkit-scrollbar-track { background: transparent; }
+        #milestoneList::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+        .milestone-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-left: 3px solid transparent; margin: 0 0 2px 0; opacity: 0; transform: translateX(-20px); transition: all 0.4s ease-out; cursor: default; }
+        .milestone-item.visible { opacity: 1; transform: translateX(0); }
+        .milestone-item.active { border-left-color: #ff6b35; background: rgba(255,107,53,0.1); }
+        .milestone-item:hover { background: rgba(255,255,255,0.05); }
+        .milestone-header { display: flex; flex-direction: column; align-items: center; gap: 2px; flex-shrink: 0; }
+        .milestone-icon { font-size: 1.2rem; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: rgba(255,107,53,0.15); border-radius: 6px; }
+        .milestone-year { font-size: 0.7rem; font-weight: 700; color: #ff6b35; font-family: monospace; }
+        .milestone-body { flex: 1; min-width: 0; }
+        .milestone-title { font-size: 0.7rem; font-weight: 600; color: #fff; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .milestone-text { font-size: 0.65rem; color: #888; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .milestone-3pa { font-size: 0.65rem; font-weight: 700; color: #4ade80; background: rgba(74,222,128,0.15); padding: 4px 8px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; }
+        body.team-view #milestoneTimeline { display: none; }
+        @media (max-width: 900px) { #milestoneTimeline { width: 220px; } .milestone-item { padding: 6px 10px; gap: 8px; } .milestone-icon { width: 24px; height: 24px; font-size: 1rem; } .milestone-year { font-size: 0.65rem; } .milestone-3pa { font-size: 0.6rem; padding: 3px 6px; } }
+        @media (max-width: 700px) { #milestoneTimeline { display: none; } }
 
         /* View Toggle Styles */
         #viewToggle { position: absolute; top: 20px; left: 20px; z-index: 50; display: flex; background: rgba(0,0,0,0.8); border-radius: 25px; border: 1px solid #333; overflow: hidden; }
         .view-btn { padding: 10px 20px; background: transparent; border: none; color: #888; font-family: 'Inter', sans-serif; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; }
         .view-btn:hover { color: #ccc; }
         .view-btn.active { background: #ff6b35; color: white; }
+        @media (max-width: 700px) { #viewToggle { top: 15px; left: 15px; } .view-btn { padding: 8px 14px; font-size: 0.8rem; } }
+        @media (max-width: 480px) { #viewToggle { top: 10px; left: 10px; border-radius: 20px; } .view-btn { padding: 6px 10px; font-size: 0.75rem; } }
 
         /* Page Titles */
         #overallTitle { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 40; pointer-events: none; }
         #overallTitle h1 { margin: 0; font-size: 1.8rem; font-weight: 600; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
         #overallTitle p { margin: 5px 0 0 0; font-size: 0.95rem; color: #aaa; }
         body.team-view #overallTitle { display: none; }
+        @media (max-width: 700px) { #overallTitle h1 { font-size: 1.4rem; } #overallTitle p { font-size: 0.8rem; } }
+        @media (max-width: 480px) { #overallTitle h1 { font-size: 1.1rem; } #overallTitle p { font-size: 0.7rem; } }
 
-        #teamGridTitle { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 45; pointer-events: none; background: rgba(5,5,5,0.9); padding: 10px 25px; border-radius: 12px; border: 1px solid #222; }
+        #teamGridTitle { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 45; pointer-events: none; background: rgba(5,5,5,0.9); padding: 10px 25px; border-radius: 12px; border: 1px solid #222; max-width: calc(100% - 40px); }
         #teamGridTitle h1 { margin: 0; font-size: 1.5rem; font-weight: 600; color: #fff; }
         #teamGridTitle .team-year-display { margin: 8px 0 0 0; font-size: 1.4rem; color: #ff6b35; font-weight: 600; font-family: monospace; }
         #teamGridTitle p { margin: 4px 0 0 0; font-size: 0.85rem; color: #666; }
+        @media (max-width: 700px) { #teamGridTitle { padding: 8px 15px; top: 10px; } #teamGridTitle h1 { font-size: 1.1rem; } #teamGridTitle .team-year-display { font-size: 1.1rem; margin-top: 4px; } #teamGridTitle p { font-size: 0.7rem; } }
+        @media (max-width: 480px) { #teamGridTitle { padding: 6px 12px; } #teamGridTitle h1 { font-size: 0.95rem; } #teamGridTitle .team-year-display { font-size: 1rem; } #teamGridTitle p { font-size: 0.65rem; } }
 
         /* Sort Button */
         #sortBtn { padding: 10px 16px; background: transparent; border: none; border-left: 1px solid #333; color: #888; font-family: 'Inter', sans-serif; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; display: none; align-items: center; gap: 6px; }
         #sortBtn:hover { color: #ccc; }
         #sortBtn.active { background: #ff6b35; color: white; }
         body.team-view #sortBtn { display: flex; }
+        @media (max-width: 700px) { #sortBtn { padding: 8px 12px; font-size: 0.8rem; gap: 4px; } }
+        @media (max-width: 480px) { #sortBtn { padding: 6px 8px; font-size: 0.7rem; } #sortBtn span { display: none; } }
+        
+        /* Team Bottom Controls */
+        #teamBottomWrapper { position: fixed; bottom: 20px; left: 20px; right: 20px; display: none; justify-content: flex-end; align-items: center; gap: 15px; z-index: 20; height: 40px; }
+        body.team-view #teamBottomWrapper { display: flex; }
+        #teamTimelineContainer { position: absolute; bottom: 0; left: 0; right: 120px; height: 40px; background: rgba(0,0,0,0.8); padding: 0 15px; border-radius: 30px; border: 1px solid #333; display: flex; align-items: center; gap: 15px; box-sizing: border-box; }
+        #teamTimelineSlider { -webkit-appearance: none; appearance: none; flex: 1; background: transparent; }
+        #teamTimelineSlider::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #ff6b35; cursor: pointer; margin-top: -6px; }
+        #teamTimelineSlider::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #555; border-radius: 2px; }
+        #teamButtonGroup { position: absolute; bottom: 0; right: 0; display: flex; gap: 10px; }
+        @media (max-width: 700px) { #teamBottomWrapper { bottom: 15px; left: 15px; right: 15px; height: 36px; } #teamTimelineContainer { height: 36px; right: 100px; padding: 0 12px; gap: 10px; } #teamTimelineContainer span { font-size: 0.7rem !important; } #teamButtonGroup { gap: 8px; } #teamButtonGroup .icon-btn { width: 36px; height: 36px; font-size: 1rem; } }
+        @media (max-width: 480px) { #teamBottomWrapper { bottom: 10px; left: 10px; right: 10px; height: 32px; } #teamTimelineContainer { height: 32px; right: 85px; padding: 0 10px; gap: 8px; border-radius: 20px; } #teamTimelineContainer span { display: none; } #teamButtonGroup { gap: 6px; } #teamButtonGroup .icon-btn { width: 32px; height: 32px; font-size: 0.9rem; } }
 
         /* Smooth card transitions */
         .team-card { background: rgba(20,20,20,0.9); border-radius: 12px; padding: 15px; border: 1px solid #222; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s, border-color 0.3s, box-shadow 0.3s; }
         .team-card.sorting { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
         /* Team Grid Styles */
-        #teamGridContainer { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #050505; overflow-y: auto; display: none; padding: 130px 20px 20px 20px; box-sizing: border-box; cursor: grab; }
+        #teamGridContainer { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #050505; overflow-y: auto; display: none; padding: 120px 20px 80px 20px; box-sizing: border-box; cursor: grab; }
         #teamGridContainer:active { cursor: grabbing; }
         #teamGridContainer.visible { display: block; }
-        #teamGrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; max-width: 1800px; margin: 0 auto; }
+        #teamGrid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; max-width: 1800px; margin: 0 auto; padding-bottom: 20px; }
         @media (max-width: 1600px) { #teamGrid { grid-template-columns: repeat(5, 1fr); } }
         @media (max-width: 1300px) { #teamGrid { grid-template-columns: repeat(4, 1fr); } }
         @media (max-width: 1000px) { #teamGrid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 700px) { #teamGrid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 700px) { #teamGrid { grid-template-columns: repeat(2, 1fr); gap: 10px; } #teamGridContainer { padding: 110px 10px 80px 10px; } }
+        @media (max-width: 480px) { #teamGrid { grid-template-columns: repeat(2, 1fr); gap: 8px; } #teamGridContainer { padding: 100px 8px 75px 8px; } }
 
         .team-card:hover { border-color: #ff6b35; box-shadow: 0 4px 20px rgba(255,107,53,0.2); }
         .team-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .team-logo { width: 40px; height: 40px; object-fit: contain; }
-        .team-logo-fallback { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; }
+        .team-logo { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
+        .team-logo-fallback { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0; }
         .team-name { font-size: 0.85rem; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .team-abbr { font-size: 0.7rem; color: #666; }
         .team-chart-container { width: 100%; aspect-ratio: 1; position: relative; background: radial-gradient(circle at center, rgba(30,30,30,0.5) 0%, transparent 70%); border-radius: 8px; overflow: hidden; cursor: grab; }
@@ -106,13 +150,17 @@
         .team-stat { text-align: center; }
         .team-stat-value { font-size: 1rem; font-weight: 600; color: #ff6b35; }
         .team-stat-label { color: #666; }
+        @media (max-width: 700px) { .team-card { padding: 10px; } .team-header { gap: 8px; margin-bottom: 8px; } .team-logo, .team-logo-fallback { width: 32px; height: 32px; } .team-name { font-size: 0.75rem; } .team-stats { margin-top: 8px; } .team-stat-value { font-size: 0.85rem; } .team-stat-label { font-size: 0.65rem; } }
+        @media (max-width: 480px) { .team-card { padding: 8px; border-radius: 8px; } .team-header { gap: 6px; margin-bottom: 6px; } .team-logo, .team-logo-fallback { width: 28px; height: 28px; font-size: 11px; } .team-name { font-size: 0.7rem; } .team-abbr { font-size: 0.6rem; } .team-stats { margin-top: 6px; } .team-stat-value { font-size: 0.75rem; } .team-stat-label { font-size: 0.6rem; } }
 
         /* Hide 3D canvas when in team view */
         body.team-view > canvas { display: none; }
         body.team-view #bottomWrapper { display: none; }
         body.team-view #infoPanel { display: none !important; }
-        body.team-view #settingsPanel { display: none !important; }
+        body.team-view .overall-only { display: none !important; }
         body.team-view #milestoneToast { display: none; }
+        body.team-view #settingsPanel { top: 60px; bottom: auto; }
+        @media (max-width: 480px) { body.team-view #settingsPanel { top: auto; bottom: 55px; left: 10px; right: 10px; } }
     </style>
     <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head>
@@ -126,23 +174,35 @@
 
     <!-- Overall Chart Title -->
     <div id="overallTitle">
-        <h1>NBA 3-Point Revolution</h1>
+        <h1>NBA 3-Point Evolution</h1>
         <p>3-Point Attempts Per Game · 1980-2025</p>
     </div>
 
     <!-- Team Grid Container -->
     <div id="teamGridContainer">
         <div id="teamGridTitle">
-            <h1>NBA 3-Point Revolution by Team</h1>
+            <h1>NBA 3-Point Attempts Per Game</h1>
             <div class="team-year-display" id="teamYearDisplay">2000-01</div>
-            <p>3-Point Attempts Per Game</p>
         </div>
         <div id="teamGrid"></div>
     </div>
 
+    <!-- Team Bottom Controls -->
+    <div id="teamBottomWrapper">
+        <div id="teamTimelineContainer">
+            <span style="font-size:0.8rem;color:#aaa;">2000-01</span>
+            <input type="range" id="teamTimelineSlider" min="0" max="100" value="0" step="0.1">
+            <span style="font-size:0.8rem;color:#aaa;">2024-25</span>
+        </div>
+        <div id="teamButtonGroup">
+            <button id="teamPlayBtn" class="icon-btn" title="Play">▶</button>
+            <button id="teamSettingsBtn" class="icon-btn" title="Settings">⚙</button>
+        </div>
+    </div>
+
     <div id="infoPanel" class="panel">
         <button class="close-btn" data-target="infoPanel">×</button>
-        <h1>🏀 3-Point Revolution</h1>
+        <h1>🏀 3-Point Evolution</h1>
         <p>Visualizing the explosion of 3-point attempts in the NBA from 1980 to present. Each coil represents one season.</p>
         <p>Data: <a href="https://www.basketball-reference.com" target="_blank">Basketball Reference</a></p>
         <p style="margin-top: 10px; color: #888;">Made by <a href="kobakhit.com" target="_blank"><span style="color: #ff6b35;">kobakhit</span></a></p>
@@ -158,14 +218,23 @@
     <div id="settingsPanel" class="panel">
         <button class="close-btn" data-target="settingsPanel">×</button>
         <h2>Settings</h2>
-        <div class="setting-row"><span>Show Annotations</span><label class="switch"><input type="checkbox" id="helpersToggle" checked><span class="slider-switch"></span></label></div>
-        <div class="setting-row"><span>Orthographic View</span><label class="switch"><input type="checkbox" id="orthoToggle" checked><span class="slider-switch"></span></label></div>
-        <div class="setting-row"><span>Free Camera</span><label class="switch"><input type="checkbox" id="freeCameraToggle"><span class="slider-switch"></span></label></div>
-        <div class="setting-row"><span>Smooth Spiral</span><label class="switch"><input type="checkbox" id="smoothSpiralToggle" checked><span class="slider-switch"></span></label></div>
-        <div class="setting-row" style="flex-direction:column;align-items:flex-start;"><div class="slider-label"><span>Coil Spacing</span><span id="spacingValue" class="slider-val">3.9</span></div><input type="range" id="spacingSlider" min="0.0" max="6.0" step="0.1" value="3.9" style="width:100%;"></div>
+        <div class="setting-row overall-only"><span>Show Annotations</span><label class="switch"><input type="checkbox" id="helpersToggle" checked><span class="slider-switch"></span></label></div>
+        <div class="setting-row overall-only"><span>Orthographic View</span><label class="switch"><input type="checkbox" id="orthoToggle" checked><span class="slider-switch"></span></label></div>
+        <div class="setting-row overall-only"><span>Free Camera</span><label class="switch"><input type="checkbox" id="freeCameraToggle"><span class="slider-switch"></span></label></div>
+        <div class="setting-row overall-only"><span>Smooth Spiral</span><label class="switch"><input type="checkbox" id="smoothSpiralToggle" checked><span class="slider-switch"></span></label></div>
+        <div class="setting-row" style="flex-direction:column;align-items:flex-start;"><div class="slider-label"><span>Coil Spacing</span><span id="spacingValue" class="slider-val">0.39</span></div><input type="range" id="spacingSlider" min="0.0" max="1.0" step="0.01" value="0.39" style="width:100%;"></div>
         <div class="setting-row" style="flex-direction:column;align-items:flex-start;"><div class="slider-label"><span>Animation Speed</span><span id="speedValue" class="slider-val">0.8x</span></div><input type="range" id="speedSlider" min="0.01" max="1.0" step="0.01" value="0.8" style="width:100%;"></div>
     </div>
     <div id="milestoneToast"><h3 id="milestoneTitle"></h3><p id="milestoneText"></p></div>
+    
+    <!-- Milestone Timeline Panel -->
+    <div id="milestoneTimeline">
+        <div id="milestoneTimelineHeader">
+            <span class="timeline-icon">📅</span>
+            <span>Timeline</span>
+        </div>
+        <div id="milestoneList"></div>
+    </div>
     <div id="bottomWrapper">
         <div id="timelineContainer" class="collapsed">
             <span style="font-size:0.8rem;color:#aaa;" id="timelineStart">1979-80</span>
@@ -298,15 +367,15 @@
         const TEAM_START_YEAR = 2000;
 
         const MILESTONES = {
-            1980: { title: "THE BEGINNING", text: "Three-point line introduced to the NBA. Teams average just 2.8 attempts per game." },
-            1987: { title: "FIRST SURGE", text: "Larry Bird wins 3-point contest. League attempts nearly double." },
-            1995: { title: "SHORTENED LINE", text: "NBA shortens 3-point line to 22 feet. Attempts spike to 15.3 per game." },
-            1998: { title: "LINE RESTORED", text: "3-point line restored to original distance. Attempts temporarily drop." },
-            2005: { title: "PHOENIX RISING", text: "Mike D'Antoni's '7 Seconds or Less' Suns revolutionize pace and space." },
-            2013: { title: "CURRY ERA BEGINS", text: "Stephen Curry breaks single-season 3PM record with 272 made threes." },
-            2016: { title: "73-9 WARRIORS", text: "Golden State shatters records. The 3-point revolution reaches full force." },
-            2019: { title: "32 PER GAME", text: "League average crosses 32 3PA/game — over 1000% increase from 1980." },
-            2025: { title: "MODERN ERA", text: "Teams now average nearly 40 attempts per game. Mid-range nearly extinct." }
+            1980: { title: "THE BEGINNING", text: "Three-point line introduced", icon: "🏀", threePA: "2.8" },
+            1987: { title: "FIRST SURGE", text: "Larry Bird wins 3PT contest", icon: "🐦", threePA: "4.7" },
+            1995: { title: "SHORTENED LINE", text: "Line moved to 22 feet", icon: "📏", threePA: "15.3" },
+            1998: { title: "LINE RESTORED", text: "Back to 23'9\"", icon: "↩️", threePA: "12.7" },
+            2005: { title: "PHOENIX RISING", text: "7 Seconds or Less debuts", icon: "☀️", threePA: "15.8" },
+            2013: { title: "CURRY ERA", text: "Steph breaks 3PM record", icon: "👨‍🍳", threePA: "20.0" },
+            2016: { title: "73-9 WARRIORS", text: "Golden State dominance", icon: "🏆", threePA: "24.1" },
+            2019: { title: "EXPLOSION", text: "League-wide adoption", icon: "📈", threePA: "32.0" },
+            2025: { title: "MODERN ERA", text: "Mid-range nearly extinct", icon: "🎯", threePA: "37.2" }
         };
 
         const CONFIG = {
@@ -317,7 +386,7 @@
 
         // Mini spiral config for team cards
         const MINI_CONFIG = {
-            radiusBase: 3, radiusScale: 0.15, heightPerYear: 0.35, tubeRadius: 0.08, radialSegments: 6, frustumSize: 25
+            radiusBase: 3, radiusScale: 0.15, heightPerYear: 0.39, tubeRadius: 0.08, radialSegments: 6, frustumSize: 25
         };
         
         const FONT_FAMILY = '"Inter", sans-serif';
@@ -339,6 +408,7 @@
         let sharedRenderer = null;
         let sharedRenderTarget = null;
         const SHARED_SIZE = 256; // Fixed size for shared rendering
+        let isTeamAnimating = false; // Track if team animation is playing
 
         // Camera transition state
         let isTransitioningToSideView = false;
@@ -436,7 +506,7 @@
             const timelineContainer=document.getElementById('timelineContainer'),buttonGroup=document.getElementById('buttonGroup');
             infoBtn.addEventListener('click',()=>{infoPanel.classList.toggle('visible');settingsPanel.classList.remove('visible');});
             settingsBtn.addEventListener('click',()=>{settingsPanel.classList.toggle('visible');infoPanel.classList.remove('visible');});
-            document.querySelectorAll('.close-btn').forEach(b=>b.addEventListener('click',e=>document.getElementById(e.target.dataset.target).classList.remove('visible')));
+            document.querySelectorAll('.close-btn').forEach(b=>b.addEventListener('click',e=>{document.getElementById(e.target.dataset.target).classList.remove('visible');if(e.target.dataset.target==='settingsPanel')document.getElementById('teamSettingsBtn').classList.remove('active');}));
             document.getElementById('orthoToggle').addEventListener('change',e=>switchCamera(e.target.checked));
             document.getElementById('helpersToggle').addEventListener('change',e=>{const v=e.target.checked;if(yearLabelsGroup)yearLabelsGroup.visible=v;if(yearIndicatorMesh)yearIndicatorMesh.visible=v;if(attemptsGridGroup)attemptsGridGroup.visible=v;if(attemptsLabelGroup)attemptsLabelGroup.visible=v;if(endCapMesh)endCapMesh.visible=v;});
             document.getElementById('smoothSpiralToggle').addEventListener('change',()=>{createSpiral();resetAnimation();});
@@ -448,11 +518,33 @@
             playBtn.addEventListener('click',toggleAnimation);
             document.getElementById('speedSlider').addEventListener('input',e=>{animationSpeed=parseFloat(e.target.value);document.getElementById('speedValue').innerText=animationSpeed+'x';});
             document.getElementById('timelineSlider').addEventListener('input',e=>{showTL();if(isAnimating)toggleAnimation();animationIndex=Math.floor((parseFloat(e.target.value)/100)*totalIndices);updateSpiralVisuals();updateTimelineState(animationIndex);});
-            document.getElementById('spacingSlider').addEventListener('input',e=>{CONFIG.heightPerYear=parseFloat(e.target.value);document.getElementById('spacingValue').innerText=parseFloat(e.target.value).toFixed(1);createSpiral();});
+            document.getElementById('spacingSlider').addEventListener('input',e=>{const val=parseFloat(e.target.value);CONFIG.heightPerYear=val;MINI_CONFIG.heightPerYear=val;document.getElementById('spacingValue').innerText=val.toFixed(2);if(currentView==='teams'){recreateTeamSpiralsPreserveState();}else{createSpiral();}});
         }
 
         function setupViewToggle() {
             const viewBtns = document.querySelectorAll('.view-btn');
+            const teamSettingsBtn = document.getElementById('teamSettingsBtn');
+            const teamPlayBtn = document.getElementById('teamPlayBtn');
+            const teamTimelineSlider = document.getElementById('teamTimelineSlider');
+            const settingsPanel = document.getElementById('settingsPanel');
+            
+            // Team settings button click handler
+            teamSettingsBtn.addEventListener('click', () => {
+                settingsPanel.classList.toggle('visible');
+                teamSettingsBtn.classList.toggle('active', settingsPanel.classList.contains('visible'));
+            });
+            
+            // Team play button click handler - toggle play/pause
+            teamPlayBtn.addEventListener('click', () => {
+                toggleTeamAnimation();
+            });
+            
+            // Team timeline slider handler
+            teamTimelineSlider.addEventListener('input', e => {
+                const progress = parseFloat(e.target.value) / 100;
+                setTeamAnimationProgress(progress);
+            });
+            
             viewBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     const view = btn.dataset.view;
@@ -465,9 +557,10 @@
                     if (view === 'teams') {
                         document.body.classList.add('team-view');
                         document.getElementById('teamGridContainer').classList.add('visible');
+                        // Reset timeline slider
+                        teamTimelineSlider.value = 0;
                         // Reset year display
-                        const yearDisplay = document.getElementById('teamYearDisplay');
-                        if (yearDisplay) yearDisplay.textContent = '2000-01';
+                        document.getElementById('teamYearDisplay').textContent = '2000-01';
                         // Reset sort state
                         isSortedBy3PA = false;
                         document.getElementById('sortBtn').classList.remove('active');
@@ -478,16 +571,215 @@
                         teamDragState.targetPolar = 1.1;
                         teamDragState.isDragging = false;
                         // Always recreate to get fresh animation
-                        disposeTeamSpirals();
                         renderTeamGrid();
                         setupTeamDragControls();
+                        updateTeamPlayButton(true);
                     } else {
                         document.body.classList.remove('team-view');
                         document.getElementById('teamGridContainer').classList.remove('visible');
+                        settingsPanel.classList.remove('visible');
+                        teamSettingsBtn.classList.remove('active');
+                        updateTeamPlayButton(false);
                         disposeTeamSpirals();
                     }
                 });
             });
+        }
+        
+        function setTeamAnimationProgress(progress, preserveCameraState = false) {
+            // Stop any ongoing animations
+            teamSpirals.forEach(ts => {
+                ts.isAnimating = false;
+                ts.isTransitioningCamera = false;
+                
+                if (ts.mesh && ts.mesh.geometry && ts.totalIndices > 0) {
+                    // Set draw range based on progress
+                    const targetIndex = Math.floor(progress * ts.totalIndices);
+                    ts.animationIndex = targetIndex;
+                    ts.mesh.geometry.setDrawRange(0, targetIndex);
+                    
+                    // Update colors for visible portion
+                    const geo = ts.mesh.geometry;
+                    const cAttr = geo.attributes.color;
+                    const orig = geo.userData.originalColorArray;
+                    if (orig && cAttr) {
+                        for (let k = 0; k < orig.length; k++) {
+                            cAttr.array[k] = orig[k];
+                        }
+                        cAttr.needsUpdate = true;
+                    }
+                }
+                
+                // Only update camera if not preserving state (e.g., from settings change)
+                if (!preserveCameraState) {
+                    const startY = 100, endY = ts.spiralHeight * 0.5;
+                    const startZ = 0, endZ = 35;
+                    const startX = 0, endX = 20;
+                    
+                    const t = Math.min(1, progress * 1.5);
+                    ts.camera.position.set(
+                        startX + (endX - startX) * t,
+                        startY + (endY - startY) * t,
+                        startZ + (endZ - startZ) * t
+                    );
+                    ts.camera.lookAt(0, ts.spiralHeight * 0.4 * t, 0);
+                    
+                    // Mark camera transition as complete if progress > 0
+                    ts.cameraTransitionComplete = progress > 0.5;
+                }
+            });
+            
+            // Update year display
+            updateTeamYearDisplay(progress);
+            
+            // Update play button to paused state
+            updateTeamPlayButton(false);
+        }
+        
+        // Helper to update year display
+        function updateTeamYearDisplay(progress) {
+            const yearDisplay = document.getElementById('teamYearDisplay');
+            if (yearDisplay && teamSpirals.length > 0) {
+                const startYear = 2000, endYear = 2024;
+                const yearIndex = Math.floor(progress * (endYear - startYear));
+                const currentYear = startYear + yearIndex;
+                const nextYear = currentYear + 1;
+                yearDisplay.textContent = progress >= 1 ? '2024-25' : `${currentYear}-${String(nextYear).slice(-2)}`;
+            }
+        }
+        
+        // Helper to update play button state
+        function updateTeamPlayButton(playing) {
+            isTeamAnimating = playing;
+            const btn = document.getElementById('teamPlayBtn');
+            btn.innerText = playing ? '❚❚' : '▶';
+            btn.title = playing ? 'Pause' : 'Play';
+            btn.classList.toggle('active', playing);
+        }
+        
+        function toggleTeamAnimation() {
+            // Check if any animation is still running or can be resumed
+            const anyAnimating = teamSpirals.some(ts => ts.isAnimating || ts.isTransitioningCamera);
+            const anyCanResume = teamSpirals.some(ts => ts.animationIndex < ts.totalIndices);
+            
+            if (isTeamAnimating && anyAnimating) {
+                // Pause: stop all animations but keep state
+                teamSpirals.forEach(ts => {
+                    ts.isAnimating = false;
+                    ts.isTransitioningCamera = false;
+                });
+                updateTeamPlayButton(false);
+            } else {
+                // Play: either resume or restart
+                if (!anyCanResume) {
+                    // Animation finished, restart from beginning
+                    replayTeamAnimations();
+                } else {
+                    // Resume paused animation
+                    teamSpirals.forEach(ts => {
+                        if (ts.animationIndex < ts.totalIndices) {
+                            ts.isAnimating = true;
+                        }
+                    });
+                    updateTeamPlayButton(true);
+                }
+            }
+        }
+        
+        function replayTeamAnimations() {
+            // Reset timeline slider and year display
+            document.getElementById('teamTimelineSlider').value = 0;
+            document.getElementById('teamYearDisplay').textContent = '2000-01';
+            
+            // Reset each team spiral's animation state
+            teamSpirals.forEach(ts => {
+                ts.animationIndex = 0;
+                ts.isAnimating = true;
+                ts.isTransitioningCamera = false;
+                ts.cameraTransitionProgress = 0;
+                ts.cameraTransitionComplete = false;
+                
+                // Reset camera to top view
+                ts.camera.position.set(0, 100, 0);
+                ts.camera.lookAt(0, 0, 0);
+                ts.camera.zoom = 1;
+                ts.camera.updateProjectionMatrix();
+                
+                // Reset draw range
+                if (ts.mesh && ts.mesh.geometry) {
+                    ts.mesh.geometry.setDrawRange(0, 0);
+                }
+            });
+            
+            // Reset drag state to initial side view angles
+            teamDragState.azimuthAngle = 0.52;
+            teamDragState.polarAngle = 1.1;
+            teamDragState.targetAzimuth = 0.52;
+            teamDragState.targetPolar = 1.1;
+            
+            updateTeamPlayButton(true);
+        }
+        
+        function recreateTeamSpiralsPreserveState() {
+            // Save current state
+            const wasAnimating = isTeamAnimating;
+            const currentProgress = document.getElementById('teamTimelineSlider').value / 100;
+            const currentYear = document.getElementById('teamYearDisplay').textContent;
+            
+            // Save drag/camera state
+            const savedDragState = { ...teamDragState };
+            const savedCameraComplete = teamSpirals.length > 0 && teamSpirals[0].cameraTransitionComplete;
+            
+            // Recreate spirals in paused state
+            renderTeamGrid(true);
+            setupTeamDragControls();
+            
+            // Restore drag state
+            Object.assign(teamDragState, savedDragState);
+            
+            // Set each spiral to the saved progress
+            teamSpirals.forEach(ts => {
+                if (ts.mesh && ts.mesh.geometry && ts.totalIndices > 0) {
+                    const targetIndex = Math.floor(currentProgress * ts.totalIndices);
+                    ts.animationIndex = targetIndex;
+                    
+                    // Set draw range based on progress
+                    if (currentProgress >= 0.99) {
+                        ts.mesh.geometry.setDrawRange(0, Infinity);
+                    } else if (targetIndex > 0) {
+                        ts.mesh.geometry.setDrawRange(0, targetIndex);
+                    }
+                    
+                    // Reset colors to original
+                    const cAttr = ts.mesh.geometry.attributes.color;
+                    const orig = ts.mesh.geometry.userData.originalColorArray;
+                    if (orig && cAttr) {
+                        for (let k = 0; k < orig.length; k++) {
+                            cAttr.array[k] = orig[k];
+                        }
+                        cAttr.needsUpdate = true;
+                    }
+                }
+                
+                // Mark camera transition as complete if it was before
+                ts.cameraTransitionComplete = savedCameraComplete || currentProgress > 0.5;
+            });
+            
+            // Restore year and slider display
+            document.getElementById('teamYearDisplay').textContent = currentYear;
+            document.getElementById('teamTimelineSlider').value = currentProgress * 100;
+            
+            // Restore animation state
+            if (wasAnimating && currentProgress < 0.99) {
+                teamSpirals.forEach(ts => {
+                    if (ts.animationIndex < ts.totalIndices) {
+                        ts.isAnimating = true;
+                    }
+                });
+                updateTeamPlayButton(true);
+            } else {
+                updateTeamPlayButton(false);
+            }
         }
 
         function setupSortButton() {
@@ -656,7 +948,7 @@
             return `https://a.espncdn.com/i/teamlogos/nba/500/${team.abbr.toLowerCase()}.png`;
         }
 
-        function renderTeamGrid() {
+        function renderTeamGrid(startPaused = false) {
             const grid = document.getElementById('teamGrid');
             grid.innerHTML = '';
             disposeTeamSpirals();
@@ -702,18 +994,14 @@
                 grid.appendChild(card);
             });
 
-            // Initialize shared renderer and all team spirals
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    initSharedRenderer();
-                    teamsToRender.forEach((team, idx) => {
-                        createTeamSpiral(team, idx);
-                    });
-                }, 100);
+            // Initialize shared renderer and all team spirals synchronously
+            initSharedRenderer();
+            teamsToRender.forEach((team, idx) => {
+                createTeamSpiral(team, idx, startPaused);
             });
         }
 
-        function createTeamSpiral(team, index) {
+        function createTeamSpiral(team, index, startPaused = false) {
             const canvas = document.getElementById(`chart-${team.abbr}`);
             if (!canvas) return;
             
@@ -791,7 +1079,7 @@
                 // Animation properties
                 animationIndex: 0,
                 totalIndices: totalTeamIndices,
-                isAnimating: true,
+                isAnimating: !startPaused,
                 originalColors: spiralData?.mesh?.geometry?.userData?.originalColorArray || null,
                 // Camera transition properties
                 isTransitioningCamera: false,
@@ -853,7 +1141,57 @@
             return { mesh, height, numPoints: finalPts.length };
         }
 
-        function showMilestone(y){const m=MILESTONES[y];if(!m||currentMilestone===y)return;currentMilestone=y;const t=document.getElementById('milestoneToast');document.getElementById('milestoneTitle').textContent=m.title;document.getElementById('milestoneText').textContent=m.text;t.classList.add('visible');clearTimeout(milestoneTimeout);milestoneTimeout=setTimeout(()=>t.classList.remove('visible'),4000);}
+        function showMilestone(y) {
+            const m = MILESTONES[y];
+            if (!m) return;
+            
+            // Check if this milestone already exists in the timeline
+            const existingItem = document.querySelector(`.milestone-item[data-year="${y}"]`);
+            if (existingItem) {
+                // Just highlight it
+                document.querySelectorAll('.milestone-item').forEach(el => el.classList.remove('active'));
+                existingItem.classList.add('active');
+                existingItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                return;
+            }
+            
+            // Create new milestone item
+            const list = document.getElementById('milestoneList');
+            const item = document.createElement('div');
+            item.className = 'milestone-item';
+            item.dataset.year = y;
+            
+            item.innerHTML = `
+                <div class="milestone-header">
+                    <div class="milestone-icon">${m.icon}</div>
+                    <span class="milestone-year">${y}</span>
+                </div>
+                <div class="milestone-body">
+                    <div class="milestone-title">${m.title}</div>
+                    <div class="milestone-text">${m.text}</div>
+                </div>
+                <div class="milestone-3pa">${m.threePA} 3PA/G</div>
+            `;
+            
+            // Remove active state from others
+            document.querySelectorAll('.milestone-item').forEach(el => el.classList.remove('active'));
+            
+            // Add to list and animate in
+            list.appendChild(item);
+            
+            // Trigger animation
+            requestAnimationFrame(() => {
+                item.classList.add('visible', 'active');
+                item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+            
+            currentMilestone = y;
+        }
+        
+        function clearMilestones() {
+            document.getElementById('milestoneList').innerHTML = '';
+            currentMilestone = null;
+        }
 
         function updateTimelineState(idx) {
             const progress=idx/totalIndices;
@@ -873,8 +1211,8 @@
             }
         }
 
-        function toggleAnimation(){isAnimating=!isAnimating;const btn=document.getElementById('playBtn');if(isAnimating){btn.innerText='❚❚';btn.classList.add('active');if(animationIndex>=totalIndices){animationIndex=0;currentMilestone=null;isTransitioningToSideView=false;cameraTransitionProgress=0;resetCameraToTop();if(spiralMesh)spiralMesh.geometry.setDrawRange(0,0);}}else{btn.innerText='▶';btn.classList.remove('active');}}
-        function resetAnimation(){animationIndex=0;lastDrawnYear=-1;currentMilestone=null;isTransitioningToSideView=false;cameraTransitionProgress=0;resetCameraToTop();if(spiralMesh){updateSpiralVisuals();document.getElementById('timelineSlider').value=0;updateTimelineState(0);}if(!isAnimating)toggleAnimation();}
+        function toggleAnimation(){isAnimating=!isAnimating;const btn=document.getElementById('playBtn');if(isAnimating){btn.innerText='❚❚';btn.classList.add('active');if(animationIndex>=totalIndices){animationIndex=0;currentMilestone=null;isTransitioningToSideView=false;cameraTransitionProgress=0;clearMilestones();resetCameraToTop();if(spiralMesh)spiralMesh.geometry.setDrawRange(0,0);}}else{btn.innerText='▶';btn.classList.remove('active');}}
+        function resetAnimation(){animationIndex=0;lastDrawnYear=-1;currentMilestone=null;isTransitioningToSideView=false;cameraTransitionProgress=0;clearMilestones();resetCameraToTop();if(spiralMesh){updateSpiralVisuals();document.getElementById('timelineSlider').value=0;updateTimelineState(0);}if(!isAnimating)toggleAnimation();}
         
         function resetCameraToTop() {
             // Reset to top-down view
@@ -1048,7 +1386,6 @@
             if (!sharedRenderer || teamSpirals.length === 0) return;
             
             const rotationSpeed = 0.008;
-            const animSpeed = 0.6; // Animation speed multiplier
             const cameraTransSpeed = 0.02; // Camera transition speed for teams
             
             teamSpirals.forEach(ts => {
@@ -1060,7 +1397,7 @@
                 // Progressive draw animation
                 if (ts.isAnimating && ts.totalIndices > 0) {
                     const baseSpeed = Math.ceil(ts.totalIndices / 400);
-                    ts.animationIndex += baseSpeed * animSpeed;
+                    ts.animationIndex += baseSpeed * animationSpeed;
                     
                     if (ts.animationIndex >= ts.totalIndices) {
                         ts.animationIndex = ts.totalIndices;
@@ -1187,9 +1524,9 @@
                 ts.ctx2d.drawImage(sharedRenderer.domElement, 0, 0);
             });
             
-            // Update global year display based on average animation progress
-            const yearDisplay = document.getElementById('teamYearDisplay');
-            if (yearDisplay && teamSpirals.length > 0) {
+            // Update global year display and timeline slider based on average animation progress
+            const teamTimelineSlider = document.getElementById('teamTimelineSlider');
+            if (teamSpirals.length > 0) {
                 // Get the average progress (all teams should be roughly synchronized)
                 let totalProgress = 0;
                 let animatingCount = 0;
@@ -1204,14 +1541,19 @@
                 
                 if (animatingCount > 0) {
                     const avgProgress = totalProgress / animatingCount;
-                    // Data spans 2000-2025 (26 seasons)
-                    const startYear = 2000;
-                    const endYear = 2024;
-                    const yearIndex = Math.floor(avgProgress * (endYear - startYear));
-                    const currentYear = startYear + yearIndex;
-                    const nextYear = currentYear + 1;
-                    const seasonStr = avgProgress >= 1 ? '2024-25' : `${currentYear}-${String(nextYear).slice(-2)}`;
-                    yearDisplay.textContent = seasonStr;
+                    
+                    // Update timeline slider
+                    if (teamTimelineSlider) {
+                        teamTimelineSlider.value = avgProgress * 100;
+                    }
+                    
+                    // Update play button state when animation completes
+                    if (avgProgress >= 1 && isTeamAnimating) {
+                        updateTeamPlayButton(false);
+                    }
+                    
+                    // Update year display
+                    updateTeamYearDisplay(avgProgress);
                 }
             }
         }
