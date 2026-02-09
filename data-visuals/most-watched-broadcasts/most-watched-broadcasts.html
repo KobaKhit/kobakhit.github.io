@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>31 Most Watched 📺 Broadcasts in the US</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600&family=Source+Sans+Pro:wght@300;400;600&display=swap');
+  :root {
+    --bg: #1a1a2e; --text: #ccc; --text-dim: #888; --text-bright: #e0e0e0;
+    --bar-sb: linear-gradient(90deg, #6b1a1a, #8b2222);
+    --bar-nf: linear-gradient(90deg, #444, #555);
+    --accent: #c0392b; --row-h: 26px; --row-gap: 2px; --logo-size: 24px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Source Sans Pro', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  .container { max-width: 1500px; margin: 0 auto; padding: 24px 16px; }
+  h1 { font-family: 'Oswald', sans-serif; font-weight: 400; font-size: clamp(18px, 3vw, 28px); text-align: center; color: var(--text-bright); margin-bottom: 20px; letter-spacing: 1px; }
+
+  .chart-wrapper { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: start; }
+  .panel { min-width: 0; }
+  .panel-header { font-family: 'Oswald', sans-serif; font-size: clamp(11px, 1.2vw, 14px); font-weight: 400; color: #aaa; margin-bottom: 3px; }
+  .right-panel .panel-header { text-align: right; }
+
+  .legend { display: flex; gap: 12px; margin-bottom: 10px; font-size: clamp(9px, 1vw, 11px); color: var(--text-dim); flex-wrap: wrap; }
+  .right-panel .legend { justify-content: flex-end; }
+  .legend-item { display: flex; align-items: center; gap: 4px; }
+  .legend-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .legend-swatch.nf { background: #555; }
+  .legend-swatch.sb { background: #8b1a1a; }
+
+  .bar-row {
+    display: flex; align-items: center; height: var(--row-h); margin-bottom: var(--row-gap);
+    font-size: clamp(8px, 1vw, 11px); position: relative; cursor: pointer; transition: opacity 0.15s;
+  }
+  .left-panel .bar-row { justify-content: flex-end; }
+  .right-panel .bar-row { justify-content: flex-start; }
+
+  .net {
+    font-family: 'Oswald', sans-serif; font-weight: 600; font-size: clamp(7px, 0.8vw, 9px);
+    padding: 1px 3px; border-radius: 2px; white-space: nowrap; letter-spacing: 0.5px;
+    min-width: 24px; text-align: center; flex-shrink: 0;
+  }
+  .net-cbs { background: #1a1a1a; color: #aaa; border: 1px solid #555; }
+  .net-fox { background: #1a1a1a; color: #e74c3c; border: 1px solid #e74c3c; }
+  .net-nbc { background: #1a1a1a; color: #3498db; border: 1px solid #3498db; }
+  .net-abc { background: #1a1a1a; color: #999; border: 1px solid #666; }
+  .net-multi { color: #f0c040; font-size: clamp(9px, 1vw, 12px); border: none; min-width: auto; }
+
+  .bar {
+    height: 18px; border-radius: 2px; display: flex; align-items: center;
+    position: relative; min-width: 0; overflow: hidden; flex-shrink: 1; transition: filter 0.15s;
+  }
+  .bar.sb { background: var(--bar-sb); }
+  .bar.nf { background: var(--bar-nf); }
+  .bar.hatched { background: repeating-linear-gradient(45deg, #555, #555 4px, #333 4px, #333 8px) !important; }
+
+  .bar-label {
+    position: absolute; white-space: nowrap; font-size: clamp(7px, 0.85vw, 10px);
+    color: #ddd; font-weight: 700; text-overflow: ellipsis; overflow: hidden;
+  }
+  .left-panel .bar-label { right: 4px; }
+  .right-panel .bar-label { left: 4px; }
+
+  .vtxt { font-size: clamp(8px, 0.9vw, 10px); color: #aaa; white-space: nowrap; margin: 0 3px; flex-shrink: 0; font-weight: 700; }
+  .bar-row:hover .bar { filter: brightness(1.3); }
+
+  .logo {
+    width: var(--logo-size); height: var(--logo-size); flex-shrink: 0; margin: 0 2px;
+    object-fit: contain; border-radius: 2px; background: transparent;
+  }
+
+  .middle-panel {
+    display: flex; flex-direction: column; align-items: center;
+    width: clamp(120px, 18vw, 260px); flex-shrink: 0;
+  }
+  .middle-header {
+    font-family: 'Oswald', sans-serif; font-size: clamp(10px, 1.1vw, 14px);
+    font-weight: 400; color: #aaa; margin-bottom: calc(var(--row-h) + 10px + 3px);
+    text-align: center; white-space: nowrap;
+  }
+  .slope-area { display: flex; width: 100%; position: relative; }
+  .rank-col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+  .rank-row {
+    height: var(--row-h); margin-bottom: var(--row-gap); display: flex; align-items: center;
+    justify-content: center; font-size: clamp(8px, 1vw, 11px); color: #555;
+    font-family: 'Oswald', sans-serif; width: 22px;
+  }
+  .line-ctr { flex: 1; position: relative; min-width: 0; }
+  #lineCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+
+  .tooltip {
+    position: fixed; background: rgba(10,10,20,0.95); color: #fff; padding: 10px 14px;
+    border-radius: 6px; font-size: 12px; pointer-events: none; display: none; z-index: 100;
+    border: 1px solid #333; max-width: 300px; line-height: 1.5; backdrop-filter: blur(4px);
+  }
+  .footer {
+    margin-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap;
+    gap: 8px; font-size: clamp(9px, 1vw, 11px); color: #555;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  .mobile-info {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(10,10,20,0.97); color: #fff; padding: 16px 20px;
+    font-size: 13px; line-height: 1.6; border-top: 1px solid #333; z-index: 200; backdrop-filter: blur(8px);
+  }
+  .mobile-info .close-btn {
+    position: absolute; top: 8px; right: 14px; background: none; border: none;
+    color: #aaa; font-size: 20px; cursor: pointer;
+  }
+
+  @media (max-width: 1100px) { .middle-panel { width: clamp(80px, 14vw, 160px); } }
+  @media (max-width: 900px) {
+    :root { --row-h: 22px; --logo-size: 20px; }
+    .chart-wrapper { grid-template-columns: 1fr 80px 1fr; }
+    .middle-panel { width: 80px; }
+    .rank-row { width: 16px; font-size: 8px; }
+    .bar { height: 16px; }
+  }
+  @media (max-width: 680px) {
+    :root { --row-h: 28px; --row-gap: 3px; --logo-size: 22px; }
+    .container { padding: 16px 10px; }
+    .chart-wrapper { display: flex; flex-direction: column; gap: 32px; }
+    .middle-panel { display: none; }
+    .left-panel .bar-row, .right-panel .bar-row { justify-content: flex-start; }
+    .right-panel .panel-header { text-align: left; }
+    .right-panel .legend { justify-content: flex-start; }
+    .bar { height: 20px; flex: 1; max-width: 65%; }
+    .left-panel .bar-label { right: auto; left: 4px; }
+    .tooltip { display: none !important; }
+    .mobile-info.visible { display: block; }
+  }
+  @media (max-width: 400px) { .bar { max-width: 55%; } h1 { font-size: 16px; } :root { --logo-size: 18px; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>31 Most Watched 📺 Broadcasts in the US</h1>
+  <div class="chart-wrapper">
+    <div class="panel left-panel">
+      <div class="panel-header">by number of average viewers</div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-swatch nf"></div> Non Football 📺</div>
+        <div class="legend-item"><div class="legend-swatch sb"></div> Super Bowl 🏈</div>
+      </div>
+      <div id="leftBars"></div>
+    </div>
+    <div class="middle-panel">
+      <div class="middle-header">Change in Rank</div>
+      <div class="slope-area">
+        <div class="rank-col" id="lRanks"></div>
+        <div class="line-ctr" id="lineCtr"><canvas id="lineCanvas"></canvas></div>
+        <div class="rank-col" id="rRanks"></div>
+      </div>
+    </div>
+    <div class="panel right-panel">
+      <div class="panel-header">by percent (%) of US population</div>
+      <div class="legend" style="justify-content:flex-end">
+        <div class="legend-item"><div class="legend-swatch nf"></div> Non Football 📺</div>
+        <div class="legend-item"><div class="legend-swatch sb"></div> Super Bowl 🏈</div>
+      </div>
+      <div id="rightBars"></div>
+    </div>
+  </div>
+  <div class="footer">
+    <div>
+      <div style="color:#666">* - multiple networks</div>
+      <a href="https://en.wikipedia.org/wiki/List_of_most_watched_broadcasts_in_the_United_States" target="_blank">Source: List of Most Watched Broadcasts in the US</a>
+    </div>
+    <div>Made with ❤️ by <a href="https://kobakhit.com" target="_blank">Koba K</a></div>
+  </div>
+</div>
+<div class="tooltip" id="tip"></div>
+<div class="mobile-info" id="mob"><button class="close-btn" id="mobX">&times;</button><div id="mobC"></div></div>
+
+<script>
+var B = "https://raw.githubusercontent.com/KobaKhit/vizvault/main/most-watched-broadcasts/";
+var SB = B + "superbowl-logos/";
+var OT = B + "other-logos/";
+var NW = B + "network-logos-white/";
+
+var data = [
+  {id:1, n:"Apollo 11 Moon landing",y:1969,v:150,p:70,net:"*",t:"nf",lr:1,rr:1,logo:OT+"moon.png",nlogo:NW+"multiple.png"},
+  {id:2, n:"Super Bowl LVIII",y:2024,v:120,p:35,net:"CBS",t:"sb",lr:2,rr:13,logo:SB+"lviii.png",nlogo:NW+"cbs.png"},
+  {id:3, n:"Super Bowl LVII",y:2023,v:115.1,p:34,net:"FOX",t:"sb",lr:3,rr:22,logo:SB+"lvii.png",nlogo:NW+"fox.png"},
+  {id:4, n:"Super Bowl XLIX",y:2015,v:114.4,p:35,net:"NBC",t:"sb",lr:4,rr:11,logo:SB+"xlix.png",nlogo:NW+"nbc.png"},
+  {id:5, n:"Super Bowl LVI",y:2022,v:112.3,p:33,net:"NBC",t:"sb",lr:5,rr:23,logo:SB+"lvi.png",nlogo:NW+"nbc.png"},
+  {id:6, n:"Super Bowl XLVIII",y:2014,v:112.2,p:35,net:"FOX",t:"sb",lr:6,rr:14,logo:SB+"xlviii.png",nlogo:NW+"fox.png"},
+  {id:7, n:"Super Bowl 50",y:2016,v:111.9,p:34,net:"CBS",t:"sb",lr:7,rr:17,logo:SB+"50.png",nlogo:NW+"cbs.png"},
+  {id:8, n:"Super Bowl XLVI",y:2012,v:111.3,p:35,net:"NBC",t:"sb",lr:8,rr:12,logo:SB+"xlvi.png",nlogo:NW+"nbc.png"},
+  {id:9, n:"Super Bowl LI",y:2017,v:111.3,p:34,net:"FOX",t:"sb",lr:9,rr:20,logo:SB+"li.png",nlogo:NW+"fox.png"},
+  {id:10,n:"Super Bowl XLV",y:2011,v:111,p:35,net:"FOX",t:"sb",lr:10,rr:10,logo:SB+"xlv.png",nlogo:NW+"fox.png"},
+  {id:11,n:"Richard Nixon's resignation speech",y:1974,v:110,p:51,net:"*",t:"nf",lr:11,rr:2,logo:OT+"nixon.png",nlogo:NW+"multiple.png"},
+  {id:12,n:"Super Bowl XLVII",y:2013,v:108.7,p:34,net:"CBS",t:"sb",lr:12,rr:19,logo:SB+"xlvii.png",nlogo:NW+"cbs.png"},
+  {id:13,n:"Super Bowl XLIV",y:2010,v:106.5,p:34,net:"CBS",t:"sb",lr:13,rr:18,logo:SB+"xliv.png",nlogo:NW+"cbs.png"},
+  {id:14,n:"MASH – Goodbye, Farewell and Amen",y:1983,v:105.9,p:45,net:"CBS",t:"nf",lr:14,rr:4,logo:OT+"mash.png",nlogo:NW+"cbs.png"},
+  {id:15,n:"Super Bowl LII",y:2018,v:103.4,p:31,net:"NBC",t:"sb",lr:15,rr:26,logo:SB+"lii.png",nlogo:NW+"nbc.png"},
+  {id:16,n:"SB XXVII Michael Jackson Show",y:1993,v:102,p:39,net:"NBC",t:"sb",lr:16,rr:7,logo:OT+"mj.png",nlogo:NW+"nbc.png"},
+  {id:17,n:"Super Bowl LIV",y:2020,v:100.4,p:30,net:"FOX",t:"sb",lr:17,rr:28,logo:SB+"liv.png",nlogo:NW+"fox.png"},
+  {id:18,n:'Roots ("Part VIII")',y:1977,v:100,p:45,net:"ABC",t:"nf",lr:18,rr:3,logo:OT+"roots.png",nlogo:NW+"abc.png"},
+  {id:19,n:"The Day After",y:1983,v:100,p:42,net:"ABC",t:"nf",lr:19,rr:5,logo:OT+"day-after.png",nlogo:NW+"abc.png"},
+  {id:20,n:"Super Bowl XLIII",y:2009,v:98.7,p:32,net:"NBC",t:"sb",lr:20,rr:24,logo:SB+"xliii.png",nlogo:NW+"nbc.png"},
+  {id:21,n:"Super Bowl LIII",y:2019,v:98.2,p:29,net:"CBS",t:"sb",lr:21,rr:30,logo:SB+"liii.png",nlogo:NW+"cbs.png"},
+  {id:22,n:"Super Bowl XLII",y:2008,v:97.4,p:32,net:"FOX",t:"sb",lr:22,rr:25,logo:SB+"xlii.png",nlogo:NW+"fox.png"},
+  {id:23,n:"Police pursuit of O.J. Simpson",y:1994,v:95,p:36,net:"*",t:"nf",lr:23,rr:9,logo:OT+"bronco.png",nlogo:NW+"multiple.png"},
+  {id:24,n:"Super Bowl XXX",y:1996,v:94.1,p:34,net:"NBC",t:"sb",lr:24,rr:16,logo:SB+"xxx.png",nlogo:NW+"nbc.png"},
+  {id:25,n:"Super Bowl XLI",y:2007,v:93.2,p:30,net:"CBS",t:"sb",lr:25,rr:27,logo:SB+"xli.png",nlogo:NW+"cbs.png"},
+  {id:26,n:"Super Bowl XX",y:1986,v:92.6,p:38,net:"NBC",t:"sb",lr:26,rr:8,logo:SB+"xx.png",nlogo:NW+"nbc.png"},
+  {id:27,n:"Super Bowl LV",y:2021,v:91.6,p:27,net:"CBS",t:"sb",lr:27,rr:31,logo:SB+"lv.png",nlogo:NW+"cbs.png"},
+  {id:28,n:"Super Bowl XXVII",y:1993,v:91,p:35,net:"NBC",t:"sb",lr:28,rr:15,logo:SB+"xxvii.png",nlogo:NW+"nbc.png"},
+  {id:29,n:"Super Bowl XL",y:2006,v:90.7,p:30,net:"ABC",t:"sb",lr:29,rr:29,logo:SB+"xl.png",nlogo:NW+"abc.png"},
+  {id:30,n:"L. Spinks vs. M. Ali II",y:1978,v:90,p:40,net:"ABC",t:"nf",lr:30,rr:6,logo:OT+"ali-spinks.png",nlogo:NW+"abc.png"},
+  {id:31,n:"Super Bowl XXVIII",y:1994,v:90,p:34,net:"NBC",t:"sb",lr:31,rr:21,logo:SB+"xxviii.png",nlogo:NW+"nbc.png"}
+];
+
+var rData = data.slice().sort(function(a,b){return a.rr-b.rr});
+var MV=150, MP=70;
+
+function isMob(){return window.innerWidth<=680}
+
+function netHTML(n){
+  if(n==="*")return '<span class="net net-multi">\u2731</span>';
+  return '<span class="net net-'+n.toLowerCase()+'">'+n+'</span>';
+}
+
+function buildLeft(){
+  var c=document.getElementById('leftBars'); c.innerHTML='';
+  data.forEach(function(d){
+    var pct=(d.v/MV)*100, cls=d.t==='sb'?'sb':'nf', h=d.id===1?' hatched':'';
+    var vs=d.v>=125?'125-150 mil':d.v+' mil';
+    var r=document.createElement('div'); r.className='bar-row'; r.dataset.id=d.id;
+    r.innerHTML=netHTML(d.net)+
+      '<span class="vtxt">'+vs+'</span>'+
+      '<div class="bar '+cls+h+'" style="width:'+pct+'%">'+
+        '<span class="bar-label">'+ d.n+' ('+d.y+')</span>'+
+      '</div>'+
+      '<img class="logo" src="'+d.logo+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
+    r.addEventListener('mouseenter',function(e){hl(d.id,e)});
+    r.addEventListener('mouseleave',clr);
+    r.addEventListener('click',function(){mobShow(d.id)});
+    c.appendChild(r);
+  });
+}
+
+function buildRight(){
+  var c=document.getElementById('rightBars'); c.innerHTML='';
+  rData.forEach(function(d){
+    var pct=(d.p/MP)*100, cls=d.t==='sb'?'sb':'nf', h=d.id===1?' hatched':'';
+    var ps=d.id===1?'~70%':d.p+'%';
+    var r=document.createElement('div'); r.className='bar-row'; r.dataset.id=d.id;
+    r.innerHTML=
+      '<img class="logo" src="'+d.logo+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">'+
+      '<div class="bar '+cls+h+'" style="width:'+pct+'%">'+
+        '<span class="bar-label" style="left:4px">'+ d.n+' ('+d.y+')</span>'+
+      '</div>'+
+      '<span class="vtxt">'+ps+'</span>'+
+      netHTML(d.net);
+    r.addEventListener('mouseenter',function(e){hl(d.id,e)});
+    r.addEventListener('mouseleave',clr);
+    r.addEventListener('click',function(){mobShow(d.id)});
+    c.appendChild(r);
+  });
+}
+
+function buildRanks(){
+  var l=document.getElementById('lRanks'),r=document.getElementById('rRanks');
+  l.innerHTML='';r.innerHTML='';
+  for(var i=1;i<=31;i++){
+    var a=document.createElement('div');a.className='rank-row';a.textContent=i;a.id='lr'+i;l.appendChild(a);
+    var b=document.createElement('div');b.className='rank-row';b.textContent=i;b.id='rr'+i;r.appendChild(b);
+  }
+}
+
+function drawLines(hid){
+  var cv=document.getElementById('lineCanvas'),ct=document.getElementById('lineCtr');
+  if(!ct||ct.offsetWidth===0)return;
+  var rc=ct.getBoundingClientRect(),dp=window.devicePixelRatio||1;
+  cv.width=rc.width*dp;cv.height=rc.height*dp;
+  cv.style.width=rc.width+'px';cv.style.height=rc.height+'px';
+  var cx=cv.getContext('2d');cx.scale(dp,dp);cx.clearRect(0,0,rc.width,rc.height);
+  var cr=ct.getBoundingClientRect();
+  var sorted=hid?data.slice().sort(function(a,b){return(a.id===hid?1:0)-(b.id===hid?1:0)}):data;
+  sorted.forEach(function(d){
+    var le=document.getElementById('lr'+d.lr),re=document.getElementById('rr'+d.rr);
+    if(!le||!re)return;
+    var y1=le.getBoundingClientRect().top+le.getBoundingClientRect().height/2-cr.top;
+    var y2=re.getBoundingClientRect().top+re.getBoundingClientRect().height/2-cr.top;
+    var sb=d.t==='sb',isH=d.id===hid;
+    cx.beginPath();cx.moveTo(0,y1);cx.lineTo(rc.width,y2);
+    if(hid){
+      if(isH){cx.strokeStyle=sb?'#ff4444':'#ffffff';cx.lineWidth=2.5;cx.globalAlpha=1;}
+      else{cx.strokeStyle=sb?'rgba(180,40,40,0.12)':'rgba(150,150,150,0.1)';cx.lineWidth=0.8;cx.globalAlpha=0.4;}
+    }else{
+      cx.strokeStyle=sb?'rgba(180,40,40,0.45)':'rgba(150,150,150,0.5)';
+      cx.lineWidth=d.lr===d.rr?2:1;cx.globalAlpha=1;
+    }
+    cx.stroke();cx.globalAlpha=1;
+    if(!hid||isH){
+      var dr=isH?3.5:2.5,dc=isH?(sb?'#ff4444':'#fff'):(sb?'#b42828':'#666');
+      cx.beginPath();cx.arc(1,y1,dr,0,Math.PI*2);cx.fillStyle=dc;cx.fill();
+      cx.beginPath();cx.arc(rc.width-1,y2,dr,0,Math.PI*2);cx.fillStyle=dc;cx.fill();
+    }
+  });
+}
+
+var hlId=null;
+function hl(id,e){
+  if(isMob())return;hlId=id;
+  document.querySelectorAll('.bar-row').forEach(function(r){r.style.opacity=r.dataset.id==id?'1':'0.2'});
+  drawLines(id);showTip(id,e);
+}
+function clr(){
+  if(isMob())return;hlId=null;
+  document.querySelectorAll('.bar-row').forEach(function(r){r.style.opacity='1'});
+  drawLines();document.getElementById('tip').style.display='none';
+}
+
+function info(d){
+  var df=d.lr-d.rr,dir=df>0?'\u2191 '+df+' ranks higher':df<0?'\u2193 '+Math.abs(df)+' ranks lower':'\u2014 Same rank';
+  var dc=df>0?'#4ecdc4':df<0?'#ff6b6b':'#ffd93d';
+  return '<strong>'+d.n+' ('+d.y+')</strong><br>Viewers: '+(d.v>=125?'125\u2013150':d.v)+' million<br>% of Population: '+(d.id===1?'~70':d.p)+'%<br>Network: '+(d.net==='*'?'Multiple':d.net)+'<br>Rank by viewers: #'+d.lr+' \u2192 by %: #'+d.rr+'<br><span style="color:'+dc+'">'+dir+' by % of population</span>';
+}
+
+function showTip(id,e){
+  var d=data.find(function(x){return x.id===id}),tip=document.getElementById('tip');
+  tip.innerHTML=info(d);tip.style.display='block';posTip(e);
+}
+function posTip(e){
+  var t=document.getElementById('tip'),x=e.clientX+14,y=e.clientY-14;
+  if(x+300>window.innerWidth)x=e.clientX-300-14;if(y+160>window.innerHeight)y=e.clientY-160;if(y<0)y=4;
+  t.style.left=x+'px';t.style.top=y+'px';
+}
+document.addEventListener('mousemove',function(e){if(hlId!==null&&!isMob())posTip(e)});
+
+function mobShow(id){
+  if(!isMob())return;
+  var d=data.find(function(x){return x.id===id});
+  document.getElementById('mobC').innerHTML=info(d);
+  document.getElementById('mob').classList.add('visible');
+  document.querySelectorAll('.bar-row').forEach(function(r){r.style.opacity=r.dataset.id==id?'1':'0.25'});
+}
+document.getElementById('mobX').addEventListener('click',function(){
+  document.getElementById('mob').classList.remove('visible');
+  document.querySelectorAll('.bar-row').forEach(function(r){r.style.opacity='1'});
+});
+document.addEventListener('click',function(e){
+  if(isMob()&&!e.target.closest('.bar-row')&&!e.target.closest('.mobile-info')){
+    document.getElementById('mob').classList.remove('visible');
+    document.querySelectorAll('.bar-row').forEach(function(r){r.style.opacity='1'});
+  }
+});
+
+function init(){buildLeft();buildRight();buildRanks();requestAnimationFrame(function(){requestAnimationFrame(function(){drawLines()})});}
+var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(init,150)});
+init();
+</script>
+</body>
+</html>
