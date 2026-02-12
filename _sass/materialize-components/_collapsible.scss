@@ -61,7 +61,16 @@
     border: 0;
     background-color: $collapsible-header-color;
 
-    li a { margin: 0 1rem 0 2rem; }
+    li {
+      line-height: normal;
+    }
+
+    li a {
+      margin: 0 1rem 0 2rem;
+      height: auto;
+      line-height: 1.4;
+      padding: 12px 0;
+    }
   }
 
 }
