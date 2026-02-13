@@ -25,7 +25,7 @@
   }
 
   .page {
-    max-width: 960px;
+    max-width: 990px;
     margin: 0 auto;
     padding: 48px 24px 56px;
   }
@@ -56,7 +56,7 @@
 
   .top-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 5fr 7fr;
     gap: 16px;
     margin-bottom: 16px;
   }
@@ -178,7 +178,7 @@
   .stacked-legend {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 10px;
+    gap: 6px 8px;
     margin-bottom: 10px;
   }
 
@@ -523,6 +523,7 @@ const sportsMeta = [
   { key: 'Soccer',     emoji: '⚽', color: '#6c3fc5' },
   { key: 'Golf',       emoji: '⛳', color: '#1a8f6e' },
   { key: 'Parkour',    emoji: '🤸', color: '#e0a820' },
+  { key: 'Volleyball', emoji: '🏐', color: '#e05297' },
 ];
 
 const charBySport = {
@@ -533,6 +534,7 @@ const charBySport = {
   Soccer:     { Dwight:5, Andy:3, Jim:3, Charles:3, Michael:2, Kelly:2, Nellie:1, Phyllis:1 },
   Golf:       { Andy:5, Michael:4, Jim:3, Pam:2, David:1, Holly:1, Jan:1 },
   Parkour:    { Andy:5, Dwight:4, Michael:2, Jim:1 },
+  Volleyball: { Dwight:3, Michael:2, Toby:2, Pam:2, Charles:1 },
 };
 
 // Aggregate per character
@@ -604,6 +606,7 @@ const sports = [
   { name: 'Soccer',     emoji: '⚽', ep: 10, qt: 21, color: '#6c3fc5' },
   { name: 'Hockey',     emoji: '🏒', ep: 6,  qt: 12, color: '#0077c0' },
   { name: 'Parkour',    emoji: '🤸', ep: 1,  qt: 13, color: '#e0a820' },
+  { name: 'Volleyball', emoji: '🏐', ep: 9,  qt: 11, color: '#e05297' },
 ];
 
 const leftSorted = [...sports].sort((a, b) => b.ep - a.ep);
