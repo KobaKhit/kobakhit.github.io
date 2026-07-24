@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The NBA's Most Decorated Rosters — Career Accolades by Team & Player</title>
+<meta name="description" content="Career accolades across signed 2026–27 NBA rosters, ranked by team total. Heat table and player-bar views of All-Star, All-NBA, MVP, rings, and more.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Kobakhit">
+<meta property="og:title" content="The NBA's Most Decorated Rosters">
+<meta property="og:description" content="Career accolades on every signed 2026–27 NBA roster — heat table and player breakdown.">
+<meta property="og:url" content="https://kobakhit.github.io/data-visuals/nba-accolades/">
+<meta property="og:image" content="https://kobakhit.github.io/data-visuals/nba-accolades/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Heat table ranking NBA teams by career accolades on their 2026–27 rosters">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The NBA's Most Decorated Rosters">
+<meta name="twitter:description" content="Career accolades on every signed 2026–27 NBA roster — heat table and player breakdown.">
+<meta name="twitter:image" content="https://kobakhit.github.io/data-visuals/nba-accolades/og.png">
 <style>
   *{box-sizing:border-box;}
   body{
@@ -83,6 +97,72 @@
     color:#707987; font-size:12px; font-weight:600;
     letter-spacing:0.02em;
   }
+  .heat-scroll-hint{display:none;}
+  .team-abbr, .th-short{display:none;}
+
+  @media (max-width: 720px){
+    body{padding:16px 12px 36px;}
+    h1{font-size:18px; line-height:1.25;}
+    p.sub{font-size:12.5px;}
+    p.note{font-size:11px; margin-bottom:12px;}
+    .legend{gap:5px; margin-bottom:10px;}
+    .legend .pill{font-size:10.5px; padding:3px 8px 3px 6px;}
+    .view-controls{width:100%;}
+    .view-button{flex:1; text-align:center; padding:9px 10px; font-size:12.5px;}
+
+    /* Taller than square so 30 team rows stay readable on phones */
+    .chart-wrap{
+      aspect-ratio:auto;
+      height:min(155vw, 980px);
+      padding:8px 6px 4px;
+      border-radius:10px;
+    }
+
+    .heat-wrap{
+      min-height:0;
+      padding:10px 8px 12px;
+      border-radius:10px;
+    }
+    .heat-scroll{
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      overscroll-behavior-x:contain;
+      margin:0 -2px;
+      padding-bottom:4px;
+    }
+    .heat-scroll-hint{
+      display:block;
+      margin:0 0 8px;
+      color:#8891a0;
+      font-size:11px;
+      font-weight:600;
+    }
+    .heat-table{
+      min-width:760px;
+      border-spacing:2px;
+    }
+    .heat-table th{
+      height:34px; font-size:9px; padding:3px 2px;
+      position:sticky; top:0; z-index:2; background:#ffffff;
+    }
+    .heat-table th.team-head{width:72px; padding-left:4px; left:0; z-index:3;}
+    .heat-table th.total-head{width:42px;}
+    .heat-table td{height:26px; font-size:10px; border-radius:3px;}
+    .heat-table .team-cell{
+      gap:5px; padding:2px 4px; font-size:11px;
+      box-shadow:4px 0 8px -6px rgba(21,26,35,0.35);
+    }
+    .heat-table .team-cell img{width:18px; height:18px;}
+    .team-full, .th-full{display:none;}
+    .team-abbr, .th-short{display:inline;}
+    .credit{margin-top:10px; font-size:11.5px;}
+  }
+
+  @media (max-width: 420px){
+    body{padding:12px 8px 28px;}
+    .chart-wrap{height:min(170vw, 1040px); padding:6px 4px 2px;}
+    .heat-table{min-width:700px;}
+  }
 </style>
 </head>
 <body>
@@ -102,6 +182,7 @@
       </div>
     </div>
     <div id="heat-view" class="view-panel heat-wrap">
+      <p class="heat-scroll-hint">Swipe sideways to see all columns</p>
       <div class="heat-scroll">
         <table id="heat-table" class="heat-table" aria-label="NBA roster accolades heat table"></table>
       </div>
@@ -313,12 +394,12 @@ function renderHeatTable() {
   const header = `<thead><tr>
     <th class="team-head">Team</th>
     <th class="total-head">Total</th>
-    <th class="total-head" title="Average age of players with at least one accolade on that roster (not the full team)">Avg Age</th>
-    ${STAT_KEYS.map((key) => `<th title="${STAT_LABELS[key]}">${STAT_LABELS[key]}</th>`).join('')}
+    <th class="total-head" title="Average age of players with at least one accolade on that roster (not the full team)"><span class="th-full">Avg Age</span><span class="th-short">Age</span></th>
+    ${STAT_KEYS.map((key) => `<th title="${STAT_LABELS[key]}"><span class="th-full">${STAT_LABELS[key]}</span><span class="th-short">${key}</span></th>`).join('')}
   </tr></thead>`;
   const body = `<tbody>${rows.map((row) => {
     return `<tr>
-      <td class="team-cell"><img src="${teamLogoUrl(row.team)}" alt="">${row.team}</td>
+      <td class="team-cell"><img src="${teamLogoUrl(row.team)}" alt=""><span class="team-full">${row.team}</span><span class="team-abbr">${TEAM_ABBR[row.team] || ''}</span></td>
       ${totalCell(row)}
       ${ageCell(row)}
       ${STAT_KEYS.map((key) => cell(row.team, key, row.counts[key])).join('')}
@@ -562,13 +643,18 @@ const accoladeBreakdownPlugin = {
 };
 
 // Team logo in the reserved left strip (team name text is intentionally hidden).
-const LOGO_SIZE = 32;
-const LOGO_GAP = 13;
+function logoMetrics() {
+  const mobile = window.matchMedia('(max-width: 720px)').matches;
+  return mobile
+    ? { size: 24, gap: 8 }
+    : { size: 32, gap: 13 };
+}
 const teamBadgePlugin = {
   id: 'teamBadgePlugin',
   afterDraw(chart) {
     const { ctx, scales } = chart;
     const yScale = scales.y;
+    const { size: LOGO_SIZE } = logoMetrics();
     DATA.teams.forEach((team, i) => {
       const y = yScale.getPixelForTick(i);
       if (y === undefined) return;
@@ -630,7 +716,7 @@ chartRef = new Chart(document.getElementById('chart'), {
     responsive: true,
     maintainAspectRatio: false,
     animation: false,
-    layout: { padding: { left: 10, right: 34, top: 4 } },
+    layout: { padding: { left: 6, right: 28, top: 4 } },
     datasets: {
       bar: {
         categoryPercentage: 0.94,
@@ -694,7 +780,8 @@ chartRef = new Chart(document.getElementById('chart'), {
       y: {
         stacked: true,
         afterFit(scale) {
-          scale.width = LOGO_SIZE + LOGO_GAP;
+          const { size, gap } = logoMetrics();
+          scale.width = size + gap;
         },
         ticks: { display: false },
         grid: { display: false },
@@ -728,6 +815,15 @@ document.querySelectorAll('.view-button').forEach((button) => {
   button.addEventListener('click', () => setView(button.dataset.view, true));
 });
 setView(new URLSearchParams(window.location.search).get('view'));
+
+window.addEventListener('resize', () => {
+  if (chartRef && !document.getElementById('bar-view').hidden) {
+    chartRef.resize();
+  }
+});
+window.matchMedia('(max-width: 720px)').addEventListener('change', () => {
+  if (chartRef) chartRef.update('none');
+});
 </script>
 </body>
 </html>
