@@ -89,7 +89,7 @@
   <div class="page">
     <h1>The NBA's Most Decorated Rosters</h1>
     <p class="sub">Career accolades across signed 2026&ndash;27 rosters (Basketball-Reference contracts), ranked by team total. Each bar is divided by player; the inset ribbon along its bottom edge shows that player's mix of accolades. Hover a segment for exact counts.</p>
-    <p class="note">Every All-Star or All-NBA selection, defensive honor, major award, scoring title, championship ring and Olympic gold medal counts as one accolade.</p>
+    <p class="note">Every All-Star or All-NBA selection, defensive honor, major award, scoring title, championship ring and Olympic gold medal counts as one accolade. Avg Age is the average age of players with at least one accolade on that roster (not the full team), as of July 24, 2026.</p>
     <p class="note">Players still on the market and excluded from team totals (unsigned for 2026&ndash;27 per <a href="https://www.basketball-reference.com/contracts/players.html">Basketball-Reference</a> as of July 24, 2026): DeMar DeRozan, Gary Payton II, Herb Jones, Jalen Duren, Matisse Thybulle, Peyton Watson, Thanasis Antetokounmpo. Guerschon Yabusele is overseas with a Greek club and is also excluded.</p>
     <div id="legend" class="legend"></div>
     <div class="view-controls" role="group" aria-label="Chart view">
@@ -313,7 +313,7 @@ function renderHeatTable() {
   const header = `<thead><tr>
     <th class="team-head">Team</th>
     <th class="total-head">Total</th>
-    <th class="total-head">Avg Age</th>
+    <th class="total-head" title="Average age of players with at least one accolade on that roster (not the full team)">Avg Age</th>
     ${STAT_KEYS.map((key) => `<th title="${STAT_LABELS[key]}">${STAT_LABELS[key]}</th>`).join('')}
   </tr></thead>`;
   const body = `<tbody>${rows.map((row) => {
