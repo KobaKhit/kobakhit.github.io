@@ -6,21 +6,74 @@ excerpt: Career accolades on every signed 2026–27 NBA roster — heat table an
 ---
 
 <style>
-iframe {
-    height: 100vh;
-    width: 100vw;
-    position: absolute;
+/* Grow the iframe to the chart's full height so only the page scrolls
+   (GoFullPage / full-page screenshots break with nested iframe scroll). */
+body {
+  background-color: #f4f6f9;
+  margin: 0;
 }
 #bb {
-    width: 100vw;
-    height: 100vh;
+  width: 100%;
 }
-body {
-    background-color: #f4f6f9;
-    margin: 0;
+#chart-frame {
+  display: block;
+  width: 100%;
+  border: 0;
+  overflow: hidden;
+  min-height: 100vh;
 }
 </style>
 
 <div id="bb">
-<iframe src="chart.html" frameborder="0" title="The NBA's Most Decorated Rosters"></iframe>
+  <iframe
+    id="chart-frame"
+    src="chart.html"
+    frameborder="0"
+    scrolling="no"
+    title="The NBA's Most Decorated Rosters"
+  ></iframe>
 </div>
+
+<script>
+(function () {
+  var frame = document.getElementById('chart-frame');
+  if (!frame) return;
+
+  function resize() {
+    try {
+      var doc = frame.contentDocument || frame.contentWindow.document;
+      if (!doc) return;
+      var body = doc.body;
+      var html = doc.documentElement;
+      var height = Math.max(
+        body ? body.scrollHeight : 0,
+        body ? body.offsetHeight : 0,
+        html ? html.scrollHeight : 0,
+        html ? html.offsetHeight : 0
+      );
+      if (height > 0) frame.style.height = height + 'px';
+    } catch (err) {
+      // same-origin only
+    }
+  }
+
+  frame.addEventListener('load', function () {
+    resize();
+    try {
+      var doc = frame.contentDocument || frame.contentWindow.document;
+      if (window.ResizeObserver && doc && doc.body) {
+        var ro = new ResizeObserver(function () { resize(); });
+        ro.observe(doc.body);
+      }
+      frame.contentWindow.addEventListener('resize', resize);
+    } catch (err) {}
+    // Catch late chart/table layout after images load
+    setTimeout(resize, 300);
+    setTimeout(resize, 1200);
+  });
+
+  window.addEventListener('message', function (event) {
+    if (event.data && event.data.type === 'nba-accolades-resize') resize();
+  });
+})();
+</script>

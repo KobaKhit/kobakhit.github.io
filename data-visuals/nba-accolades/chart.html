@@ -791,6 +791,12 @@ chartRef = new Chart(document.getElementById('chart'), {
   }
 });
 
+function notifyParentResize() {
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ type: 'nba-accolades-resize' }, '*');
+  }
+}
+
 function setView(view, updateUrl = false) {
   const activeView = view === 'bar' ? 'bar' : 'heat';
   document.getElementById('bar-view').hidden = activeView !== 'bar';
@@ -801,7 +807,12 @@ function setView(view, updateUrl = false) {
     button.setAttribute('aria-pressed', String(active));
   });
   if (activeView === 'bar') {
-    requestAnimationFrame(() => chartRef.resize());
+    requestAnimationFrame(() => {
+      chartRef.resize();
+      notifyParentResize();
+    });
+  } else {
+    requestAnimationFrame(notifyParentResize);
   }
   if (updateUrl) {
     const url = new URL(window.location.href);
@@ -815,15 +826,19 @@ document.querySelectorAll('.view-button').forEach((button) => {
   button.addEventListener('click', () => setView(button.dataset.view, true));
 });
 setView(new URLSearchParams(window.location.search).get('view'));
+notifyParentResize();
 
 window.addEventListener('resize', () => {
   if (chartRef && !document.getElementById('bar-view').hidden) {
     chartRef.resize();
   }
+  notifyParentResize();
 });
 window.matchMedia('(max-width: 720px)').addEventListener('change', () => {
   if (chartRef) chartRef.update('none');
+  notifyParentResize();
 });
+window.addEventListener('load', notifyParentResize);
 </script>
 </body>
 </html>
